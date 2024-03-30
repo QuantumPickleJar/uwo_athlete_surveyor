@@ -6,7 +6,6 @@ Provides means for intercollegiate faculty to better keep in touch with the stra
 - [Code Standards](#code-standards)
 - [Project Structure](#project-structure)
 - [Navigation](#navigation)
-<!-- - [Commits](Commits) -->
 
 # Code Standards 
 ## Responsibilities
