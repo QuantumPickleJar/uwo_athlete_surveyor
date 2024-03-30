@@ -1,3 +1,11 @@
+/**
+ * Date Started:     3/30/24
+ * Desc: 
+ * Entry point for student-faculty survey orchestrating app.
+ * 
+ * Authors: Josh, Vince, Amanda, Matt.
+ * Version:          0.0.1
+ */
 import 'package:flutter/material.dart';
 
 void main() {
