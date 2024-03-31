@@ -20,12 +20,6 @@ class PreviousFormsWidget extends StatefulWidget
 
 class _PreviousFormsWidgetState extends State<PreviousFormsWidget>
 {
-
-  void returnToPreviousPage()
-  {
-    //TODO
-  }
-
   @override
   Widget build(BuildContext context) 
   {
@@ -35,7 +29,7 @@ class _PreviousFormsWidgetState extends State<PreviousFormsWidget>
         backgroundColor: Colors.blue.shade200, 
         leading: Padding(
             padding: const EdgeInsets.all(2.0),
-            child: ElevatedButton(onPressed: returnToPreviousPage, child: const Text("< Back")),
+            child: ElevatedButton(onPressed:(){ Navigator.pop(context); }, child: const Text("<")),
           ),),
       body: Column(
         children: [
@@ -44,9 +38,8 @@ class _PreviousFormsWidgetState extends State<PreviousFormsWidget>
               itemCount: widget.formModel.formsList.length,
               separatorBuilder: (BuildContext context, int index) => listviewDivider,
               itemBuilder: (BuildContext context, int index) {
-                return ListTile();}))]
+                return const ListTile();}))]
       )
     );
   }
-
 }
