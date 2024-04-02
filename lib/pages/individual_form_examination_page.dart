@@ -1,7 +1,4 @@
-
 /*Author - Joshua*/
-
-
 import 'package:athlete_surveyor/styles/colors.dart';
 import 'package:flutter/material.dart';
 
