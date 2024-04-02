@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 /* Author - Joshua */
+import 'package:athlete_surveyor/pages/individual_form_examination_page.dart';
 import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
 import 'package:athlete_surveyor/styles/colors.dart';
@@ -16,6 +17,16 @@ class PreviousFormsWidget extends StatefulWidget
 
 class _PreviousFormsWidgetState extends State<PreviousFormsWidget>
 {
+  //
+  void navigateToPage(BuildContext context, Widget page)
+  {
+    Navigator.push
+    (
+      context,
+      MaterialPageRoute(builder: (context) => page)
+    );
+  }
+
   @override
   Widget build(BuildContext context) 
   {
@@ -44,7 +55,7 @@ class _PreviousFormsWidgetState extends State<PreviousFormsWidget>
                     child: ListTile(
                       title: Text("${widget.formModel.formsList[index].formName}\n~ ${widget.formModel.formsList[index].sport} ~\n", textAlign: TextAlign.center), titleAlignment: ListTileTitleAlignment.center,
                       subtitle: Text("Received:\n${widget.formModel.formsList[index].dateReceived}\nCompleted:\n${widget.formModel.formsList[index].dateCompleted}", textAlign: TextAlign.center),
-                      onTap: null //add later for viewing individual forms
+                      onTap:(){ navigateToPage(context, IndividualFormWidget(widget.formModel.formsList[index].formName, widget.formModel.formsList[index].sport)); }
                     ),
                   ));
               }))
