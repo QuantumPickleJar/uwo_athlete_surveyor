@@ -1,4 +1,4 @@
-import 'package:athlete_surveyor/styles/colors.dart';
+import 'package:athlete_surveyor/resources/colors.dart';
 import 'package:flutter/material.dart';
 
 // The default style for an AppBar with modifiable title.

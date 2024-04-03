@@ -1,5 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
-import 'package:athlete_surveyor/common.dart';
+import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/models/individual_form_examination_model.dart';
 import 'package:athlete_surveyor/pages/individual_form_examination_page.dart';
 import 'package:flutter/material.dart';

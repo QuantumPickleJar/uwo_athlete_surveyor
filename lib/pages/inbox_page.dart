@@ -1,4 +1,4 @@
-import 'package:athlete_surveyor/common.dart';
+import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:flutter/material.dart';
 
