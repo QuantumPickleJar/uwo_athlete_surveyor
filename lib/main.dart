@@ -5,12 +5,14 @@
 /// 
 /// Authors: Josh, Vince, Amanda, Matt.
 /// Version:          0.0.1
+import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
+import 'package:athlete_surveyor/pages/inbox_page.dart';
 import 'package:athlete_surveyor/pages/previous_forms_page.dart';
 import 'package:athlete_surveyor/styles/colors.dart';
 import 'package:flutter/material.dart';
 
-const Text appbarTitleText = Text(
+const Text _appbarTitleText = Text(
   "Final Project GUI", 
   style: TextStyle(
     color: Colors.black, 
@@ -25,7 +27,7 @@ class MainApp extends StatelessWidget
 {
   const MainApp({super.key});
 
-  /// Use to navigate to any page by supplying the existing context from "Widget build" and the name of the page.
+  /// Use to navigate to any page by supplying the existing context from "Widget build" and the page type.
   void navigateToPage(BuildContext context, Widget page)
   {
     Navigator.push
@@ -40,7 +42,7 @@ class MainApp extends StatelessWidget
   {
     return Scaffold(
       appBar: AppBar(
-        title: appbarTitleText,
+        title: _appbarTitleText,
         backgroundColor: titanYellow),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start, 
@@ -66,10 +68,10 @@ class MainApp extends StatelessWidget
             child: ElevatedButton(
               onPressed: null, 
               child: Text("Screen 5"))),
-          const Padding(padding: EdgeInsets.all(2.0),
+          Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
-              onPressed: null, 
-              child: Text("Screen 6: Inbox"))),
+              onPressed:(){ navigateToPage(context, InboxWidget(InboxModel())); },
+              child: const Text("Screen 6: Inbox"))),
           const Padding(padding: EdgeInsets.all(2.0),
             child: ElevatedButton(
               onPressed: null, 

@@ -1,4 +1,4 @@
-/* Author - Joshua */
+// A data object for storing the information related to a single form.
 class PreviousForm 
 {
   final String _formName;
