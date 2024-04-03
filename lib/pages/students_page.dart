@@ -1,12 +1,11 @@
+import 'package:athlete_surveyor/pages/add_athlete_page.dart';
+import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:flutter/material.dart';
-import 'individual_student.dart'; // Import the individual student screen
+import 'individual_student_page.dart'; // Import the individual student screen
 
-void main() {
-  runApp(const MainApp());
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+//
+class StudentsWidget extends StatelessWidget {
+  const StudentsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +25,7 @@ class MainApp extends StatelessWidget {
   },
     ];
 
-    return MaterialApp(
-      home: Scaffold(
+      return Scaffold(
         appBar: AppBar(
           title: const Text('Your App Title'),
         ),
@@ -60,18 +58,18 @@ class MainApp extends StatelessWidget {
                 ),
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     "Students",
                     style: TextStyle(fontSize: 50),
                   ),
                   ElevatedButton(
-                    onPressed: _addAthlete,
-                    child: Text("Add Athlete"),
+                    onPressed: (){ navigateToPage(context, const AddAthleteWidget()); },
+                    child: const Text("Add Athlete"),
                   ),
                 ],
               ),
@@ -99,15 +97,7 @@ class MainApp extends StatelessWidget {
                     ),
                     trailing: ElevatedButton(
                       onPressed: () {
-                        // Navigate to the individual student screen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => IndividualStudentScreen(
-                              studentData: dataList[index], // Pass student data if needed
-                            ),
-                          ),
-                        );
+                        navigateToPage(context, IndividualStudentWidget(studentData: dataList[index]));
                       },
                       child: const Text('More Info'),
                     ),
@@ -117,13 +107,10 @@ class MainApp extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 
 void _sport() {}
 
 void _grade() {}
-
-void _addAthlete() {}

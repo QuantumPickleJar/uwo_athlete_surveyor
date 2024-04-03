@@ -9,7 +9,9 @@ import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
 import 'package:athlete_surveyor/pages/inbox_page.dart';
 import 'package:athlete_surveyor/pages/previous_forms_page.dart';
+import 'package:athlete_surveyor/pages/students_page.dart';
 import 'package:athlete_surveyor/resources/colors.dart';
+import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:flutter/material.dart';
 
 const Text _appbarTitleText = Text(
@@ -26,16 +28,6 @@ void main()
 class MainApp extends StatelessWidget 
 {
   const MainApp({super.key});
-
-  /// Use to navigate to any page by supplying the existing context from "Widget build" and the page type.
-  void navigateToPage(BuildContext context, Widget page)
-  {
-    Navigator.push
-    (
-      context,
-      MaterialPageRoute(builder: (context) => page)
-    );
-  }
 
   @override
   Widget build(BuildContext context) 
@@ -60,10 +52,10 @@ class MainApp extends StatelessWidget
             child: ElevatedButton(
               onPressed: null, 
               child: Text("Screen 3"))),
-          const Padding(padding: EdgeInsets.all(2.0),
+          Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
-              onPressed: null, 
-              child: Text("Screen 4"))),
+              onPressed: (){ navigateToPage(context, const StudentsWidget()); }, 
+              child: const Text("Screen 4: Students Page(?) - ADMIN"))),
           const Padding(padding: EdgeInsets.all(2.0),
             child: ElevatedButton(
               onPressed: null, 

@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+// 
+class AddAthleteWidget extends StatelessWidget {
+  const AddAthleteWidget({super.key});
   
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+      return Scaffold(
         appBar: AppBar(
           title: const Text('Your App Title'),
         ),
@@ -121,15 +116,13 @@ class MyApp extends StatelessWidget {
                     width: 390,
                     height: 390,
                   ),
-                
                 ],
               ),
             ],
           ),
           
         ),
-      ),
-    );
+      );
   }
 }
 

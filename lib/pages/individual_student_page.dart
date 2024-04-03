@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-class IndividualStudentScreen extends StatelessWidget {
+//
+class IndividualStudentWidget extends StatelessWidget {
   final Map<String, dynamic> studentData;
 
-  const IndividualStudentScreen({Key? key, required this.studentData}) : super(key: key);
+  const IndividualStudentWidget({super.key, required this.studentData});
 
   @override
   Widget build(BuildContext context) {
