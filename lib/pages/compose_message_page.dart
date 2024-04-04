@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 
 class ComposeMessagePage extends StatelessWidget {
   const ComposeMessagePage({super.key});
+  // ignore: constant_identifier_names
   static const double SCREEN_WIDTH = 375.0;
 
 
@@ -42,6 +43,15 @@ class ComposeMessagePage extends StatelessWidget {
                 ),
               ),
             ),
+          Card(
+            margin: EdgeInsets.all(5),
+            child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+            Text("Request reply?"),
+            Switch(value: false, onChanged: null)
+          ]),
+          )
         ])
         );
   }

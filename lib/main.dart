@@ -7,6 +7,7 @@
 /// Version:          0.0.1
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
+import 'package:athlete_surveyor/pages/compose_message_page.dart';
 import 'package:athlete_surveyor/pages/inbox_page.dart';
 import 'package:athlete_surveyor/pages/previous_forms_page.dart';
 import 'package:athlete_surveyor/pages/screen_one_splash_screen.dart';
@@ -57,6 +58,10 @@ class MainApp extends StatelessWidget
           Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
               onPressed:(){ navigateToPage(context, InboxWidget(InboxModel())); },
+              child: const Text("Screen 6: Inbox"))),
+          Padding(padding: const EdgeInsets.all(2.0),
+            child: ElevatedButton(
+              onPressed:(){ navigateToPage(context, const ComposeMessagePage()); },
               child: const Text("Screen 6: Inbox"))),
           Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
