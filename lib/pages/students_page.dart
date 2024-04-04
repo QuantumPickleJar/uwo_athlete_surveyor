@@ -43,12 +43,12 @@ class StudentsWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
-                          onPressed: _sport,
+                          onPressed: null,
                           child: Text("Sport"),
                         ),
                         SizedBox(width: 8), // Add space between buttons
                         ElevatedButton(
-                          onPressed: _grade,
+                          onPressed: null,
                           child: Text("Grade"),
                         ),
                         SizedBox(width: 50), // Add space to the right of the "Grade" button
@@ -111,6 +111,6 @@ class StudentsWidget extends StatelessWidget {
   }
 }
 
-void _sport() {}
+//void _sport() {}
 
-void _grade() {}
+//void _grade() {}

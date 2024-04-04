@@ -57,20 +57,8 @@ class MainApp extends StatelessWidget
               child: const Text("Screen 2b: Home - ADMIN"))),
           Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
-              onPressed: (){ navigateToPage(context, const StudentsWidget()); }, 
-              child: const Text("Screen 4: Students Page - ADMIN"))),
-          const Padding(padding: EdgeInsets.all(2.0),
-            child: ElevatedButton(
-              onPressed: null, 
-              child: Text("Screen 5"))),
-          Padding(padding: const EdgeInsets.all(2.0),
-            child: ElevatedButton(
               onPressed:(){ navigateToPage(context, InboxWidget(InboxModel())); },
               child: const Text("Screen 6: Inbox"))),
-          const Padding(padding: EdgeInsets.all(2.0),
-            child: ElevatedButton(
-              onPressed: null, 
-              child: Text("Screen 7"))),
           Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
               onPressed:(){ navigateToPage(context, PreviousFormsWidget(PreviousFormsModel())); }, 

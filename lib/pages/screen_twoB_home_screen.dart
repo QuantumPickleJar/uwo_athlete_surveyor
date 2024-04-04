@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:athlete_surveyor/pages/students_page.dart';
+import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:flutter/material.dart';
 
 /// Screen Two B is the alternate screen two, only meant to be seen by administrative users.
@@ -28,7 +30,7 @@ class ScreenTwoB extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(onPressed: null, 
+                  child: ElevatedButton(onPressed:(){ navigateToPage(context, StudentsWidget()); }, 
                     style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
                     child: SizedBox(width: 200, height: 50, child: Center(child: Text('View Student Forms', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
                 ),
