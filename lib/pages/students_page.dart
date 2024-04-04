@@ -15,13 +15,13 @@ class StudentsWidget extends StatelessWidget {
     'title': 'Student 1',
     'subtitle1': 'Subtitle 1 for Student 1',
     'subtitle2': 'Subtitle 2 for Student 1',
-    'image': 'assets/download-7.jpg', // Path to your image asset
+    'image': 'lib/resources/images/download-7.jpg', // Path to your image asset
   },
   {
     'title': 'Student 2',
     'subtitle1': 'Subtitle 1 for Student 2',
     'subtitle2': 'Subtitle 2 for Student 2',
-    'image': 'assets/download-7.jpg', // Path to your image asset
+    'image': 'lib/resources/images/download-7.jpg', // Path to your image asset
   },
     ];
 

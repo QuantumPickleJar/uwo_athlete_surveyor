@@ -27,8 +27,6 @@ class AddAthleteWidget extends StatelessWidget {
                 children: [
                   Image.network(
                     'https://via.placeholder.com/150', // Replace with your image URL
-                    width: 150,
-                    height: 150,
                   ),
                   const SizedBox(width: 16.0), // Add some spacing between image and text fields
                   const Expanded(
@@ -113,8 +111,6 @@ class AddAthleteWidget extends StatelessWidget {
                   const Text("Analytics of 'Student's name'"),
                   Image.network(
                     'https://via.placeholder.com/400', // Replace with the student's headshot
-                    width: 390,
-                    height: 390,
                   ),
                 ],
               ),
