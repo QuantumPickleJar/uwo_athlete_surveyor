@@ -8,6 +8,7 @@
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
 import 'package:athlete_surveyor/pages/compose_message_page.dart';
+import 'package:athlete_surveyor/pages/form_builder_page.dart';
 import 'package:athlete_surveyor/pages/inbox_page.dart';
 import 'package:athlete_surveyor/pages/previous_forms_page.dart';
 import 'package:athlete_surveyor/pages/screen_one_splash_screen.dart';
@@ -55,6 +56,10 @@ class MainApp extends StatelessWidget
             child: ElevatedButton(
               onPressed:(){ navigateToPage(context, const ScreenTwoB()); },
               child: const Text("Screen 2b: Home - ADMIN"))),
+          Padding(padding: const EdgeInsets.all(2.0),
+            child: ElevatedButton(
+              onPressed:(){ navigateToPage(context, FormBuilderPage()); },
+              child: const Text("Screen 5: Form Builder"))),
           Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
               onPressed:(){ navigateToPage(context, InboxWidget(InboxModel())); },
