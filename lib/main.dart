@@ -9,6 +9,9 @@ import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
 import 'package:athlete_surveyor/pages/inbox_page.dart';
 import 'package:athlete_surveyor/pages/previous_forms_page.dart';
+import 'package:athlete_surveyor/pages/screen_one_splash_screen.dart';
+import 'package:athlete_surveyor/pages/screen_twoB_home_screen.dart';
+import 'package:athlete_surveyor/pages/screen_two_home_screen.dart';
 import 'package:athlete_surveyor/pages/students_page.dart';
 import 'package:athlete_surveyor/resources/colors.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
@@ -40,22 +43,22 @@ class MainApp extends StatelessWidget
         crossAxisAlignment: CrossAxisAlignment.start, 
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Padding(padding: EdgeInsets.all(2.0),
+          Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
-              onPressed: null, 
-              child: Text("Screen 1"))),
-          const Padding(padding: EdgeInsets.all(2.0),
+              onPressed:(){ navigateToPage(context, const ScreenOne()); },
+              child: const Text("Screen 1: Login"))),
+          Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
-              onPressed: null, 
-              child: Text("Screen 2"))),
-          const Padding(padding: EdgeInsets.all(2.0),
+              onPressed:(){ navigateToPage(context, const ScreenTwo()); },
+              child: const Text("Screen 2a: Home"))),
+          Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
-              onPressed: null, 
-              child: Text("Screen 3"))),
+              onPressed:(){ navigateToPage(context, const ScreenTwoB()); },
+              child: const Text("Screen 2b: Home - ADMIN"))),
           Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
               onPressed: (){ navigateToPage(context, const StudentsWidget()); }, 
-              child: const Text("Screen 4: Students Page(?) - ADMIN"))),
+              child: const Text("Screen 4: Students Page - ADMIN"))),
           const Padding(padding: EdgeInsets.all(2.0),
             child: ElevatedButton(
               onPressed: null, 
