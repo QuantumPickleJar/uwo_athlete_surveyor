@@ -8,18 +8,30 @@ class FormBuilderPage extends StatefulWidget {
   _FormBuilderPageState createState() => _FormBuilderPageState();
 }
 
+
 class _FormBuilderPageState extends State<FormBuilderPage> {
+
+  late double _sliderValue;
+
+  /// Temporary placeholder to allow the slider to be enabled
+  void _onSliderTap() {
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
+    /// give [_sliderValue] a valid number
+    _sliderValue = 0.5;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Form Builder'),
       ),
-      body: const Column(
+      body:  Column(
         children: [
-          ExpandedTextField(labelText: "Title"),
-          Divider(),
-          Card(
+          const ExpandedTextField(labelText: "Title"),
+          const Divider(),
+          const Card(
             /// Collapsed question 1
             margin: EdgeInsets.all(15.0),
             child: Column(children: [
@@ -32,12 +44,12 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
               ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [const Text("Open-ended")],
+                children: [Text("Open-ended")],
               )
             ]),
           ),
-          Divider(),
-          Card(
+          const Divider(),
+          const Card(
 
               /// Expanded visible question
               margin: EdgeInsets.all(15.0),
@@ -81,22 +93,34 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
                   )
                 ])
               ),
-              Divider(),
+              const Divider(),
               /// Answer Type Selection
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                Text("Format response:", style: TextStyle(fontWeight: FontWeight.bold)),
-                Slider(
-                  onChanged: null,
-                  value: 50
-                )
-                  
-              ], /// end header row
-              )
+                const Text("Format response:", style: TextStyle(fontWeight: FontWeight.bold)),
+                TextButton(onPressed: _openFormatModal, child: const Text("Sliding Scale"))
+              ]),/// end header row
               
+              Slider(
+                  value: _sliderValue.toDouble(),
+                  onChanged: (double newValue) {
+                    setState(() {
+                      _sliderValue = newValue;
+                    });
+                  },
+                ),
+              Center(
+                child:ElevatedButton(onPressed: _openFormatModal, child: const Text("Add Question"))
+              ),
+              InputChip(onPressed: null, label: Text("Save Changes"), avatar: Icon(Icons.check))
         ],
       ),
     );
+  }
+
+  void _openFormatModal() {
+    // TODO: make this later, see the figma for the prototype
+    return;
   }
 }
