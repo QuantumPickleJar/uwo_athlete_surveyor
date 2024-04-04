@@ -24,7 +24,7 @@ class ComposeMessagePage extends StatelessWidget {
                 leadingIcon: Icon(Icons.search),
                 trailingIcon: Icon(Icons.clear)
               )
-            ),
+            ), 
           ),
           Card(           /// Subject line
             child: IntrinsicHeight(
@@ -44,13 +44,25 @@ class ComposeMessagePage extends StatelessWidget {
               ),
             ),
           Card(
-            margin: EdgeInsets.all(5),
-            child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-            Text("Request reply?"),
-            Switch(value: false, onChanged: null)
-          ]),
+            margin: EdgeInsets.all(12),
+            child: 
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Request reply?"),
+                    Switch(value: false, onChanged: null)]),
+                Divider(indent: 15, endIndent: 20),
+                Column(           /// Attachments
+                  children: [
+                    Text("Attachments", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text("No attachments", style: TextStyle(fontSize: 24, color: Colors.blueGrey))
+                    ],
+                )
+
+              ],
+            ),
           )
         ])
         );

@@ -62,7 +62,7 @@ class MainApp extends StatelessWidget
           Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
               onPressed:(){ navigateToPage(context, const ComposeMessagePage()); },
-              child: const Text("Screen 6: Inbox"))),
+              child: const Text("Screen 7: Message Composer"))),
           Padding(padding: const EdgeInsets.all(2.0),
             child: ElevatedButton(
               onPressed:(){ navigateToPage(context, PreviousFormsWidget(PreviousFormsModel())); }, 
