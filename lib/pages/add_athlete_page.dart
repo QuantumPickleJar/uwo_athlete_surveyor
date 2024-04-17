@@ -1,3 +1,4 @@
+import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart'; 
 
 class AddStudent extends StatefulWidget {
@@ -15,15 +16,10 @@ class _AddStudentState extends State<AddStudent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your App Title'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      appBar: defaultAppBar(
+        buildContext: context, 
+        title: "Add New Athlete", 
+        hasBackButton: true),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

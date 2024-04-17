@@ -1,3 +1,4 @@
+import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'individual_student_page.dart'; // Import the individual student screen
 import 'add_athlete_page.dart'; // Import the add athlete screen
@@ -51,9 +52,10 @@ class _StudentsState extends State<Students> {
     }
 
     return Scaffold( // Removed MaterialApp since it's already wrapped by the one in main
-      appBar: AppBar(
-        title: const Text('Your App Title'),
-      ),
+      appBar: defaultAppBar(
+        buildContext: context, 
+        title: "Students", 
+        hasBackButton: false),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

@@ -12,9 +12,13 @@ class ComposeMessagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar:
-            defaultAppBarWithActionButton(context, "Compose Message", Icons.send, () {
-          null;
-        }),
+            defaultAppBar(
+              buildContext: context, 
+              title: "Compose Message", 
+              hasBackButton: true, 
+              actionButton: defaultActionButton(
+                actionIcon: Icons.send, 
+                onPressed: () { null; })),
         body: const Column(children: [
           Card(               /// Recipients Input
             child: IntrinsicHeight(

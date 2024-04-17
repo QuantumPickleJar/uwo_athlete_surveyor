@@ -29,27 +29,32 @@ class _InboxPageState extends State<InboxPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: defaultAppBarWithActionButton(context, 'Inbox', Icons.email, () { navigateToPage(context, const ComposeMessagePage()); }),
-        body: Column(
-          children: [
-            DropdownMenu(dropdownMenuEntries: dropdownMenuEntries, hintText: "Inbox", width: MediaQuery.of(context).size.width-8),
-            const Padding(
-              padding: EdgeInsets.all(4.0),
-              child: SearchBar(
-                padding: MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16.0)),
-                leading: Icon(Icons.search))),
-            Expanded(
-              child: ListView.separated(
-                itemCount: widget.inboxModel.emailList.length,
-                separatorBuilder: (BuildContext context, int index) => const Divider(color: Colors.transparent, height: 1.0),
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    child: RadioListTile(
-                      value: true,          //temp
-                      groupValue: null,     //temp
-                      onChanged: (value){}, //temp
-                      title: Text("${widget.inboxModel.emailList[index].receivedDate}\nFrom: ${widget.inboxModel.emailList[index].from}\n${widget.inboxModel.emailList[index].subject}\n"),
-                      subtitle: Text(widget.inboxModel.emailList[index].body)
-                    ));}))]));
+      appBar: defaultAppBar( 
+        buildContext: context, 
+        title: 'Inbox', 
+        hasBackButton: false, 
+        actionButton: defaultActionButton(
+          actionIcon: Icons.email, 
+          onPressed: () { navigateToPage(context, const ComposeMessagePage()); })),
+      body: Column(
+        children: [
+          DropdownMenu(dropdownMenuEntries: dropdownMenuEntries, hintText: "Inbox", width: MediaQuery.of(context).size.width-8),
+          const Padding(
+            padding: EdgeInsets.all(4.0),
+            child: SearchBar(
+              padding: MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16.0)),
+              leading: Icon(Icons.search))),
+          Expanded(
+            child: ListView.separated(
+              itemCount: widget.inboxModel.emailList.length,
+              separatorBuilder: (BuildContext context, int index) => const Divider(color: Colors.transparent, height: 1.0),
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  child: RadioListTile(
+                    value: true,          //temp
+                    groupValue: null,     //temp
+                    onChanged: (value){}, //temp
+                    title: Text("${widget.inboxModel.emailList[index].receivedDate}\nFrom: ${widget.inboxModel.emailList[index].from}\n${widget.inboxModel.emailList[index].subject}\n"),
+                    subtitle: Text(widget.inboxModel.emailList[index].body)));}))]));
   }
 }

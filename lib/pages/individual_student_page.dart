@@ -1,3 +1,4 @@
+import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
 
 class IndividualStudentScreen extends StatelessWidget {
@@ -8,9 +9,10 @@ class IndividualStudentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(studentData['name']), // Assuming 'title' contains the student's name
-      ),
+      appBar: defaultAppBar(
+        buildContext: context, 
+        title: studentData['name'], 
+        hasBackButton: true),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

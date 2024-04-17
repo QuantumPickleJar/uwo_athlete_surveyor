@@ -1,5 +1,4 @@
 // ignore_for_file: library_private_types_in_public_api
-import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/models/individual_form_examination_model.dart';
 import 'package:athlete_surveyor/pages/individual_form_examination_page.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +30,7 @@ class _PreviousFormsPageState extends State<PreviousFormsPage>
   @override
   Widget build(BuildContext context) 
   {
-    return Scaffold(
-      appBar: defaultAppBar(context, "Previous Forms"),
-      body: Column(
+    return Column(
         children: [
           Expanded(
             child: GridView.builder(
@@ -50,6 +47,6 @@ class _PreviousFormsPageState extends State<PreviousFormsPage>
                       title: Text("${widget.formModel.formsList[index].formName}\n~ ${widget.formModel.formsList[index].sport} ~\n", textAlign: TextAlign.center), titleAlignment: ListTileTitleAlignment.center,
                       subtitle: Text("Received:\n${widget.formModel.formsList[index].dateReceived}\nCompleted:\n${widget.formModel.formsList[index].dateCompleted}", textAlign: TextAlign.center),
                       onTap:(){ navigateToPage(context, IndividualFormWidget(widget.formModel.formsList[index].formName, widget.formModel.formsList[index].sport, IndividualFormExaminationModel())); }
-                    )));}))]));
+                    )));}))]);
   }
 }
