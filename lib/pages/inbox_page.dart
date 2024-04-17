@@ -1,19 +1,21 @@
+import 'package:athlete_surveyor/pages/compose_message_page.dart';
+import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:flutter/material.dart';
 
 // Widget representing an Email inbox.
-class InboxWidget extends StatefulWidget
+class InboxPage extends StatefulWidget
 {
   final InboxModel inboxModel;
-  const InboxWidget(this.inboxModel, {super.key});
+  const InboxPage(this.inboxModel, {super.key});
 
   @override
-  State<StatefulWidget> createState() => _InboxWidgetState();
+  State<StatefulWidget> createState() => _InboxPageState();
 }
 
 // InboxWidget State
-class _InboxWidgetState extends State<InboxWidget>
+class _InboxPageState extends State<InboxPage>
 {
   String initialSelection = "Inbox";
 
@@ -27,7 +29,7 @@ class _InboxWidgetState extends State<InboxWidget>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: defaultAppBarWithActionButton(context, 'Inbox', Icons.email, () { null; }), //null temp; will be used to navigate to screen7 (new message) later
+      appBar: defaultAppBarWithActionButton(context, 'Inbox', Icons.email, () { navigateToPage(context, const ComposeMessagePage()); }),
         body: Column(
           children: [
             DropdownMenu(dropdownMenuEntries: dropdownMenuEntries, hintText: "Inbox", width: MediaQuery.of(context).size.width-8),

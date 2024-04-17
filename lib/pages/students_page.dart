@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'individual_student.dart'; // Import the individual student screen
-import 'add_athlete.dart'; // Import the add athlete screen
+import 'individual_student_page.dart'; // Import the individual student screen
+import 'add_athlete_page.dart'; // Import the add athlete screen
 
 void main() {
   runApp(MaterialApp( // Wrap the Students widget with MaterialApp

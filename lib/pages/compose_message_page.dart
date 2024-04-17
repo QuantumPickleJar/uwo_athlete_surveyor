@@ -14,7 +14,7 @@ class ComposeMessagePage extends StatelessWidget {
         appBar:
             defaultAppBarWithActionButton(context, "Compose Message", Icons.send, () {
           null;
-        }), //null temp; will be used to navigate to screen7 (new message) later
+        }),
         body: const Column(children: [
           Card(               /// Recipients Input
             child: IntrinsicHeight(
@@ -60,7 +60,6 @@ class ComposeMessagePage extends StatelessWidget {
                       Text("No attachments", style: TextStyle(fontSize: 24, color: Colors.blueGrey))
                     ],
                 )
-
               ],
             ),
           )

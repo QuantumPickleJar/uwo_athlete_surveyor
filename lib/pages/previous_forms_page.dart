@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
 
 //
-class PreviousFormsWidget extends StatefulWidget 
+class PreviousFormsPage extends StatefulWidget 
 {
   final PreviousFormsModel formModel;
-  const PreviousFormsWidget(this.formModel, {super.key});
+  const PreviousFormsPage(this.formModel, {super.key});
 
   @override
-  _PreviousFormsWidgetState createState() => _PreviousFormsWidgetState();
+  _PreviousFormsPageState createState() => _PreviousFormsPageState();
 }
 
 //
-class _PreviousFormsWidgetState extends State<PreviousFormsWidget>
+class _PreviousFormsPageState extends State<PreviousFormsPage>
 {
   //
   void navigateToPage(BuildContext context, Widget page)
