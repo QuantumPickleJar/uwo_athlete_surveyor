@@ -26,6 +26,15 @@ class _InboxPageState extends State<InboxPage>
     const DropdownMenuEntry(value: 3, label: "Sent"),
     const DropdownMenuEntry(value: 4, label: "Archived")];
 
+  /// Handles fetching inbox messages and populating ListView when received.
+  @override
+  void initState()
+  {
+    super.initState();
+
+    widget.inboxModel.getCluansFromDatabase();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
