@@ -1,17 +1,18 @@
+import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
 
-//
-class IndividualStudentWidget extends StatelessWidget {
+class IndividualStudentScreen extends StatelessWidget {
   final Map<String, dynamic> studentData;
 
-  const IndividualStudentWidget({super.key, required this.studentData});
+  const IndividualStudentScreen({Key? key, required this.studentData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(studentData['title']), // Assuming 'title' contains the student's name
-      ),
+      appBar: defaultAppBar(
+        buildContext: context, 
+        title: studentData['name'], 
+        hasBackButton: true),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -20,7 +21,7 @@ class IndividualStudentWidget extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.network(
+                Image.asset(
                   studentData['image'], // Assuming 'image' contains the URL of the student's image
                   width: 150,
                   height: 150,

@@ -18,29 +18,28 @@ class IndividualFormWidget extends StatefulWidget
 class _IndividualFormWidgetState extends State<IndividualFormWidget>
 {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) 
+  {
     return Scaffold(
-      appBar: defaultAppBar(context, widget.appBarTitle),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("~ ${widget.sportName} ~", style: const TextStyle(fontSize: 20.0),),
-            ),
-            Expanded(
-              child: ListView.separated(
-                itemCount: widget.individualModel.pairsList.length,
-                separatorBuilder: (BuildContext context, int index) => defaultListViewDivider,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    leading: Text("${index+1}."),
-                    title: Text("Q: ${widget.individualModel.pairsList[index].question}"),
-                    subtitle: Text("A: ${widget.individualModel.pairsList[index].answer}")
-                  );
-                },
-              ))
-          ],
-        ),
-    );
+      appBar: defaultAppBar(
+        buildContext: context, 
+        title: widget.appBarTitle, 
+        hasBackButton: true),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("~ ${widget.sportName} ~", style: const TextStyle(fontSize: 20.0),),
+          ),
+          Expanded(
+            child: ListView.separated(
+              itemCount: widget.individualModel.pairsList.length,
+              separatorBuilder: (BuildContext context, int index) => defaultListViewDivider,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  leading: Text("${index+1}."),
+                  title: Text("Q: ${widget.individualModel.pairsList[index].question}"),
+                  subtitle: Text("A: ${widget.individualModel.pairsList[index].answer}")
+                );}))]));
   }
 }
