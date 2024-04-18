@@ -11,6 +11,7 @@ import 'package:athlete_surveyor/pages/tabbed_main_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'models/student_model.dart';
 
 void main() 
 {
@@ -19,6 +20,7 @@ void main()
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => InboxModel()),
+        ChangeNotifierProvider(create: (context) => StudentsModel()),
         ChangeNotifierProvider(create: (context) => PreviousFormsModel())
       ],
       child: const MaterialApp(home: MainApp())

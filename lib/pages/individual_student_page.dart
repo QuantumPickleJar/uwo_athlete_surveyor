@@ -1,8 +1,9 @@
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:athlete_surveyor/models/student_model.dart';
 
 class IndividualStudentScreen extends StatelessWidget {
-  final Map<String, dynamic> studentData;
+  final Student studentData;
 
   const IndividualStudentScreen({Key? key, required this.studentData}) : super(key: key);
 
@@ -11,7 +12,7 @@ class IndividualStudentScreen extends StatelessWidget {
     return Scaffold(
       appBar: defaultAppBar(
         buildContext: context, 
-        title: studentData['name'], 
+        title: studentData.name, 
         hasBackButton: true),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -22,9 +23,8 @@ class IndividualStudentScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.asset(
-                  studentData['image'], // Assuming 'image' contains the URL of the student's image
-                  width: 150,
-                  height: 150,
+                  'assets/download-7.jpg', // Load image from asset
+                  fit: BoxFit.cover,
                 ),
                 const Padding(
                   padding: EdgeInsets.all(16.0),

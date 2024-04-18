@@ -1,24 +1,14 @@
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'individual_student_page.dart'; // Import the individual student screen
 import 'add_athlete_page.dart'; // Import the add athlete screen
+import '/models/student_model.dart';
 
-void main() {
-  runApp(MaterialApp( // Wrap the Students widget with MaterialApp
-   home: const Students(),
-  ));
-}
-
-class Student {//sets what each cluan will comprise of
-  String name;
-  String grade;
-  String sport;
-
-  Student({required this.name, required this.grade, required this.sport});
-}
 
 class Students extends StatefulWidget {
-  const Students({Key? key}) : super(key: key);
+  final StudentsModel model_of_student;
+  const Students(this.model_of_student, {Key? key}) : super(key: key);
 
   @override
   State<Students> createState() => _StudentsState();
@@ -31,24 +21,13 @@ class _StudentsState extends State<Students> {
 
   @override
   Widget build(BuildContext context) {
-    // Sample data for the list
-    List<Map<String, dynamic>> dataList = [
-      {
-        'name': 'Zucy Doe',
-        'grade': 'Grade: 9',
-        'sport': 'Sport: Tennis',
-        'image': 'assets/download-7.jpg', // Path to your image asset
-      },
-      
-      
-      
-    ];
-
+  
+  var model_of_student = Provider.of<StudentsModel>;
     // Sort data based on sorting criteria
     if (_sortBySport) {
-      dataList.sort((a, b) => a['sport'].compareTo(b['sport']));
+      widget.model_of_student.students.sort((a, b) => a.sport.compareTo(b.sport));
     } else if (_sortByGrade) {
-      dataList.sort((a, b) => a['grade'].compareTo(b['grade']));
+      widget.model_of_student.students.sort((a, b) => a.grade.compareTo(b.grade));
     }
 
     return Scaffold( // Removed MaterialApp since it's already wrapped by the one in main
@@ -113,7 +92,9 @@ class _StudentsState extends State<Students> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    _addAthlete(context); // Pass context to the function
+                    setState(() {
+                      _addAthlete(context); // Pass context to the function
+                    });
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.yellow),
@@ -125,28 +106,28 @@ class _StudentsState extends State<Students> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: dataList.length,
+              itemCount: widget.model_of_student.students.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   leading: SizedBox(
                     width: 50,
                     height: 50,
                     child: Image.asset(
-                      dataList[index]['image'], // Load image from asset
+                      'assets/download-7.jpg', // Load image from asset
                       fit: BoxFit.cover,
                     ),
                   ),
-                  title: Text(dataList[index]['name']),
+                  title: Text(widget.model_of_student.students[index].name),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(dataList[index]['grade']),
-                      Text(dataList[index]['sport']),
+                      Text(widget.model_of_student.students[index].grade),
+                      Text(widget.model_of_student.students[index].sport),
                     ],
                   ),
                   trailing: ElevatedButton(
                     onPressed: () {
-                      _moreInfo(context, dataList[index]);
+                      _moreInfo(context, widget.model_of_student.students[index]);
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.yellow),
@@ -162,7 +143,7 @@ class _StudentsState extends State<Students> {
     );
   }
 
-  void _moreInfo(BuildContext context, Map<String, dynamic> studentData) {
+  void _moreInfo(BuildContext context, Student studentData) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => IndividualStudentScreen(studentData: studentData)),
@@ -173,7 +154,7 @@ class _StudentsState extends State<Students> {
     // Navigate to the AddStudent screen
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const AddStudent()),
+      MaterialPageRoute(builder: (context) => AddStudent(widget.model_of_student)),
     );
   }
 }

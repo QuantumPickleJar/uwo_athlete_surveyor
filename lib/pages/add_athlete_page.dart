@@ -1,8 +1,12 @@
+import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; 
+
 
 class AddStudent extends StatefulWidget {
-  const AddStudent({Key? key}) : super(key: key);
+  final StudentsModel student_model;
+  const AddStudent(this.student_model, {Key? key}) : super(key: key);
 
   @override
   State<AddStudent> createState() => _AddStudentState();
@@ -13,8 +17,18 @@ class _AddStudentState extends State<AddStudent> {
   final TextEditingController _gradeController = TextEditingController();
   final TextEditingController _sportController = TextEditingController();
 
+  void _addStudent(BuildContext context) {
+    
+    widget.student_model.addStudent(
+      Student(name: _nameController.text, grade: _gradeController.text, sport: _sportController.text,)
+    );
+    Navigator.pop(context); // Pop the AddStudent page from the navigation stack
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    //final studentModel = Provider.of<StudentsModel>(context, listen: false);
     return Scaffold(
       appBar: defaultAppBar(
         buildContext: context, 
@@ -110,9 +124,7 @@ class _AddStudentState extends State<AddStudent> {
             const SizedBox(height: 20), 
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  // Add functionality to handle adding student
-                },
+                onPressed: () => _addStudent,
                 child: const Text('Add Student'),
               ),
             ),

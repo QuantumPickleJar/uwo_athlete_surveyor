@@ -1,3 +1,4 @@
+import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/pages/students_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class AdminHomePage extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(onPressed:(){ navigateToPage(context, const Students()); }, 
+                      child: ElevatedButton(onPressed:(){ navigateToPage(context, Students(StudentsModel())); }, 
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
                         child: const SizedBox(width: 200, height: 50, child: Center(child: Text('View Student Forms', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))))),
                     Padding(
