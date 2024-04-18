@@ -6,15 +6,15 @@ import 'add_athlete_page.dart'; // Import the add athlete screen
 import '/models/student_model.dart';
 
 
-class Students extends StatefulWidget {
-  final StudentsModel model_of_student;
-  const Students(this.model_of_student, {Key? key}) : super(key: key);
+class StudentsWidget extends StatefulWidget {
+  final StudentsModel studentModel;
+  const StudentsWidget(this.studentModel, {Key? key}) : super(key: key);
 
   @override
-  State<Students> createState() => _StudentsState();
+  State<StudentsWidget> createState() => _StudentsWidgetState();
 }
 
-class _StudentsState extends State<Students> {
+class _StudentsWidgetState extends State<StudentsWidget> {
   // Define sorting criteria
   bool _sortBySport = false;
   bool _sortByGrade = false;
@@ -25,9 +25,9 @@ class _StudentsState extends State<Students> {
   var model_of_student = Provider.of<StudentsModel>;
     // Sort data based on sorting criteria
     if (_sortBySport) {
-      widget.model_of_student.students.sort((a, b) => a.sport.compareTo(b.sport));
+      widget.studentModel.students.sort((a, b) => a.sport.compareTo(b.sport));
     } else if (_sortByGrade) {
-      widget.model_of_student.students.sort((a, b) => a.grade.compareTo(b.grade));
+      widget.studentModel.students.sort((a, b) => a.grade.compareTo(b.grade));
     }
 
     return Scaffold( // Removed MaterialApp since it's already wrapped by the one in main
@@ -106,7 +106,7 @@ class _StudentsState extends State<Students> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: widget.model_of_student.students.length,
+              itemCount: widget.studentModel.students.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   leading: SizedBox(
@@ -117,17 +117,17 @@ class _StudentsState extends State<Students> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  title: Text(widget.model_of_student.students[index].name),
+                  title: Text(widget.studentModel.students[index].name),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.model_of_student.students[index].grade),
-                      Text(widget.model_of_student.students[index].sport),
+                      Text(widget.studentModel.students[index].grade),
+                      Text(widget.studentModel.students[index].sport),
                     ],
                   ),
                   trailing: ElevatedButton(
                     onPressed: () {
-                      _moreInfo(context, widget.model_of_student.students[index]);
+                      _moreInfo(context, widget.studentModel.students[index]);
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.yellow),
@@ -151,10 +151,10 @@ class _StudentsState extends State<Students> {
   }
 
   void _addAthlete(BuildContext context) {
-    // Navigate to the AddStudent screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddStudent(widget.model_of_student)),
-    );
-  }
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => AddStudent(widget.studentModel)),
+  );
+}
+
 }

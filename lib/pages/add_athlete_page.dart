@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 
 
 class AddStudent extends StatefulWidget {
-  final StudentsModel student_model;
-  const AddStudent(this.student_model, {Key? key}) : super(key: key);
+  final StudentsModel studentsModel;
+  const AddStudent(this.studentsModel, {super.key});
 
   @override
   State<AddStudent> createState() => _AddStudentState();
@@ -19,10 +19,18 @@ class _AddStudentState extends State<AddStudent> {
 
   void _addStudent(BuildContext context) {
     
-    widget.student_model.addStudent(
-      Student(name: _nameController.text, grade: _gradeController.text, sport: _sportController.text,)
-    );
-    Navigator.pop(context); // Pop the AddStudent page from the navigation stack
+     // Create a new Student object using the data from the text controllers
+  Student newStudent = Student(
+    name: _nameController.text,
+    grade: _gradeController.text,
+    sport: _sportController.text,
+  );
+  // Navigate back to the previous page
+  Navigator.pop(context);
+  // Call the addStudent method from the model to add the new student
+  widget.studentsModel.addStudent(newStudent);
+
+  
   }
 
 
@@ -124,7 +132,7 @@ class _AddStudentState extends State<AddStudent> {
             const SizedBox(height: 20), 
             Center(
               child: ElevatedButton(
-                onPressed: () => _addStudent,
+                onPressed: () => _addStudent(context),
                 child: const Text('Add Student'),
               ),
             ),

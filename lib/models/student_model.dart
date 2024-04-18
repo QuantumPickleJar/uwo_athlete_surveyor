@@ -17,7 +17,7 @@ class Student {
   final String grade;
   final String sport;
 
-  Student({
+  Student( {
     required this.name,
     required this.grade,
     required this.sport,
