@@ -9,7 +9,7 @@ class Database
   static const String _dbUser = "joshhill";
   static const String _dbPass = "0LMiuWwPzCfrlub7YlKxpw";
 
-  // static const String _insertCluan = "INSERT INTO cluans (answer, clue, date_created) VALUES (@answer, @clue, @date);";
+  // static const String _insertCluan = "INSERT INTO cluans (answer, clue, date_created) VALUES (@answer, @clue, @date);"; //REFERENCE
   static const String _getEmailsQuery = "SELECT date_received, address_from, subject_line, body FROM tbl_inbox;";
 
   /// Open connection to the database.
@@ -53,6 +53,7 @@ class Database
     } 
   }
 
+//REFERENCE
   // /// Insert new Cluan into Cluans table.
   // static Future<void> insertCluan(String answer, String clue, String date) async 
   // {

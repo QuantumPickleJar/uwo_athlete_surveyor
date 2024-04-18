@@ -4,7 +4,7 @@ import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:flutter/material.dart';
 
-// Widget representing an Email inbox.
+/// Widget representing an Email inbox.
 class InboxPage extends StatefulWidget
 {
   final InboxModel inboxModel;
@@ -14,7 +14,7 @@ class InboxPage extends StatefulWidget
   State<StatefulWidget> createState() => _InboxPageState();
 }
 
-// InboxWidget State
+/// InboxWidget State
 class _InboxPageState extends State<InboxPage>
 {
   String initialSelection = "Inbox";
