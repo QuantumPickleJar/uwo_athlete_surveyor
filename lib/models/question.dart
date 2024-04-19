@@ -8,19 +8,21 @@ import 'response.dart';
 /// created/modified by department staff, and doled out to students for 
 /// collection of their results in an organized fashion
 class Question { 
-  /// used to control the ordering of the question when loaded on a form
-  late int? ordinal;
+  String questionId;
   late String header;   /// TODO: this should default to the ordinal
   late String content;
   late bool resRequired;
-  
   /// Controls what widget will be shown to students when loaded
   late ResponseType resFormat;
+  
+  /// used to control the ordering of the question when loaded on a form
+  late int? ordinal;
   
   /// (Optional) supplements the [content], ideally an IMG, PDF, etc.
   File? linkedFile;
 
   Question({
+    required this.questionId,
     required this.ordinal, 
     required this.header,
     required this.content,
