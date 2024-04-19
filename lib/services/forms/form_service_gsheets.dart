@@ -1,15 +1,16 @@
-
-import 'package:athlete_surveyor/models/StudentForm.dart';
+import 'package:athlete_surveyor/models/student_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:gsheets/gsheets.dart';
 import 'package:uuid/uuid.dart';
 
+@Deprecated('This is only to be used when (and if) we\'re ready to switch' +
+'from storing forms on cockroach to storing them in a google sheet')
 class FormService {
   final GSheets gsheets;
   final Spreadsheet spreadsheet;
   late Worksheet formSheet;
 
-  FormService(this.gsheets, String spreadsheetId) {
+  FormService(this.gsheets, String spreadsheetId, this.spreadsheet) {
     _init(spreadsheetId);
   }
 
