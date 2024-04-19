@@ -1,7 +1,8 @@
 import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; 
+import '/models/student_model.dart';
+//import 'package:provider/provider.dart'; 
 
 
 class AddStudent extends StatefulWidget {
@@ -32,6 +33,29 @@ class _AddStudentState extends State<AddStudent> {
 
   
   }
+
+  void _submitForm() {
+  // Validate form fields and retrieve data
+  String name = _nameController.text;
+  String grade = _gradeController.text;
+  String sport = _sportController.text;
+
+  widget.studentsModel.addStudentToDatabase(name, grade, sport)
+      .then((_) {
+    // Clear form fields
+    _nameController.clear();
+    _gradeController.clear();
+    _sportController.clear();
+
+    // Navigate back to the previous screen
+    Navigator.pop(context);
+  }).catchError((error) {
+    // Handle error
+    print('Error adding student: $error');
+    // Show error message to the user
+  });
+}
+
 
 
   @override

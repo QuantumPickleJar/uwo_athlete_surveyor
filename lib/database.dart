@@ -11,7 +11,7 @@ class Database
 
   // static const String _insertCluan = "INSERT INTO cluans (answer, clue, date_created) VALUES (@answer, @clue, @date);"; //REFERENCE
   static const String _getEmailsQuery = "SELECT date_received, address_from, subject_line, body FROM tbl_inbox;";
-  static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
+  static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList";  static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
 
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
@@ -40,7 +40,6 @@ class Database
     { 
       conn = await getOpenConnection(); 
       final Result result = await conn.execute(_getEmailsQuery);
- 
       return result;
     } 
     catch (e) 
@@ -54,15 +53,15 @@ class Database
     } 
   }
 
-  /// Get all previous forms from the database.
-  static Future<Result> fetchPreviousForms() async 
+  //fetching the student list
+
+   static Future<Result> fetchStudents() async 
   { 
     Connection? conn; 
     try 
     { 
       conn = await getOpenConnection(); 
-      final Result result = await conn.execute(_getPreviousFormsQuery);
- 
+      final Result result = await conn.execute(_getStudentList);
       return result;
     } 
     catch (e) 

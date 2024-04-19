@@ -1,6 +1,6 @@
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 import 'individual_student_page.dart'; // Import the individual student screen
 import 'add_athlete_page.dart'; // Import the add athlete screen
 import '/models/student_model.dart';
@@ -20,9 +20,17 @@ class _StudentsWidgetState extends State<StudentsWidget> {
   bool _sortByGrade = false;
 
   @override
+  void initState()
+  {
+    super.initState();
+
+    widget.studentModel.fetchStudentsFromDatabase();
+  }
+
+  @override
   Widget build(BuildContext context) {
   
-  var model_of_student = Provider.of<StudentsModel>;
+  //var model_of_student = Provider.of<StudentsModel>;
     // Sort data based on sorting criteria
     if (_sortBySport) {
       widget.studentModel.students.sort((a, b) => a.sport.compareTo(b.sport));
