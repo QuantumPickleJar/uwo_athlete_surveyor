@@ -1,9 +1,9 @@
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
 import 'package:athlete_surveyor/pages/admin_home_page.dart';
-import 'package:athlete_surveyor/pages/inbox_page.dart';
+import 'package:athlete_surveyor/pages/common/inbox_page.dart';
 import 'package:athlete_surveyor/pages/previous_forms_page.dart';
-import 'package:athlete_surveyor/pages/student_home_page.dart';
+import 'package:athlete_surveyor/pages/students/student_home_page.dart';
 import 'package:athlete_surveyor/resources/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
