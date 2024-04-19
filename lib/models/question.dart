@@ -12,7 +12,7 @@ class Question {
   late bool res_required;
   
   /// Controls what widget will be shown to students when loaded
-  ResponseType _resFormat;
+  late ResponseType _resFormat;
   
   /// (Optional) supplements the [content] ideally an IMG, PDF, etc.
   File? _linkedFile;
@@ -46,7 +46,10 @@ class Question {
 /// This should include whatever we need to:
 /// - (staff) supply the dropdown displayed for this question when loaded in FormEditor
 /// - (student) tell the UI layer what widget to place in the Question
-class ResponseType {
-
-
+enum ResponseWidgetType {
+  text,
+  radio,
+  checkbox,
+  slider,
+  dropdown
 }
