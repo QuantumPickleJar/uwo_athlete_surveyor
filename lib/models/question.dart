@@ -8,7 +8,7 @@ class Question {
   /// used to control the ordering of the question when loaded on a form
   late int? ordinal;
   /// TODO: ask GPT/prof if late is appropriate approach for async data
-  late String header;
+  late String header;   /// TODO: this should default to the ordinal
   late String content;
   late bool res_required;
   
@@ -19,13 +19,6 @@ class Question {
   File? _linkedFile;
 
   /// Gets the desired format the response will be
-  /// 
-  /// ===TARGET_BLOCK_START===
-  /// Something to ask GPT about:  
-  /// Since the purpose of ResponseType is to succinctly convey
-  /// the type of widget that this [Question] would show when 
-  /// the parent Form is of type [StudentForm].
-  /// ===TARGET_BLOCK_END===
   ResponseType get resFormat => _resFormat;
 
   /// Sets the format of the response
