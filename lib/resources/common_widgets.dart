@@ -30,7 +30,7 @@ IconButton defaultActionButton({required IconData actionIcon, required void Func
     icon: Icon(
       actionIcon, 
       color: Colors.black), 
-    onPressed:(){ onPressed; });
+    onPressed: onPressed);
 }
 
 // The default style of the ListViewDivider.
