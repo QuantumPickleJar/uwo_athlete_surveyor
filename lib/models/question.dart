@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:athlete_surveyor/models/response_type.dart';
 
 /// Represents an individual question found on a survey-like form that's 
 /// created/modified by department staff, and doled out to students for 
@@ -32,7 +33,7 @@ class Question {
     _resFormat = value;
   }
 
-  /// Gets the linked files of the question
+  /// If there is a file associated with this question, fetch it
   File? get linkedFile => _linkedFile;
 
   /// Sets which file (if any) is attached 
