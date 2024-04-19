@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:uuid/uuid.dart';
 
 /// The base Form object that is loaded full of content via one of 
@@ -6,7 +7,8 @@ abstract class IGenericForm {
   /// getter syntax, enforcing use of a concrete implementation
   String get formName;  
   String get sport;
-  
+  List<File>? attachments; 
+
   /// Save changes/answers to the current form
   void saveForm(); 
 

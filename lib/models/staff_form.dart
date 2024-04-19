@@ -1,7 +1,7 @@
-// TODO Implement this library.import 'package:athlete_surveyor/models/interfaces/IGenericForm.dart';
+import 'dart:io';
+import 'interfaces/IGenericForm.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
-import 'interfaces/IGenericForm.dart';
 
 /// A concrete implementation of [IGenericForm], tailored for what students will see.
 /// This includes the loading of a form to *take* a survey, as well as the ability to 
@@ -22,8 +22,11 @@ class StudentForm implements IGenericForm {
   
   late final DateTime? formDateReceived;
   final DateTime? formDateCompleted;
+  
+  /// TODO: this should be populated by the form_file_service
+  List<File>? attachments = [];
 
-  // Map<Question, List<Response>> used later in analytics
+  // Map<Question, List<Response>> used later in analytics, ABOVE this scope
   List<Question> questions = [];
 
   /// Constructs a new StudentForm
