@@ -42,15 +42,3 @@ class Question {
   }
 }
 
-/// Used to represent the various formats that students wll be 
-/// using to input their answers.  
-/// This should include whatever we need to:
-/// - (staff) supply the dropdown displayed for this question when loaded in FormEditor
-/// - (student) tell the UI layer what widget to place in the Question
-enum ResponseWidgetType {
-  text,
-  radio,
-  checkbox,
-  slider,
-  dropdown
-}
