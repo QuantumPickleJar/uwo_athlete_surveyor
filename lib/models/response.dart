@@ -2,6 +2,7 @@
 /// Since the form of their response will vary, we call 
 /// it the generic type T.
 ///
+import 'question.dart';
 import 'response_type.dart';
 
 class Response<T> {
@@ -19,5 +20,18 @@ class Response<T> {
   Response({ 
     required this.questionId, 
     required this.answer,
-    required this.responseType});
+    required this.responseType
+  });
+
+  /// Creates a response wrapping [answer] based on the [responseType]
+  static Response<dynamic> fromAnswer(Question question, dynamic answer) {
+    // TODO: conditionally format based on question.resFormat
+    
+    return Response<dynamic>(
+      questionId: question.questionId,
+      answer: answer,
+      responseType: question.resFormat
+    );
+  }
+
 }
