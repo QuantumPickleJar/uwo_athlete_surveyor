@@ -6,6 +6,7 @@ import 'response.dart';
 
 /// Represents an individual question found on a survey-like form that's 
 /// created/modified by department staff, and doled out to students for 
+/// 
 /// collection of their results in an organized fashion
 class Question { 
   String questionId;
