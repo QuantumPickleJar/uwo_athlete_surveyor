@@ -5,7 +5,8 @@ import 'package:uuid/uuid.dart';
 abstract class IGenericForm {
   /// getter syntax, enforcing use of a concrete implementation
   String get formName;  
-   
+  String get sport;
+  
   /// Save changes/answers to the current form
   void saveForm(); 
 
