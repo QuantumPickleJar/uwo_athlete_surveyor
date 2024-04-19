@@ -121,7 +121,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                     width: 50,
                     height: 50,
                     child: Image.asset(
-                      'assets/download-7.jpg', // Load image from asset
+                      'lib/resources/images/download-7.jpg', // Load image from asset
                       fit: BoxFit.cover,
                     ),
                   ),

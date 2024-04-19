@@ -15,40 +15,42 @@ class IndividualStudentScreen extends StatelessWidget {
         title: studentData.name, 
         hasBackButton: true),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.asset(
-                  'assets/download-7.jpg', // Load image from asset
-                  fit: BoxFit.cover,
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Line 1',
-                        textAlign: TextAlign.right,
-                      ),
-                      SizedBox(height: 20), // Spacer between lines
-                      Text(
-                        'Line 2',
-                        textAlign: TextAlign.right,
-                      ),
-                      SizedBox(height: 20), // Spacer between lines
-                      Text(
-                        'Line 3',
-                        textAlign: TextAlign.right,
-                      ),
-                      SizedBox(height: 20),
-                    ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'lib/resources/images/download-7.jpg', // Load image from asset
+                    fit: BoxFit.cover,
                   ),
-                ), // Spacer between lines
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Name: ' + studentData.name,
+                        ),
+                        SizedBox(height: 20), // Spacer between lines
+                        Text(
+                          'Grade: ' + studentData.grade,
+                    
+                        ),
+                        SizedBox(height: 20), // Spacer between lines
+                        Text(
+                          'Sport: ' + studentData.sport,
+                        ),
+                        SizedBox(height: 20),
+                      ],
+                    ),
+                  ), // Spacer between lines
+                ],
+              ),
             ),
             const SizedBox(height: 20), // Spacer between the Row and the additional Column
             const Column(
@@ -88,7 +90,7 @@ class IndividualStudentScreen extends StatelessWidget {
             Expanded(
               // Wrap the Column containing the elevated button with Expanded
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   const Text("Analytics of 'Student's name'"),
                   Image.network(

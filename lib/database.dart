@@ -11,7 +11,11 @@ class Database
 
   // static const String _insertCluan = "INSERT INTO cluans (answer, clue, date_created) VALUES (@answer, @clue, @date);"; //REFERENCE
   static const String _getEmailsQuery = "SELECT date_received, address_from, subject_line, body FROM tbl_inbox;";
-  static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList";  static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
+
+  static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList"; 
+   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
+
+  static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport) VALUES (@studentName, @grade, @sport)";
 
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
@@ -74,6 +78,25 @@ class Database
       conn?.close();
     } 
   }
+//connects the app to the data base and gets the athletes put in on the app into the database
+static Future<void> insertAthlete(String studentName, String grade, String sport) async {
+      Connection? conn;
+      try{
+        conn = await getOpenConnection(); 
+        await conn.execute(Sql.named(_insertAthlete),
+        parameters: {'student_name': studentName, 'grade': grade, 'sport': sport}
+        );
+        print('Connected successfully.');
+      }
+      catch (e){
+        print('Error inserting data: $e');
+        rethrow;
+        }
+        finally
+        {
+        conn?.close();
+      } 
+    }
 
 //REFERENCE
   // /// Insert new Cluan into Cluans table.

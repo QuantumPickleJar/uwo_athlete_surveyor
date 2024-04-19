@@ -156,7 +156,7 @@ class _AddStudentState extends State<AddStudent> {
             const SizedBox(height: 20), 
             Center(
               child: ElevatedButton(
-                onPressed: () => _addStudent(context),
+                onPressed: () => _submitForm(),
                 child: const Text('Add Student'),
               ),
             ),

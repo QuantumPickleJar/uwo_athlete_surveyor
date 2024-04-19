@@ -11,6 +11,9 @@ Future<void> addStudentToDatabase(String name, String grade, String sport) async
     Connection conn = await Database.getOpenConnection();
     await conn.execute("INSERT INTO tbl_studentlist (student_name, grade, sport) VALUES (\$1, \$2, \$3)",
         parameters: [name, grade, sport]);
+        students.clear();
+        fetchStudentsFromDatabase();//will repopulate the List with the new added student
+        notifyListeners();
   } catch (e) {
     print('Error adding student to database: $e');
     rethrow;
@@ -31,7 +34,6 @@ Future<void> addStudentToDatabase(String name, String grade, String sport) async
         final Student student = Student(name: name, grade: grade, sport: sport);
         students.add(student);
       }
-      
       // Notify listeners that the data has been fetched
       notifyListeners();
     } catch (e) {
