@@ -8,7 +8,7 @@ import '/models/student_model.dart';
 
 class StudentsWidget extends StatefulWidget {
   final StudentsModel studentModel;
-  const StudentsWidget(this.studentModel, {Key? key}) : super(key: key);
+  const StudentsWidget(this.studentModel, {super.key});
 
   @override
   State<StudentsWidget> createState() => _StudentsWidgetState();

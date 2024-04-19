@@ -15,7 +15,6 @@ import 'models/student_model.dart';
 
 void main() 
 {
-  //runApp(const MaterialApp(home: MainApp()));
   runApp(
     MultiProvider(
       providers: [
@@ -50,10 +49,10 @@ class MainApp extends StatelessWidget
                 ),
               ),
               const Text('Be Better Initiative', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-              ElevatedButton(onPressed: (){ navigateToPage(context, TabbedMainPage(isAdmin: false)); }, 
+              ElevatedButton(onPressed: (){ navigateToPage(context, const TabbedMainPage(isAdmin: false)); }, 
                 style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
                 child: const SizedBox(child: Center(child: Text('Log in using UWO ID', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
-              ElevatedButton(onPressed: (){ navigateToPage(context, TabbedMainPage(isAdmin: true)); }, 
+              ElevatedButton(onPressed: (){ navigateToPage(context, const TabbedMainPage(isAdmin: true)); }, 
                 style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
                 child: const SizedBox(child: Center(child: Text('Log in using UWO ID (ADMIN)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))))
             ]),

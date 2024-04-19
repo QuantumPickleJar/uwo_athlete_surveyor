@@ -1,5 +1,5 @@
 import "package:athlete_surveyor/resources/common_widgets.dart";
-import "package:athlete_surveyor/widgets/ExpandedTextField.dart";
+import "package:athlete_surveyor/widgets/expanded_text_file.dart";
 import "package:flutter/material.dart";
 
 class ComposeMessagePage extends StatelessWidget {

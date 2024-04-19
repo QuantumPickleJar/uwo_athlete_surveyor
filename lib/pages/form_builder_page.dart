@@ -1,8 +1,10 @@
-import 'package:athlete_surveyor/widgets/ExpandedTextField.dart';
+// ignore_for_file: library_private_types_in_public_api
+
+import 'package:athlete_surveyor/widgets/expanded_text_file.dart';
 import 'package:flutter/material.dart';
     
 class FormBuilderPage extends StatefulWidget {
-  const FormBuilderPage({Key? key}) : super(key: key);
+  const FormBuilderPage({super.key});
 
   @override
   _FormBuilderPageState createState() => _FormBuilderPageState();
@@ -32,7 +34,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
                   ]),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [const Text("Open-ended")],
+                  children: [Text("Open-ended")],
                   )
               ]),
           ),

@@ -1,11 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
-import '/models/student_model.dart';
-//import 'package:provider/provider.dart'; 
 
-
-class AddStudent extends StatefulWidget {
+class AddStudent extends StatefulWidget 
+{
   final StudentsModel studentsModel;
   const AddStudent(this.studentsModel, {super.key});
 
@@ -13,54 +13,37 @@ class AddStudent extends StatefulWidget {
   State<AddStudent> createState() => _AddStudentState();
 }
 
-class _AddStudentState extends State<AddStudent> {
+class _AddStudentState extends State<AddStudent> 
+{
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _gradeController = TextEditingController();
   final TextEditingController _sportController = TextEditingController();
 
-  void _addStudent(BuildContext context) {
-    
-     // Create a new Student object using the data from the text controllers
-  Student newStudent = Student(
-    name: _nameController.text,
-    grade: _gradeController.text,
-    sport: _sportController.text,
-  );
-  // Navigate back to the previous page
-  Navigator.pop(context);
-  // Call the addStudent method from the model to add the new student
-  widget.studentsModel.addStudent(newStudent);
+  void _submitForm() 
+  {
+    // Validate form fields and retrieve data
+    String name = _nameController.text;
+    String grade = _gradeController.text;
+    String sport = _sportController.text;
 
-  
+    widget.studentsModel.addStudentToDatabase(name, grade, sport)
+        .then((_) {
+      // Clear form fields
+      _nameController.clear();
+      _gradeController.clear();
+      _sportController.clear();
+
+      // Navigate back to the previous screen
+      Navigator.pop(context);
+    }).catchError((error) {
+      // Handle error
+      print('Error adding student: $error');
+      // Show error message to the user
+    });
   }
-
-  void _submitForm() {
-  // Validate form fields and retrieve data
-  String name = _nameController.text;
-  String grade = _gradeController.text;
-  String sport = _sportController.text;
-
-  widget.studentsModel.addStudentToDatabase(name, grade, sport)
-      .then((_) {
-    // Clear form fields
-    _nameController.clear();
-    _gradeController.clear();
-    _sportController.clear();
-
-    // Navigate back to the previous screen
-    Navigator.pop(context);
-  }).catchError((error) {
-    // Handle error
-    print('Error adding student: $error');
-    // Show error message to the user
-  });
-}
-
-
 
   @override
   Widget build(BuildContext context) {
-    //final studentModel = Provider.of<StudentsModel>(context, listen: false);
     return Scaffold(
       appBar: defaultAppBar(
         buildContext: context, 

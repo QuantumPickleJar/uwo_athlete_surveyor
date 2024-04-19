@@ -5,7 +5,7 @@ import 'package:athlete_surveyor/models/student_model.dart';
 class IndividualStudentScreen extends StatelessWidget {
   final Student studentData;
 
-  const IndividualStudentScreen({Key? key, required this.studentData}) : super(key: key);
+  const IndividualStudentScreen({super.key, required this.studentData});
 
   @override
   Widget build(BuildContext context) {
@@ -34,18 +34,18 @@ class IndividualStudentScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Name: ' + studentData.name,
+                          'Name: ${studentData.name}',
                         ),
-                        SizedBox(height: 20), // Spacer between lines
+                        const SizedBox(height: 20), // Spacer between lines
                         Text(
-                          'Grade: ' + studentData.grade,
+                          'Grade: ${studentData.grade}',
                     
                         ),
-                        SizedBox(height: 20), // Spacer between lines
+                        const SizedBox(height: 20), // Spacer between lines
                         Text(
-                          'Sport: ' + studentData.sport,
+                          'Sport: ${studentData.sport}',
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ), // Spacer between lines
