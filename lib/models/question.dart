@@ -1,44 +1,48 @@
 import 'dart:io';
 import 'package:athlete_surveyor/models/response_type.dart';
+import 'package:uuid/uuid.dart';
+
+import 'response.dart';
 
 /// Represents an individual question found on a survey-like form that's 
 /// created/modified by department staff, and doled out to students for 
+/// 
 /// collection of their results in an organized fashion
 class Question { 
+  String questionId;
+  late String header;   /// TODO: this should default to the ordinal
+  late String content;
+  late bool resRequired;
+  /// Controls what widget will be shown to students when loaded
+  late ResponseType resFormat;
+  
   /// used to control the ordering of the question when loaded on a form
   late int? ordinal;
-  /// TODO: ask GPT/prof if late is appropriate approach for async data
-  late String header;
-  late String content;
-  late bool res_required;
   
-  /// Controls what widget will be shown to students when loaded
-  late ResponseType _resFormat;
-  
-  /// (Optional) supplements the [content] ideally an IMG, PDF, etc.
-  File? _linkedFile;
+  /// (Optional) supplements the [content], ideally an IMG, PDF, etc.
+  File? linkedFile;
 
-  /// Gets the desired format the response will be
-  /// 
-  /// ===TARGET_BLOCK_START===
-  /// Something to ask GPT about:  
-  /// Since the purpose of ResponseType is to succinctly convey
-  /// the type of widget that this [Question] would show when 
-  /// the parent Form is of type [StudentForm].
-  /// ===TARGET_BLOCK_END===
-  ResponseType get resFormat => _resFormat;
+  Question({
+    required this.questionId,
+    required this.ordinal, 
+    required this.header,
+    required this.content,
+    required this.resRequired,
+    required this.resFormat,
+    this.linkedFile
+  });
 
-  /// Sets the format of the response
-  set resFormat(ResponseType value) {
-    _resFormat = value;
-  }
+  /// Creates a [Response] by passing [answer] through the [Question] without 
+  /// needing to know what [resFormat]. 
+  Response<dynamic> createResponse(dynamic answer) {
+    // TODO: potentially place validation logic here
 
-  /// If there is a file associated with this question, fetch it
-  File? get linkedFile => _linkedFile;
-
-  /// Sets which file (if any) is attached 
-  set linkedFile(File? value) {
-    _linkedFile = value;
+    return Response<dynamic>(
+      // questionId: TODO
+      questionId: "TEST_ID",
+      answer: answer,
+      responseType: resFormat
+    );
   }
 }
 

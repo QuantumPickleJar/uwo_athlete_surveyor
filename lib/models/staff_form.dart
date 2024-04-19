@@ -1,4 +1,5 @@
-import 'package:athlete_surveyor/models/interfaces/IGenericForm.dart';
+import 'dart:io';
+import 'interfaces/IGenericForm.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
 
@@ -12,8 +13,8 @@ import 'package:uuid/uuid.dart';
 /// and cached to the device as a draft FormResult so that the student can return to finish 
 /// questions later. 
 /// 
-/// The nested [ResponseType] is intended be read by something on the UI layer to provide
-/// a widget based on the question being viewed.
+/// The nested [ResponseType] is intended be read by a service on the Form Editor page that 
+/// would allow the alteration of the desired format. 
 class StudentForm implements IGenericForm {
 
   final String formName;        // from super
@@ -21,7 +22,11 @@ class StudentForm implements IGenericForm {
   
   late final DateTime? formDateReceived;
   final DateTime? formDateCompleted;
+  
+  /// TODO: this should be populated by the form_file_service
+  List<File>? attachments = [];
 
+  // Map<Question, List<Response>> used later in analytics, ABOVE this scope
   List<Question> questions = [];
 
   /// Constructs a new StudentForm
