@@ -9,26 +9,20 @@ class AdminHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Text('Welcome, [NAME]', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),//TODO: replace [NAME] with actual data pulled from login.
-                Column(mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(onPressed:(){ navigateToPage(context, Consumer<StudentsModel> (builder: (context, studentsModel, child) => StudentsWidget(studentsModel))); }, 
+    return  Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text('Welcome, [ADMIN_NAME]', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold), textAlign: TextAlign.center),//TODO: replace [NAME] with actual data pulled from login.
+                  Column(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(onPressed:(){ navigateToPage(context, Consumer<StudentsModel> (builder: (context, studentsModel, child) => StudentsWidget(studentsModel))); }, 
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
-                        child: const SizedBox(width: 200, height: 50, child: Center(child: Text('View Student Forms', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))))),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(onPressed: null, 
+                        child: const SizedBox(child: Center(child: Text('View Student Forms', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
+                      ElevatedButton(onPressed: null, 
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
-                        child: const SizedBox(width: 200, height: 50, child: Center(child: Text('Create a Form', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
-                    )
-                  ],
-                )
-              ],
-            );
+                        child: const SizedBox(child: Center(child: Text('Create a Form', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))))])]));
   }
 }

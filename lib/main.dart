@@ -37,23 +37,26 @@ class MainApp extends StatelessWidget
   {
     return Scaffold(
       body: Container(alignment: Alignment.center,
-        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 275,
-              height: 200,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                image: DecorationImage(image: NetworkImage('https://uwosh.edu/umc/wp-content/uploads/sites/18/2019/07/UWO_vertical_Oshkosh_4c.png'), fit: BoxFit.fill)
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: 275,
+                height: 200,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(image: NetworkImage('https://uwosh.edu/umc/wp-content/uploads/sites/18/2019/07/UWO_vertical_Oshkosh_4c.png'), fit: BoxFit.fill)
+                ),
               ),
-            ),
-            const Text('Be Better Initiative', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-            ElevatedButton(onPressed: (){ navigateToPage(context, TabbedMainPage(isAdmin: false)); }, 
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
-              child: const SizedBox(width: 200, height: 50, child: Center(child: Text('Log in using UWO ID', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
-            ElevatedButton(onPressed: (){ navigateToPage(context, TabbedMainPage(isAdmin: true)); }, 
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
-              child: const SizedBox(width: 200, height: 50, child: Center(child: Text('Log in using UWO ID (ADMIN)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))))
-          ])));
+              const Text('Be Better Initiative', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+              ElevatedButton(onPressed: (){ navigateToPage(context, TabbedMainPage(isAdmin: false)); }, 
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
+                child: const SizedBox(child: Center(child: Text('Log in using UWO ID', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
+              ElevatedButton(onPressed: (){ navigateToPage(context, TabbedMainPage(isAdmin: true)); }, 
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
+                child: const SizedBox(child: Center(child: Text('Log in using UWO ID (ADMIN)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))))
+            ]),
+        )));
   }
 }
