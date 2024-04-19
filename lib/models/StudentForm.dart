@@ -16,8 +16,9 @@ import 'package:uuid/uuid.dart';
 /// a widget based on the question being viewed.
 class StudentForm implements IGenericForm {
 
-  final String formName;
-  final String? associatedSport;
+  final String formName;        // from super
+  final String sport;           // from super
+  
   late final DateTime? formDateReceived;
   final DateTime? formDateCompleted;
 
@@ -26,7 +27,7 @@ class StudentForm implements IGenericForm {
   /// Constructs a new StudentForm
   StudentForm({
     required this.formName,
-    required this.associatedSport,
+    required this.sport,
     this.formDateReceived,
     this.formDateCompleted,
   });

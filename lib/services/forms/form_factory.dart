@@ -20,8 +20,16 @@ abstract class FormFactory {
 // Concrete factory implementing the abstract factory
 class ConcreteFormFactory extends FormFactory {
   @override
-  IGenericForm createStudentForm() => StudentForm();
+  IGenericForm createStudentForm({required String name}) => StudentForm(
+    formName: name,
+    associatedSport: "",
+    /// TODO: change below line, this is dirty code
+    formDateReceived: DateTime.now(), /// should be read from the spreadsheet
+    formDateCompleted: null
+    );
 
   @override
-  IGenericForm createStaffForm() => StaffForm();
+  IGenericForm createStaffForm({required String name}) => StaffForm(
+    formName: ,
+  );
 }
