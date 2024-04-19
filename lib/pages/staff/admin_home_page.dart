@@ -1,5 +1,5 @@
 import 'package:athlete_surveyor/models/student_model.dart';
-import 'package:athlete_surveyor/pages/students_page.dart';
+import 'package:athlete_surveyor/pages/staff/students_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
