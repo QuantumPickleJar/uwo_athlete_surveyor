@@ -1,10 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'package:athlete_surveyor/models/individual_form_examination_model.dart';
 import 'package:athlete_surveyor/pages/individual_form_examination_page.dart';
+import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
 
-//
+///
 class PreviousFormsPage extends StatefulWidget 
 {
   final PreviousFormsModel formModel;
@@ -14,17 +15,16 @@ class PreviousFormsPage extends StatefulWidget
   _PreviousFormsPageState createState() => _PreviousFormsPageState();
 }
 
-//
+/// 
 class _PreviousFormsPageState extends State<PreviousFormsPage>
 {
-  //
-  void navigateToPage(BuildContext context, Widget page)
+  /// Handles fetching previously completed forms from database and populating ListView when received.
+  @override
+  void initState()
   {
-    Navigator.push
-    (
-      context,
-      MaterialPageRoute(builder: (context) => page)
-    );
+    super.initState();
+
+    widget.formModel.getPreviousFormsFromDatabase();
   }
 
   @override

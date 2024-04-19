@@ -32,7 +32,7 @@ class _InboxPageState extends State<InboxPage>
   {
     super.initState();
 
-    widget.inboxModel.getCluansFromDatabase();
+    widget.inboxModel.getEmailsFromDatabase();
   }
 
   @override

@@ -7,9 +7,9 @@ class InboxModel extends ChangeNotifier
   final List<Email> emailList = [];
 
   /// Get all inbox messages from the database and insert into internal list.
-  Future<void> getCluansFromDatabase() async 
+  Future<void> getEmailsFromDatabase() async 
   {
-    await Database.fetchCluans().then((results) 
+    await Database.fetchEmails().then((results) 
     {  
       emailList.clear();
 
