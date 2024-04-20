@@ -9,19 +9,35 @@ import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
 import 'package:athlete_surveyor/pages/common/tabbed_main_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
+import 'package:athlete_surveyor/services/db.dart';
+import 'package:athlete_surveyor/services/forms/form_repository.dart';
+import 'package:athlete_surveyor/services/questions/question_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/student_model.dart';
+import 'services/forms/form_service.dart';
 
-void main() 
-{
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  var conn = await PostgresDB.getConnString();
   //runApp(const MaterialApp(home: MainApp()));
   runApp(
     MultiProvider(
       providers: [
+        Provider<FormRepository>(
+          create: (_) => FormRepository.getInstance(conn),
+        ),
+        Provider<QuestionRepository>(
+          create: (_) => QuestionRepository.getInstance(conn),
+        ),
+        /// [FormService] relies on Question + Form repos, so [ProxyProvider2] is suitable
+        ProxyProvider2<FormRepository, QuestionRepository, FormService>(
+          update: (_, formRepo, questionRepo, previous) => FormService(formRepo, questionRepo),
+        ),
         ChangeNotifierProvider(create: (context) => InboxModel()),
         ChangeNotifierProvider(create: (context) => StudentsModel()),
-        ChangeNotifierProvider(create: (context) => PreviousFormsModel())
+        ChangeNotifierProvider(create: (context) => PreviousFormsModel()),
       ],
       child: const MaterialApp(home: MainApp())
     )
