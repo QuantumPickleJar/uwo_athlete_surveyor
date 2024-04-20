@@ -56,26 +56,21 @@ class FormService {
    
   }
 
-  /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
-  /// accordingly so that the content can be loaded for a **specific student**
-  StudentForm? loadForm(String formUuid) {
+  // /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
+  // /// accordingly so that the content can be loaded for a **specific student**
+  // StudentForm? loadForm(String formUuid) {
 
-    /// List<Question>? questions = (get from query);
+  //   /// List<Question>? questions = (get from query);
     
-    /// based on questions, load into a [StudentForm]
-  }
+  //   /// based on questions, load into a [StudentForm]
+  // }
 
-  // Example helper methods (to be implemented)
-  Map<String, dynamic>? _fetchFormData(String formUuid) {
-    // Implementation to fetch form data
-  }
-
-  /// handles the saving of a draft, called when either:
-  /// - a form's content is modified in any way (staff only)
-  /// - a question's response has been marked complete/hits next
-  /// - a question's unfinished response has been modified, update draft
-  void _saveFormData(StudentForm form) {
-    // Implementation to save form data
-  }
+  // /// handles the saving of a draft, called when either:
+  // /// - a form's content is modified in any way (staff only)
+  // /// - a question's response has been marked complete/hits next
+  // /// - a question's unfinished response has been modified, update draft
+  // void _saveFormData(StudentForm form) {
+  //   // Implementation to save form data
+  // }
 
 }
