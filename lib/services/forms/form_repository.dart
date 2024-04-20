@@ -7,12 +7,12 @@ import 'package:postgres/postgres.dart';
 
 // Concrete implementation of the FormRepository
 class FormRepository implements IFormRepository {
-  static final FormRepository _db_instance = FormRepository._internal();
   final Connection _connection;
-  // List<Form> _forms = [];
+  static FormRepository? _db_instance;
 
-  factory FormRepository(Connection connection) {
-    return _db_instance;
+  static FormRepository getInstance(Connection connection) {
+    _db_instance ??= FormRepository._internal(connection);
+    return _db_instance!;
   }
   
   /// Private constructor
@@ -37,11 +37,11 @@ class FormRepository implements IFormRepository {
     if (result.isEmpty) {
       throw Exception('Failed creating form.');
     } 
-    /// use our helper function to 
+    /// use our helper function to map the resulting columns out to a [Form]
     return _mapRowToForm(result.first.toColumnMap());
   }
 
-   // Hhelper function to convert a database row to a Form object
+  /// Hhelper function to convert a database row to a Form object
   Form _mapRowToForm(Map<String, dynamic> row) {
     return Form(
       formId: row['form_id'],
@@ -52,37 +52,51 @@ class FormRepository implements IFormRepository {
     );
   }
   
+  /// Deletes a form and its questions from tbl_forms
   @override
-  Future<void> deleteForm(String formId) {
-    // TODO: implement deleteForm
-    throw UnimplementedError();
-  }
-  
-  @override
-  Future<List<Form>> getAllForms() async {
-    // TODO: implement getAllForms
-    List<Form> results = [];
-    String sqlStatement = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
-    final conn = await getConnString();
-    final result = await conn.execute(Sql.named(sqlStatement));
+  Future<bool> deleteForm(String formId) async {
+    String sqlStatement = "DELETE FROM tbl_forms WHERE form_id LIKE @formId";
+    var result = await _connection.execute(
+      Sql.named(sqlStatement), parameters: { 'formId': formId }
+    );
 
-    if(result.isNotEmpty) {
-      for (var row in result) {
-        var cols = row.toColumnMap(); // unpack the columns into an object
-        // _forms.add(
-        results.add(
-          Form(formId: cols['form_id'], formName: cols['form_title'], sport: "NOT_STORED_IN_TABLE", questions: [])
-        );
-      }
+    if (result.affectedRows > 0) {
+      return Future.value(true);
+    } else {
+      return Future.value(false);
     }
   }
   
+  
+  @override
+  Future<List<Form>> getAllForms() async {
+    String sqlStatement = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
+    final result = await _connection.execute(Sql.named(sqlStatement));
+
+    // if(result.isNotEmpty) {
+    //   for (var row in result) {
+    //     var cols = row.toColumnMap(); // unpack the columns into an object
+    //     // _forms.add(
+    //     results.add(
+    //       Form(formId: cols['form_id'], formName: cols['form_title'], sport: "NOT_STORED_IN_TABLE", questions: [])
+    //     );
+    //   }
+    // }
+    
+    return result.map((row) => _mapRowToForm(row.toColumnMap())).toList();
+  }
+  
+  /// Retrieves a form by its id
   @override
   Future<Form?> getFormById(String formId) async {
     // TODO: implement getFormById
     // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
     String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
-
+    var result = await _connection.execute(sqlStatement, parameters: formId);
+    if(result.isEmpty) {
+      return null;
+    }
+    return _mapRowToForm(result.first.toColumnMap());
   }
   
   @override
