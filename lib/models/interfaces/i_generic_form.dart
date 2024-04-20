@@ -7,7 +7,7 @@ abstract class IGenericForm {
   /// getter syntax, enforcing use of a concrete implementation
   String get formName;  
   String get sport;
-  Uuid get formId;
+  String get formId;  // should be performed with UUID functions
   List<File>? attachments; 
 
   /// Save changes/answers to the current form 

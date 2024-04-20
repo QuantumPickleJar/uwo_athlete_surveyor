@@ -17,6 +17,7 @@ import 'package:uuid/uuid.dart';
 /// would allow the alteration of the desired format. 
 class StaffForm implements IGenericForm {
 
+  @override final Uuid formId;            // from super
   @override final String formName;        // from super
   @override final String sport;           // from super
 
@@ -30,6 +31,7 @@ class StaffForm implements IGenericForm {
 
   /// Constructs a new StudentForm
   StaffForm({
+    required this.formId,
     required this.formName,
     required this.sport,
     this.formDateCompleted,
