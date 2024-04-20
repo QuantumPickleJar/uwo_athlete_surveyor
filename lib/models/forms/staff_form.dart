@@ -24,7 +24,7 @@ class StaffForm implements IGenericForm {
   /// TODO: this should be populated by the form_file_service, if not form_service
   @override List<File>? attachments = [];
   
-  final DateTime? formDateCompleted;
+  final DateTime? formDateCreated;
 
   // Map<Question, List<Response>> used later in analytics, ABOVE this scope
   List<Question> questions = [];
@@ -34,7 +34,7 @@ class StaffForm implements IGenericForm {
     required this.formId,
     required this.formName,
     required this.sport,
-    this.formDateCompleted,
+    this.formDateCreated,
   });
   
     /// Called when updates to the form's responses have been made 

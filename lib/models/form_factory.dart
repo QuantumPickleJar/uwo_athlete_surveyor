@@ -3,6 +3,7 @@ import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/v4.dart';
 import 'forms/student_form.dart';
+import 'forms/staff_form.dart';
 
 /// Abstracts the logic away from the client, allowing a more dynamic form 
 /// creation process at runtime.
@@ -24,8 +25,7 @@ class ConcreteFormFactory extends FormFactory {
 
   @override
   IGenericForm createStudentForm({required String formName}) {
-    // get the UUID
-    String newUuid = _uuid.v4();
+    String newUuid = _uuid.v4();    // get the UUID
     return StudentForm(
       formId: newUuid,
       formName: formName,
@@ -36,8 +36,14 @@ class ConcreteFormFactory extends FormFactory {
     );
   }
 
-  // @override
-  // IGenericForm createStaffForm({required String name}) => StaffForm(
-  //   return StaffF
-  // );
+  @override
+  IGenericForm createStaffForm({required String name, String? sport}) {
+    String newUuid = _uuid.v4();    // get the UUID
+    return StaffForm(
+      formId: newUuid,
+      formName: name,
+      formDateCreated: DateTime.now(),
+      sport: sport ?? "test sport"
+    );
+  }
 }
