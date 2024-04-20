@@ -7,14 +7,12 @@ abstract class IGenericForm {
   /// getter syntax, enforcing use of a concrete implementation
   String get formName;  
   String get sport;
+  Uuid get formId;
   List<File>? attachments; 
 
   /// Save changes/answers to the current form 
   /// TODO: Evaluate removal. could be that this is equivalent to FormService.updateForm)
   void saveForm(); 
-
-  /// Perform something with the form's dat
-  void loadForm(Uuid formUuid);
   
   // void getDraftIfExists(Uuid formUuid);
   /// May not need this one, keeping for now

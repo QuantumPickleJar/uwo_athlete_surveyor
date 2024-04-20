@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:athlete_surveyor/models/interfaces/IGenericForm.dart';
+import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
 

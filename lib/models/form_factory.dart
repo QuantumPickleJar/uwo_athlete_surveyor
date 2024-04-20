@@ -1,5 +1,5 @@
 
-import 'package:athlete_surveyor/models/interfaces/IGenericForm.dart';
+import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'forms/student_form.dart';
 
 /// Abstracts the logic away from the client, allowing a more dynamic form 
