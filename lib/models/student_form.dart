@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
 import 'interfaces/IGenericForm.dart';
@@ -44,4 +46,9 @@ class StudentForm implements IGenericForm {
     // Load form data from a remote source or local cache
     // This would populate the questions list with existing data, including drafts
   }
+
+  /// The attachments that the form contains, which will be referenced by [questions]
+  /// through means yet to be determined
+  @override
+  List<File>? attachments; 
 }

@@ -12,10 +12,20 @@ class FormService {
     // _init(spreadsheetId);
     return _formRepository.getAllForms();
   }
+/* 
+  Future<Form> createNewForm(Form form) {
+
+  }
+
+  Future<Form?> getFormDetails(Uuid formId) async {
+
+    return _formRepository.getFormById(formId);
+  }
 
   /// if we *DO* need this, it'd probably be used post-construction
   // Future<void> _init() async {
   // }
+*/
 
 
   Future<void> writeQuestion(Question question, Uuid formUuid) async {
