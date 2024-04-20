@@ -3,18 +3,21 @@ import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:athlete_surveyor/models/forms/student_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
+import 'package:athlete_surveyor/services/questions/question_repository.dart';
 import 'package:uuid/uuid.dart';
 import 'form_repository.dart';
 
 class FormService {
   final FormRepository _formRepository;
+  final QuestionRepository _questionRepository;
   final FormFactory _formFactory = ConcreteFormFactory();
   
   final Uuid _uuid = const Uuid(); // finding out if we need this at the moment
 
   /// TODO: make more specific get-based functions that query smaller 
+  FormService(this._formRepository, this._questionRepository);
+  
   /// subsets, such as ones suited for students vs staff for example
-  FormService(this._formRepository, _formFactory);
     // _init(spreadsheetId);
     // return _formRepository.getAllForms();
   
@@ -31,7 +34,8 @@ class FormService {
     Form newForm = await _formRepository.createForm(form);    // form needs the id from DB first
     for (var question in questions) {
       question.formId = newForm.formId;   // bind the question to the form it's adding into
-      newForm.questions.add(question);
+      // newForm.questions.add(question);
+      await _questionRepository.createQuestion(question, form.formId);    // now add this ref to tbl_questions
     }
     return newForm;
   }
@@ -42,27 +46,10 @@ class FormService {
     return _formRepository.getFormById(formId);
   }
 
-  /// if we *DO* need this, it'd probably be used post-construction
-  // Future<void> _init() async {
-  // }
-
-  Future<void> writeQuestion(Question question, String formUuid) async {
-      /// Ex:
-   ///   await formSheet.values.appendRow([
-   ///   formUuid,
-   ///   question.ordinal.toString(),
-   ///   question.header,
-   ///   question.content,
-   ///   question.res_required.toString(),
-   ///   question.resFormat.widgetType.toString(),
-   ///   question.linkedFile?.path ?? ''
-   /// ]);
-  }
-
   /// Called when updates to the form's responses have been made 
   @override 
   void saveForm() {
-    // if()
+    // _saveFormData(); 
   }
 
   /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
