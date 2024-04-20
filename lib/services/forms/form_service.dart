@@ -1,7 +1,6 @@
 import 'package:athlete_surveyor/models/form_factory.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
-import 'package:athlete_surveyor/models/forms/student_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/services/questions/question_repository.dart';
 import 'package:uuid/uuid.dart';
@@ -20,6 +19,20 @@ class FormService {
     // _init(spreadsheetId);
     // return _formRepository.getAllForms();
   
+  Future<Form?> getFormById(String formUuid) async{
+    try {
+      var retrievedForm = await _formRepository.getFormById(formUuid);
+      
+      if (retrievedForm != null) {
+        /// TODO: implemement during auth stage
+        /// based on questions, load into a [StudentForm] or [StaffForm]
+        return retrievedForm;
+      }
+    } on Exception catch (e) {
+      print("Error getting Form with id $formUuid: \n Error: $e");
+    }
+    return null;
+  }
 
   Future<Form> createNewForm(String formName, String sport) async {
     /// TODO: ensure another form with this name doesn't exist
@@ -39,36 +52,44 @@ class FormService {
     return newForm;
   }
 
-  /// TODO: imp
+  /// TODO: implement
   Future<Form?> getFormDetails(String formId) async {
     /// TODO: wrap with safe uuid parse
     return _formRepository.getFormById(formId);
   }
 
   /// Called when updates to the form's responses have been made 
-  @override 
   Future<Form> saveForm(Form form) async {
     if (form.formId.isEmpty) {  /// do we need to create it?
       return await _formRepository.createForm(form);
     } else {
       return await _formRepository.updateForm(form);
     }
-   
   }
 
-  // /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
-  // /// accordingly so that the content can be loaded for a **specific student**
-  // StudentForm? loadForm(String formUuid) {
+  /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
+  /// accordingly so that the content can be loaded for a **specific student**.
+  /// 
+  /// Returns `null` if the form was unable to be found.
+  Future<Form?> loadForm(String formUuid) async {
+    /// List<Question>? questions = (get from query);
+    try {
+      var retrievedForm = await _formRepository.getFormById(formUuid);
+      if (retrievedForm != null) {
+        /// TODO: implemement during auth stage
+        /// based on questions, load into a [StudentForm] or [StaffForm]
+        return retrievedForm;
+      }
+    } on Exception catch (e) {
+      print('Failed to load a form with id $formUuid:\n Error: $e');
+    } 
+    return null;
+  }
 
-  //   /// List<Question>? questions = (get from query);
-    
-  //   /// based on questions, load into a [StudentForm]
-  // }
-
-  // /// handles the saving of a draft, called when either:
-  // /// - a form's content is modified in any way (staff only)
-  // /// - a question's response has been marked complete/hits next
-  // /// - a question's unfinished response has been modified, update draft
+  /// handles the saving of a draft, called when either:
+  /// - a form's content is modified in any way (staff only)
+  /// - a question's response has been marked complete/hits next
+  /// - a question's unfinished response has been modified, update draft
   // void _saveFormData(StudentForm form) {
   //   // Implementation to save form data
   // }
