@@ -9,6 +9,7 @@ import 'response.dart';
 /// 
 /// collection of their results in an organized fashion
 class Question { 
+  late String formId;
   String questionId;
   late String header;   /// TODO: this should default to the ordinal
   late String content;
@@ -26,6 +27,7 @@ class Question {
 
 
   Question({
+    required this.formId,
     required this.questionId,
     required this.ordinal, 
     required this.header,
