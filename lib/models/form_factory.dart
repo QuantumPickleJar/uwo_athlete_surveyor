@@ -21,11 +21,9 @@ abstract class FormFactory {
 
 // Concrete factory implementing the abstract factory
 class ConcreteFormFactory extends FormFactory {
-  final _uuid = const Uuid(); // field to generate the uuid when produced
-
   @override
   IGenericForm createStudentForm({required String formName}) {
-    String newUuid = _uuid.v4();    // get the UUID
+    String newUuid = const Uuid().v4();    // get the UUID
     return StudentForm(
       formId: newUuid,
       formName: formName,
@@ -36,9 +34,11 @@ class ConcreteFormFactory extends FormFactory {
     );
   }
 
+
+  /// A staff member does not complete forms, so they only see [formDateCreated]
   @override
   IGenericForm createStaffForm({required String name, String? sport}) {
-    String newUuid = _uuid.v4();    // get the UUID
+    String newUuid = const Uuid().v4();    // get the UUID
     return StaffForm(
       formId: newUuid,
       formName: name,
