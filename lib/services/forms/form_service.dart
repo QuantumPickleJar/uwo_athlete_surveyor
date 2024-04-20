@@ -1,3 +1,6 @@
+import 'package:athlete_surveyor/models/form_factory.dart';
+import 'package:athlete_surveyor/models/forms/base_form.dart';
+import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:athlete_surveyor/models/forms/student_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
@@ -5,31 +8,42 @@ import 'form_repository.dart';
 
 class FormService {
   final FormRepository _formRepository;
+  final FormFactory _formFactory = ConcreteFormFactory();
+  
+  final Uuid _uuid = const Uuid(); // finding out if we need this at the moment
 
-  /// Gets ALL forms
   /// TODO: make more specific get-based functions that query smaller 
   /// subsets, such as ones suited for students vs staff for example
-  FormService(this._formRepository) {
+  FormService(this._formRepository, _formFactory);
     // _init(spreadsheetId);
     // return _formRepository.getAllForms();
+  
+
+  Future<Form> createNewForm(String formName, String sport) async {
+    
+    /// TODO: ensure another form with this name doesn't exist
+    IGenericForm newForm = _formFactory.createStudentForm(formName: formName);
+    // var newForm = _formFacotForm(
+    //   formId: _uuid.v4(), 
+    //   formName: newForm.formName, 
+    //   sport: newForm.sport, 
+    //   questions: newForm.questions
+    // );
+
+    await _formRepository.createForm(newForm as Form);
+    return newForm;
   }
-/* 
-  Future<Form> createNewForm(Form form) {
 
-  }
-
-  Future<Form?> getFormDetails(Uuid formId) async {
-
+  Future<Form?> getFormDetails(String formId) async {
+    /// TODO: wrap with safe uuid parse
     return _formRepository.getFormById(formId);
   }
 
   /// if we *DO* need this, it'd probably be used post-construction
   // Future<void> _init() async {
   // }
-*/
 
-
-  Future<void> writeQuestion(Question question, Uuid formUuid) async {
+  Future<void> writeQuestion(Question question, String formUuid) async {
       /// Ex:
    ///   await formSheet.values.appendRow([
    ///   formUuid,
@@ -50,7 +64,7 @@ class FormService {
 
   /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
   /// accordingly so that the content can be loaded for a **specific student**
-  StudentForm? loadForm(Uuid formUuid) {
+  StudentForm? loadForm(String formUuid) {
     // TODO: implement loadForm
     /// List<Question>? questions = (get from query);
     
@@ -58,7 +72,7 @@ class FormService {
   }
 
   // Example helper methods (to be implemented)
-  Map<String, dynamic>? _fetchFormData(Uuid formUuid) {
+  Map<String, dynamic>? _fetchFormData(String formUuid) {
     // Implementation to fetch form data
   }
 
