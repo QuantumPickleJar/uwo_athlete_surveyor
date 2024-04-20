@@ -1,9 +1,9 @@
 /// This file is a cobbled together SQL migrated form of the original plan to have Forms stored 
 /// across Google Sheets.
-// file: form_repository.dart
 import 'package:athlete_surveyor/models/interfaces/i_form_respository.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:postgres/postgres.dart';
+import 'package:athlete_surveyor/services/db.dart';
 
 // Concrete implementation of the FormRepository
 class FormRepository implements IFormRepository {
@@ -25,7 +25,14 @@ class FormRepository implements IFormRepository {
                             (form_id, user_id, form_title, last_modified, create_date)
                             VALUES (@formId, @userId, @formTitle, @lastModified, @createDate) 
                             RETURNING *;""";
-    var result = await _connection.execute(
+
+    /// TODO: run the question query separately, in a tx
+    ///  until we have a service for it
+    // var result = await _connection.runTx((insertForm) {
+    //   final persistedForm = await insertForm.execute()
+    // });
+
+   var result = await _connection.execute(
       sqlStatement, parameters: {
         'formId': form.formId,
         'userId': 'user-id', // For now, since you don't have auth
@@ -59,7 +66,7 @@ class FormRepository implements IFormRepository {
     var result = await _connection.execute(
       Sql.named(sqlStatement), parameters: { 'formId': formId }
     );
-
+    /// provide feedback about the operation's success/failure
     if (result.affectedRows > 0) {
       return Future.value(true);
     } else {
@@ -106,23 +113,5 @@ class FormRepository implements IFormRepository {
     throw UnimplementedError();
   }
 
-  /// Establishes a connection to the forms db using the provided
-  /// host, database name, port, username, and password. It returns a [Connection]
-  /// object that can be used to interact with the database.
-  /// 
-  /// Returns:
-  ///   A [Future] that completes with a [Connection] object.
-  Future<Connection> getConnString() async {
-    return await Connection.open(
-      Endpoint(
-        host: 'cs361-lab3-13043.5xj.gcp-us-central1.cockroachlabs.cloud',
-        // host: dotenv.env['COCKROACH_DB_HOST'] ?? "Bad Host!", 
-        database: 'uwo_forms_docs_test',
-        port: 26257,
-        password: 'cn9T0AvFn056o6Dz1ziyRg',
-        // password: dotenv.env['COCKROACH_DB_PASSWORD'] ?? "Password Missing!",
-        username: 'quantumpicklejar'
-      )
-    );
-  }
+
 }
