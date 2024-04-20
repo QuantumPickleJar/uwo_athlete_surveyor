@@ -16,7 +16,6 @@ class FormService {
 
   /// TODO: make more specific get-based functions that query smaller 
   FormService(this._formRepository, this._questionRepository);
-  
   /// subsets, such as ones suited for students vs staff for example
     // _init(spreadsheetId);
     // return _formRepository.getAllForms();
@@ -48,14 +47,19 @@ class FormService {
 
   /// Called when updates to the form's responses have been made 
   @override 
-  void saveForm() {
-    // _saveFormData(); 
+  Future<Form> saveForm(Form form) async {
+    if (form.formId.isEmpty) {  /// do we need to create it?
+      return await _formRepository.createForm(form);
+    } else {
+      return await _formRepository.updateForm(form);
+    }
+   
   }
 
   /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
   /// accordingly so that the content can be loaded for a **specific student**
   StudentForm? loadForm(String formUuid) {
-    // TODO: implement loadForm
+
     /// List<Question>? questions = (get from query);
     
     /// based on questions, load into a [StudentForm]
