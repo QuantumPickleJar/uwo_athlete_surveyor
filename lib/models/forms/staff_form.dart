@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 /// 
 /// Key differences from the [StaffForm] include:
 /// Rather than performing sequential *UPDATES* to a form (even if they are spaced out/ use
-/// a separate sheet for drafting) to reflect modifications, the form's content is fetched 
+/// a separate sheet for drafting) to reflect modifications,  the form's content is fetched 
 /// and cached to the device as a draft FormResult so that the student can return to finish 
 /// questions later. 
 /// 
