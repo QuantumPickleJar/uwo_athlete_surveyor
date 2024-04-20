@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'interfaces/IGenericForm.dart';
+import '../interfaces/IGenericForm.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
 
@@ -15,25 +15,23 @@ import 'package:uuid/uuid.dart';
 /// 
 /// The nested [ResponseType] is intended be read by a service on the Form Editor page that 
 /// would allow the alteration of the desired format. 
-class StudentForm implements IGenericForm {
+class StaffForm implements IGenericForm {
 
-  final String formName;        // from super
-  final String sport;           // from super
+  @override final String formName;        // from super
+  @override final String sport;           // from super
+
+  /// TODO: this should be populated by the form_file_service, if not form_service
+  @override List<File>? attachments = [];
   
-  late final DateTime? formDateReceived;
   final DateTime? formDateCompleted;
-  
-  /// TODO: this should be populated by the form_file_service
-  List<File>? attachments = [];
 
   // Map<Question, List<Response>> used later in analytics, ABOVE this scope
   List<Question> questions = [];
 
   /// Constructs a new StudentForm
-  StudentForm({
+  StaffForm({
     required this.formName,
     required this.sport,
-    this.formDateReceived,
     this.formDateCompleted,
   });
   

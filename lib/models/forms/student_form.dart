@@ -1,8 +1,8 @@
 import 'dart:io';
-
+import 'package:athlete_surveyor/models/interfaces/IGenericForm.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
-import 'interfaces/IGenericForm.dart';
+
 
 /// A concrete implementation of [IGenericForm], tailored for what students will see.
 /// This includes the loading of a form to *take* a survey, as well as the ability to 
@@ -23,6 +23,10 @@ class StudentForm implements IGenericForm {
   
   late final DateTime? formDateReceived;
   final DateTime? formDateCompleted;
+  
+  /// TODO: this should be populated by the form_file_service
+  @override
+  List<File>? attachments;
 
   List<Question> questions = [];
 
@@ -46,9 +50,5 @@ class StudentForm implements IGenericForm {
     // Load form data from a remote source or local cache
     // This would populate the questions list with existing data, including drafts
   }
-
-  /// The attachments that the form contains, which will be referenced by [questions]
-  /// through means yet to be determined
-  @override
-  List<File>? attachments; 
+  
 }

@@ -1,5 +1,5 @@
 import 'package:athlete_surveyor/resources/common_widgets.dart';
-import 'package:athlete_surveyor/models/individual_form_examination_model.dart';
+import 'package:athlete_surveyor/models/forms/individual_form_examination_model.dart';
 import 'package:flutter/material.dart';
 
 //
