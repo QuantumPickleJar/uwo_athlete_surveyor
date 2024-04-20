@@ -37,28 +37,63 @@ class QuestionRepository implements IQuestionRepository{
     return _mapRowToQuestion(result.first.toColumnMap());
   }
 
+
+  /// Removes a question from the database by its id. 
   @override
-  Future<void> deleteQuestion(String questionId) {
+  Future<bool> deleteQuestion(String questionId) async {
     // TODO: implement deleteQuestion
-    throw UnimplementedError();
+    String sqlStatement = """DELETE * FROM public.tbl_questions WHERE question_id LIKE @questionId;""";
+    var result = await _connection.execute(sqlStatement, parameters: questionId);
+    if (result.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   @override
-  Future<Question?> getQuestionById(String questionId) {
+  Future<Question?> getQuestionById(String questionId) async {
     // TODO: implement getQuestionById
-    throw UnimplementedError();
+    String sqlStatement = """SELECT content, order_in_form, form_id, question_id, response_enum
+                            FROM public.tbl_questions WHERE question_id LIKE @questionId;""";
+    var result = await _connection.execute(sqlStatement, parameters: questionId);
+    if (result.isEmpty) {
+      return null;
+    } else {
+      return _mapRowToQuestion(result.first.toColumnMap());
+    }
   }
 
   @override
-  Future<List<Question>> getQuestions() {
+  Future<List<Question>> getQuestions() async {
     // TODO: implement getQuestions
-    throw UnimplementedError();
+    String sqlStatement = """SELECT * FROM tbl_questions""";
+    var queryResult = await _connection.execute(sqlStatement);
+      
+    /// unpack the result by leveraging the row mapping function
+    return queryResult.map((row) => _mapRowToQuestion(row.toColumnMap())).toList();
   }
 
   @override
-  Future<void> updateQuestion(Question question) {
+  Future<void> updateQuestion(Question question) async {
     // TODO: implement updateQuestion
-    throw UnimplementedError();
+    String sqlStatement = """UPDATE public.tbl_questions
+                            SET content = @content, order_in_form = @order,
+                                form_id = @formId, response_enum = @responseEnum
+                            WHERE question_id = @questionId;""";
+    var result = await _connection.execute(
+      Sql.named(sqlStatement),
+      parameters: {
+        'content': question.content,
+        'order': question.ordinal,
+        'formId': question.formId,
+        'responseEnum': question.resFormat.widgetType,
+        'questionId': question.questionId,
+      },
+    );
+    if (result.isEmpty) {
+      throw Exception('Failed to update question.');
+    }
   }
 
 }

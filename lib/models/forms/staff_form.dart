@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+
 import '../interfaces/i_generic_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
@@ -15,26 +17,27 @@ import 'package:uuid/uuid.dart';
 /// 
 /// The nested [ResponseType] is intended be read by a service on the Form Editor page that 
 /// would allow the alteration of the desired format. 
-class StaffForm implements IGenericForm {
+class StaffForm extends ChangeNotifier implements IGenericForm {
 
-  @override final String formId;            // from super
-  @override final String formName;        // from super
-  @override final String sport;           // from super
+  @override String formId;            // from super
+  @override String formName;        // from super
+  @override String sport;           // from super
 
   /// TODO: this should be populated by the form_file_service, if not form_service
-  @override List<File>? attachments = [];
+  @override List<File>? attachments;
   
-  final DateTime? formDateCreated;
+  DateTime? formDateCreated;
 
   // Map<Question, List<Response>> used later in analytics, ABOVE this scope
-  List<Question> questions = [];
+  List<Question> questions;
 
-  /// Constructs a new StudentForm
+  /// Constructs a new StaffForm, loaded with [questions]
   StaffForm({
     required this.formId,
     required this.formName,
     required this.sport,
     this.formDateCreated,
+    required this.questions
   });
   
     /// Called when updates to the form's responses have been made 
@@ -48,5 +51,20 @@ class StaffForm implements IGenericForm {
   void loadForm(Uuid formUuid) {
     // Load form data from a remote source or local cache
     // This would populate the questions list with existing data, including drafts
+  }
+
+  void updateFormTitle(String newTitle) {
+    formName = newTitle;
+    notifyListeners();
+  }
+
+  void addQuestion(Question question) {
+    questions.add(question);
+    notifyListeners();
+  }
+
+  void removeQuestion(Question question) {
+    questions.remove(question);
+    notifyListeners();
   }
 }

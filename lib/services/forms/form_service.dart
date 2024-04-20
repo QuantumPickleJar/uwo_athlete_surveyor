@@ -16,7 +16,6 @@ class FormService {
 
   /// TODO: make more specific get-based functions that query smaller 
   FormService(this._formRepository, this._questionRepository);
-  
   /// subsets, such as ones suited for students vs staff for example
     // _init(spreadsheetId);
     // return _formRepository.getAllForms();
@@ -48,30 +47,30 @@ class FormService {
 
   /// Called when updates to the form's responses have been made 
   @override 
-  void saveForm() {
-    // _saveFormData(); 
+  Future<Form> saveForm(Form form) async {
+    if (form.formId.isEmpty) {  /// do we need to create it?
+      return await _formRepository.createForm(form);
+    } else {
+      return await _formRepository.updateForm(form);
+    }
+   
   }
 
-  /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
-  /// accordingly so that the content can be loaded for a **specific student**
-  StudentForm? loadForm(String formUuid) {
-    // TODO: implement loadForm
-    /// List<Question>? questions = (get from query);
+  // /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
+  // /// accordingly so that the content can be loaded for a **specific student**
+  // StudentForm? loadForm(String formUuid) {
+
+  //   /// List<Question>? questions = (get from query);
     
-    /// based on questions, load into a [StudentForm]
-  }
+  //   /// based on questions, load into a [StudentForm]
+  // }
 
-  // Example helper methods (to be implemented)
-  Map<String, dynamic>? _fetchFormData(String formUuid) {
-    // Implementation to fetch form data
-  }
-
-  /// handles the saving of a draft, called when either:
-  /// - a form's content is modified in any way (staff only)
-  /// - a question's response has been marked complete/hits next
-  /// - a question's unfinished response has been modified, update draft
-  void _saveFormData(StudentForm form) {
-    // Implementation to save form data
-  }
+  // /// handles the saving of a draft, called when either:
+  // /// - a form's content is modified in any way (staff only)
+  // /// - a question's response has been marked complete/hits next
+  // /// - a question's unfinished response has been modified, update draft
+  // void _saveFormData(StudentForm form) {
+  //   // Implementation to save form data
+  // }
 
 }
