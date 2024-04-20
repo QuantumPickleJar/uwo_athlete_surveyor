@@ -6,8 +6,8 @@
 /// Authors: Josh, Vince, Amanda.
 /// Version:          0.0.1
 import 'package:athlete_surveyor/models/inbox_model.dart';
-import 'package:athlete_surveyor/models/previous_forms_model.dart';
-import 'package:athlete_surveyor/pages/tabbed_main_page.dart';
+import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
+import 'package:athlete_surveyor/pages/common/tabbed_main_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

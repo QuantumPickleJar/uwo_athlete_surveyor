@@ -1,5 +1,5 @@
 import 'package:athlete_surveyor/models/inbox_model.dart';
-import 'package:athlete_surveyor/models/previous_forms_model.dart';
+import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
 import 'package:athlete_surveyor/pages/staff/admin_home_page.dart';
 import 'package:athlete_surveyor/pages/common/inbox_page.dart';
 import 'package:athlete_surveyor/pages/previous_forms_page.dart';

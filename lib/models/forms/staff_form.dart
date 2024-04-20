@@ -1,6 +1,7 @@
+import 'dart:io';
+import '../interfaces/IGenericForm.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
-import 'interfaces/IGenericForm.dart';
 
 /// A concrete implementation of [IGenericForm], tailored for what students will see.
 /// This includes the loading of a form to *take* a survey, as well as the ability to 
@@ -12,23 +13,25 @@ import 'interfaces/IGenericForm.dart';
 /// and cached to the device as a draft FormResult so that the student can return to finish 
 /// questions later. 
 /// 
-/// The nested [ResponseType] is intended be read by something on the UI layer to provide
-/// a widget based on the question being viewed.
+/// The nested [ResponseType] is intended be read by a service on the Form Editor page that 
+/// would allow the alteration of the desired format. 
 class StudentForm implements IGenericForm {
 
-  final String formName;        // from super
-  final String sport;           // from super
+  @override final String formName;        // from super
+  @override final String sport;           // from super
+
+  /// TODO: this should be populated by the form_file_service, if not form_service
+  @override List<File>? attachments = [];
   
-  late final DateTime? formDateReceived;
   final DateTime? formDateCompleted;
 
+  // Map<Question, List<Response>> used later in analytics, ABOVE this scope
   List<Question> questions = [];
 
   /// Constructs a new StudentForm
   StudentForm({
     required this.formName,
     required this.sport,
-    this.formDateReceived,
     this.formDateCompleted,
   });
   
