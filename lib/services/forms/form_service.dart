@@ -1,30 +1,24 @@
 import 'package:athlete_surveyor/models/student_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
-// import 'package:gsheets/gsheets.dart';
 import 'package:uuid/uuid.dart';
 
 class FormService {
-  late Worksheet formSheet;
+  final FormRepository _formRepository;
 
-  FormService(this.gsheets, String spreadsheetId) {
-    _init(spreadsheetId);
+  /// Gets ALL forms
+  /// TODO: make more specific get-based functions that query smaller 
+  /// subsets, such as ones suited for students vs staff for example
+  FormService(this._formRepository) {
+    // _init(spreadsheetId);
+    return _formRepository.getAllForms();
   }
 
-  Future<void> _init(String spreadsheetId) async {
-    spreadsheet = await gsheets.spreadsheet(spreadsheetId);
-    formSheet = await _getSheet('Forms');
-  }
-  /// individual sheet within the whole Workfile
-  Future<Worksheet> _getSheet(String title) async {
-    try {
-      return await spreadsheet.addWorksheet(title);
-    } catch (e) {
-      return spreadsheet.worksheetByTitle(title)!;
-    }
-  }
+  /// if we *DO* need this, it'd probably be used post-construction
+  // Future<void> _init() async {
+  // }
 
 
-  Future<void> writeQuestion(Question question, Uuid, formUuid) async {
+  Future<void> writeQuestion(Question question, Uuid formUuid) async {
       /// Ex:
    ///   await formSheet.values.appendRow([
    ///   formUuid,
@@ -40,15 +34,7 @@ class FormService {
   /// Called when updates to the form's responses have been made 
   @override 
   void saveForm() {
-    /// if local cache used, persist any updates to it 
-    /// 
-    /// Student's responses are stored in a table using the question's id )(PK) 
-  
-    /// and user's id as an FK (parameter?), if there's any draft there, get them.
-    /// Otherwise, (temporarily, until "production" release) we create a new draft 
-    /// to store the response until the user withdraws focus from the [Question], 
-    /// prompting the draft to be updated.  
-    /// 
+    if()
   }
 
   /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
