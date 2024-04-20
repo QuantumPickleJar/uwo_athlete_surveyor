@@ -9,7 +9,8 @@ abstract class IGenericForm {
   String get sport;
   List<File>? attachments; 
 
-  /// Save changes/answers to the current form
+  /// Save changes/answers to the current form 
+  /// TODO: Evaluate removal. could be that this is equivalent to FormService.updateForm)
   void saveForm(); 
 
   /// Perform something with the form's dat

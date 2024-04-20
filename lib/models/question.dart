@@ -19,8 +19,11 @@ class Question {
   /// used to control the ordering of the question when loaded on a form
   late int? ordinal;
   
-  /// (Optional) supplements the [content], ideally an IMG, PDF, etc.
-  File? linkedFile;
+  /// (Optional) If not null, the key of sorts specifying which of the form's
+  /// attached files will show in the [content] (ideally an IMG, PDF, etc.)
+  String? linkedFileKey;
+  /// File? linkedFile;
+
 
   Question({
     required this.questionId,
@@ -29,7 +32,7 @@ class Question {
     required this.content,
     required this.resRequired,
     required this.resFormat,
-    this.linkedFile
+    this.linkedFileKey
   });
 
   /// Creates a [Response] by passing [answer] through the [Question] without 
