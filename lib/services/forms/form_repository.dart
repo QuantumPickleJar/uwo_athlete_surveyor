@@ -34,7 +34,6 @@ class FormRepository implements IFormRepository {
 
    var result = await _connection.execute(
       sqlStatement, parameters: {
-        'formId': form.formId,
         'userId': 'user-id', // For now, since you don't have auth
         'formTitle': form.formName,
         'lastModified': DateTime.now(),
@@ -106,11 +105,12 @@ class FormRepository implements IFormRepository {
     return _mapRowToForm(result.first.toColumnMap());
   }
   
+  /// similar to the insert method, but avoids an additional query by returning args over existing
   @override
-  Future<void> updateForm(Form form) {
+  Future<Form> updateForm(Form form) {
     // TODO: implement updateForm
     
-    throw UnimplementedError();
+
   }
 
 
