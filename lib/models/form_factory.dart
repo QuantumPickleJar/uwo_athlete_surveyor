@@ -15,7 +15,7 @@ abstract class FormFactory {
 
   /// After loading form's [content], pump into form_editor_page and do 
   /// whatever is needed for entering edit mode for the form in question.
-  // IGenericForm createStaffForm({required String formName});
+  IGenericForm createStaffForm({required String formName, required String? sport});
   
 }
 
@@ -37,11 +37,11 @@ class ConcreteFormFactory extends FormFactory {
 
   /// A staff member does not complete forms, so they only see [formDateCreated]
   @override
-  IGenericForm createStaffForm({required String name, String? sport}) {
+  IGenericForm createStaffForm({required String formName, String? sport}) {
     String newUuid = const Uuid().v4();    // get the UUID
     return StaffForm(
       formId: newUuid,
-      formName: name,
+      formName: formName,
       formDateCreated: DateTime.now(),
       sport: sport ?? "test sport"
     );
