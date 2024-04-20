@@ -20,20 +20,23 @@ class FormService {
   
 
   Future<Form> createNewForm(String formName, String sport) async {
-    
     /// TODO: ensure another form with this name doesn't exist
     IGenericForm newForm = _formFactory.createStudentForm(formName: formName);
-    // var newForm = _formFacotForm(
-    //   formId: _uuid.v4(), 
-    //   formName: newForm.formName, 
-    //   sport: newForm.sport, 
-    //   questions: newForm.questions
-    // );
 
     await _formRepository.createForm(newForm as Form);
     return newForm;
   }
 
+  Future<Form> createFormWithQuestions(Form form, List<Question> questions) async {
+    Form newForm = await _formRepository.createForm(form);    // form needs the id from DB first
+    for (var question in questions) {
+      question.formId = newForm.formId;   // bind the question to the form it's adding into
+      newForm.questions.add(question);
+    }
+    return newForm;
+  }
+
+  /// TODO: imp
   Future<Form?> getFormDetails(String formId) async {
     /// TODO: wrap with safe uuid parse
     return _formRepository.getFormById(formId);
