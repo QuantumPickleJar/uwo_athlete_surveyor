@@ -1,22 +1,21 @@
 // ignore_for_file: library_private_types_in_public_api
-import 'package:athlete_surveyor/resources/common_widgets.dart';
-import 'package:athlete_surveyor/models/individual_form_examination_model.dart';
+import 'package:athlete_surveyor/models/forms/individual_form_examination_model.dart';
 import 'package:athlete_surveyor/pages/individual_form_examination_page.dart';
 import 'package:flutter/material.dart';
-import 'package:athlete_surveyor/models/previous_forms_model.dart';
+import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
 
 //
-class PreviousFormsWidget extends StatefulWidget 
+class PreviousFormsPage extends StatefulWidget 
 {
   final PreviousFormsModel formModel;
-  const PreviousFormsWidget(this.formModel, {super.key});
+  const PreviousFormsPage(this.formModel, {super.key});
 
   @override
-  _PreviousFormsWidgetState createState() => _PreviousFormsWidgetState();
+  _PreviousFormsPageState createState() => _PreviousFormsPageState();
 }
 
 //
-class _PreviousFormsWidgetState extends State<PreviousFormsWidget>
+class _PreviousFormsPageState extends State<PreviousFormsPage>
 {
   //
   void navigateToPage(BuildContext context, Widget page)
@@ -31,9 +30,7 @@ class _PreviousFormsWidgetState extends State<PreviousFormsWidget>
   @override
   Widget build(BuildContext context) 
   {
-    return Scaffold(
-      appBar: defaultAppBar(context, "Previous Forms"),
-      body: Column(
+    return Column(
         children: [
           Expanded(
             child: GridView.builder(
@@ -50,6 +47,6 @@ class _PreviousFormsWidgetState extends State<PreviousFormsWidget>
                       title: Text("${widget.formModel.formsList[index].formName}\n~ ${widget.formModel.formsList[index].sport} ~\n", textAlign: TextAlign.center), titleAlignment: ListTileTitleAlignment.center,
                       subtitle: Text("Received:\n${widget.formModel.formsList[index].dateReceived}\nCompleted:\n${widget.formModel.formsList[index].dateCompleted}", textAlign: TextAlign.center),
                       onTap:(){ navigateToPage(context, IndividualFormWidget(widget.formModel.formsList[index].formName, widget.formModel.formsList[index].sport, IndividualFormExaminationModel())); }
-                    )));}))]));
+                    )));}))]);
   }
 }

@@ -8,6 +8,26 @@ Provides means for intercollegiate faculty to better keep in touch with the stra
 - [Navigation](#navigation)
 
 # Code Standards 
+
+## Commit Message Guidelines (ft Angular)
+
+### Type
+
+Must be one of the following:
+
+    build: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+    ci: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+    docs: Documentation only changes
+    feat: A new feature
+    fix: A bug fix
+    perf: A code change that improves performance
+    refactor: A code change that neither fixes a bug nor adds a feature
+    style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+    test: Adding missing tests or correcting existing test
+### Revert
+
+If the commit reverts a previous commit, it should begin with revert: , followed by the header of the reverted commit. In the body it should say: This reverts commit \<hash\>, where the hash is the SHA of the commit being reverted.
+
 ## Responsibilities
 When in doubt... use SOLID principles / rely on the following<br>
 Credit to [VerygoodVentures](https://verygood.ventures/blog/very-good-flutter-architecture) 
