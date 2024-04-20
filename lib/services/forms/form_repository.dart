@@ -8,20 +8,48 @@ import 'package:postgres/postgres.dart';
 // Concrete implementation of the FormRepository
 class FormRepository implements IFormRepository {
   static final FormRepository _db_instance = FormRepository._internal();
+  final Connection _connection;
+  // List<Form> _forms = [];
 
-  factory FormRepository() {
+  factory FormRepository(Connection connection) {
     return _db_instance;
   }
-
-  FormRepository._internal();
-
-  // Implement the database operations using whatever database package you are using
-  // ...
+  
+  /// Private constructor
+  FormRepository._internal(this._connection);
 
   @override
   Future<Form> createForm(Form form) async {
     // Insert form into the database and return the inserted form
-    
+    String sqlStatement = """INSERT INTO tbl_forms 
+                            (form_id, user_id, form_title, last_modified, create_date)
+                            VALUES (@formId, @userId, @formTitle, @lastModified, @createDate) 
+                            RETURNING *;""";
+    var result = await _connection.execute(
+      sqlStatement, parameters: {
+        'formId': form.formId,
+        'userId': 'user-id', // For now, since you don't have auth
+        'formTitle': form.formName,
+        'lastModified': DateTime.now(),
+        'createDate': DateTime.now()
+      }
+    );
+    if (result.isEmpty) {
+      throw Exception('Failed creating form.');
+    } 
+    /// use our helper function to 
+    return _mapRowToForm(result.first.toColumnMap());
+  }
+
+   // Hhelper function to convert a database row to a Form object
+  Form _mapRowToForm(Map<String, dynamic> row) {
+    return Form(
+      formId: row['form_id'],
+      formName: row['form_title'],
+      sport: 'Sport Placeholder', // Replace with actual value if it's available
+      formDateCreated: row['create_date'],
+      questions: [], // This needs to be filled with actual questions from a related query
+    );
   }
   
   @override
@@ -31,20 +59,36 @@ class FormRepository implements IFormRepository {
   }
   
   @override
-  Future<List<Form>> getAllForms() {
+  Future<List<Form>> getAllForms() async {
     // TODO: implement getAllForms
-    throw UnimplementedError();
+    List<Form> results = [];
+    String sqlStatement = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
+    final conn = await getConnString();
+    final result = await conn.execute(Sql.named(sqlStatement));
+
+    if(result.isNotEmpty) {
+      for (var row in result) {
+        var cols = row.toColumnMap(); // unpack the columns into an object
+        // _forms.add(
+        results.add(
+          Form(formId: cols['form_id'], formName: cols['form_title'], sport: "NOT_STORED_IN_TABLE", questions: [])
+        );
+      }
+    }
   }
   
   @override
-  Future<Form?> getFormById(String formId) {
+  Future<Form?> getFormById(String formId) async {
     // TODO: implement getFormById
-    throw UnimplementedError();
+    // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
+    String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
+
   }
   
   @override
   Future<void> updateForm(Form form) {
     // TODO: implement updateForm
+    
     throw UnimplementedError();
   }
 
