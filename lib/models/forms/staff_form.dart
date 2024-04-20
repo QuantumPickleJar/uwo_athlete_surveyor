@@ -15,7 +15,7 @@ import 'package:uuid/uuid.dart';
 /// 
 /// The nested [ResponseType] is intended be read by a service on the Form Editor page that 
 /// would allow the alteration of the desired format. 
-class StudentForm implements IGenericForm {
+class StaffForm implements IGenericForm {
 
   @override final String formName;        // from super
   @override final String sport;           // from super
@@ -29,7 +29,7 @@ class StudentForm implements IGenericForm {
   List<Question> questions = [];
 
   /// Constructs a new StudentForm
-  StudentForm({
+  StaffForm({
     required this.formName,
     required this.sport,
     this.formDateCompleted,
