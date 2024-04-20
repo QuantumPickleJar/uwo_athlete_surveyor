@@ -37,7 +37,7 @@ class FormRepository implements IFormRepository {
         'userId': 'user-id', // For now, since you don't have auth
         'formTitle': form.formName,
         'lastModified': DateTime.now(),
-        'createDate': DateTime.now()
+        'createDate': DateTime.now(), 
       }
     );
     if (result.isEmpty) {
@@ -107,11 +107,25 @@ class FormRepository implements IFormRepository {
   
   /// similar to the insert method, but avoids an additional query by returning args over existing
   @override
-  Future<Form> updateForm(Form form) {
+  Future<Form> updateForm(Form form) async {
     // TODO: implement updateForm
-    
-
+    /// don't modify creation date, only the modification date
+    String sqlStatement = """UPDATE public.tbl_forms
+                    SET user_id=?, form_title='', last_modified=current_date()
+                    WHERE form_id=gen_random_uuid();""";
+       var result = await _connection.execute(
+        sqlStatement, parameters: {
+          'userId': 'user-id', // For now, since you don't have auth
+          'formTitle': form.formName,
+          'lastModified': DateTime.now(),
+          'createDate': DateTime.now()
+      }
+    );
+    if (result.isEmpty) {
+      print(form);
+      throw Exception("Failed to update the form!");
+    } else {
+      return _mapRowToForm(result.first.toColumnMap());
+    }
   }
-
-
 }
