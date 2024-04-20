@@ -1,5 +1,7 @@
 
 import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/v4.dart';
 import 'forms/student_form.dart';
 
 /// Abstracts the logic away from the client, allowing a more dynamic form 
@@ -18,15 +20,21 @@ abstract class FormFactory {
 
 // Concrete factory implementing the abstract factory
 class ConcreteFormFactory extends FormFactory {
-  @override
-  IGenericForm createStudentForm({required String formName}) => StudentForm(
-    formName: formName,
-    sport: "",
-    /// TODO: change below line, this is dirty code
-    formDateReceived: DateTime.now(), /// should be read from the spreadsheet
-    formDateCompleted: null
-    );
+  final _uuid = const Uuid(); // field to generate the uuid when produced
 
+  @override
+  IGenericForm createStudentForm({required String formName}) {
+    // get the UUID
+    String newUuid = _uuid.v4();
+    return StudentForm(
+      formId: newUuid,
+      formName: formName,
+      sport: "",
+      /// TODO: change below line, this is dirty code
+      formDateReceived: DateTime.now(), /// should be read from the spreadsheet
+      formDateCompleted: null
+    );
+  }
 
   // @override
   // IGenericForm createStaffForm({required String name}) => StaffForm(

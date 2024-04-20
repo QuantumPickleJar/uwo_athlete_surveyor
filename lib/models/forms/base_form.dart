@@ -6,7 +6,7 @@ import "package:uuid/uuid.dart";
 
 /// Concrete (but soft) implementation of IGenericForm.  
 class Form implements IGenericForm {
-  @override Uuid formId;
+  @override String formId;
   @override String formName;
   @override String sport;
   @override List<File>? attachments;
