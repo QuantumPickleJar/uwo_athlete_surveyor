@@ -1,7 +1,6 @@
 
 import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/v4.dart';
 import 'forms/student_form.dart';
 import 'forms/staff_form.dart';
 
@@ -43,7 +42,8 @@ class ConcreteFormFactory extends FormFactory {
       formId: newUuid,
       formName: formName,
       formDateCreated: DateTime.now(),
-      sport: sport ?? "test sport"
+      sport: sport ?? "test sport",
+      questions: []
     );
   }
 }
