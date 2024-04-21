@@ -40,6 +40,16 @@ class StaffForm extends ChangeNotifier implements IGenericForm {
     required this.questions
   });
   
+  /// Constructs a new StaffForm from an existing [IGenericForm].
+  /// Intended to be used when creating new forms, NOT on existing
+  StaffForm.fromGenericForm(IGenericForm genericForm): 
+      formId = genericForm.formId,
+      formName = genericForm.formName,
+      sport = genericForm.sport,
+      attachments = genericForm.attachments,
+      formDateCreated = null,
+      questions = [];
+  
     /// Called when updates to the form's responses have been made 
   @override 
   void saveForm() {
