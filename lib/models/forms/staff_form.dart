@@ -5,7 +5,7 @@ import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
 
 
-/// A concrete implementation of [IGenericForm], tailored for what students will see.
+/// A concrete implementation of [GenericForm], tailored for what students will see.
 /// This includes the loading of a form to *take* a survey, as well as the ability to 
 /// use the data to render thumbnails (possibly)
 /// 
