@@ -34,8 +34,6 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
     super.initState();
     _formService = Provider.of<FormService>(context, listen: false);
     _loadForm(widget.formId);
-
-
   }
 
   Future<void> _loadForm(String formId) async {
@@ -47,13 +45,15 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       } catch (e) { /// an exception will occur if not found
         /// a bit dirty--we handle the not found case in the catch
         if(formId.isEmpty) {
-      /// CREATE a new form if we didn't receive a `formId`
+        /// CREATE a new form if we didn't receive a `formId`
+        setState(() {
           _currentForm = StaffForm(
             formId: '', 
             formName: 'Untitled Form', 
             sport: "SOME SPORT", 
             questions: []
           );
+        });
 
         } else { /// else it must be an UPDATE
           // TODO: consider an is loading here for displaying a spinner

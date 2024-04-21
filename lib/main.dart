@@ -20,16 +20,16 @@ import 'services/forms/form_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  var conn = await PostgresDB.getConnString();
+  // var conn = await PostgresDB.getConnString();
   //runApp(const MaterialApp(home: MainApp()));
   runApp(
     MultiProvider(
       providers: [
         Provider<FormRepository>(
-          create: (_) => FormRepository.getInstance(conn),
+          create: (_) => FormRepository(),
         ),
         Provider<QuestionRepository>(
-          create: (_) => QuestionRepository.getInstance(conn),
+          create: (_) => QuestionRepository(),
         ),
         /// [FormService] relies on Question + Form repos, so [ProxyProvider2] is suitable
         ProxyProvider2<FormRepository, QuestionRepository, FormService>(
