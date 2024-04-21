@@ -12,10 +12,12 @@ class Form implements IGenericForm {
   @override List<File>? attachments;
   
   @override
-  void loadForm(Uuid formId) {
-    // TODO: Implement loadForm
+  void loadForm(String formId) {
+    // TODO: determine if this should be in a different file
   }
 
+  /// To be used in saving drafts, if at all.  May need to be 
+  /// removed to respect SOLID principles.
   @override
   void saveForm() {
     // TODO: Implement saveForm

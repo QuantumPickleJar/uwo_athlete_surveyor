@@ -15,6 +15,4 @@ abstract class IGenericForm {
   void saveForm(); 
   
   // void getDraftIfExists(Uuid formUuid);
-  /// May not need this one, keeping for now
-  // bool validateForm();
 }

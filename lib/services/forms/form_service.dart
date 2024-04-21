@@ -72,27 +72,26 @@ class FormService {
   /// Called by FormBuilderPage when loading a form.  If an id isn't supplied, we know it's 
   /// a new form and can simply construct and return a [StaffForm] with the populated ID from 
   /// the DB.
-  Future<StaffForm> fetchOrCreateForm(String formId, String formName, String sport) async {
+  Future<IGenericForm> fetchOrCreateForm(String formId, String formName, String sport) async {
     /// route to [_formFactory] if [formId] is null
     if(formId.isEmpty) {
-      return _formFactory.createStaffForm(formName: formName, sport: sport) as StaffForm;
+     return _formFactory.createStaffForm(formName: formName, sport: sport);
+      /// now we'll grab the form's newly assigned id
+      // var persistedForm = await createFormWithQuestions(newForm as Form, []) ;
+      // // verify the conversion was successful
+      // print("dates: ${newForm.formDateCreated.toString()} and ${persistedForm.formDateCreated.toString()}");
+      
+      // newForm.formId = persistedForm.formId;  /// ...and update [newForm] to match
+      // return newForm;
     } else {  /// fetch the Form
-      var form = await getFormById(formId);
+      var existingForm = await _formRepository.getFormById(formId);
       /// TODO: examine necessity of this if statement
-      if (form != null && form is StaffForm) {
-        return form as StaffForm;
+      if (existingForm != null) {
+        return existingForm; /// cast because [IGenericForm] expected
       } else {
         throw Exception('Unable to find the form, or not the right form type!');
       }
     }
   } 
-
-  /// handles the saving of a draft, called when either:
-  /// - a form's content is modified in any way (staff only)
-  /// - a question's response has been marked complete/hits next
-  /// - a question's unfinished response has been modified, update draft
-  // void _saveFormData(StudentForm form) {
-  //   // Implementation to save form data
-  // }
 
 }
