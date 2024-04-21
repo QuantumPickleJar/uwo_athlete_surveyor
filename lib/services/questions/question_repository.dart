@@ -1,20 +1,16 @@
 import 'package:athlete_surveyor/models/interfaces/i_question_respository.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/models/response_type.dart';
+import 'package:athlete_surveyor/services/db.dart';
 import 'package:postgres/postgres.dart';
 
 class QuestionRepository implements IQuestionRepository{
-  
-  final Connection _connection;
-  static QuestionRepository? _db_instance;
+  Future<Connection> get _connection async => await PostgresDB.connection;
+  // final Connection _connection;
+  // static QuestionRepository? _db_instance;
 
   // Private constructor, facilitates safeguarded connection 
-  QuestionRepository._internal(this._connection);
-
-  static QuestionRepository getInstance(Connection conn) {
-    _db_instance ??= QuestionRepository._internal(conn);
-    return _db_instance!;
-  }
+  QuestionRepository();
 
   @override
   Future<Question> createQuestion(Question question, String formId) async {
@@ -22,8 +18,8 @@ class QuestionRepository implements IQuestionRepository{
     String sql = """INSERT INTO public.tbl_questions (content, order_in_form, form_id, response_enum
                         VALUES (@content, @order, @formId, @responseEnum) 
                         RETURNING *;""";
-
-    var result = await _connection.execute(
+    var db = await _connection; /// get the static connection
+    var result = await db.execute(
       Sql.named(sql), parameters: {
       'content': question.content,
       'order': question.ordinal,
@@ -43,7 +39,8 @@ class QuestionRepository implements IQuestionRepository{
   Future<bool> deleteQuestion(String questionId) async {
     // TODO: implement deleteQuestion
     String sqlStatement = """DELETE * FROM public.tbl_questions WHERE question_id LIKE @questionId;""";
-    var result = await _connection.execute(sqlStatement, parameters: questionId);
+    var db = await _connection; /// get the static 
+    var result = await db.execute(sqlStatement, parameters: questionId);
     if (result.isEmpty) {
       return false;
     } else {
@@ -56,7 +53,8 @@ class QuestionRepository implements IQuestionRepository{
     // TODO: implement getQuestionById
     String sqlStatement = """SELECT content, order_in_form, form_id, question_id, response_enum
                             FROM public.tbl_questions WHERE question_id LIKE @questionId;""";
-    var result = await _connection.execute(sqlStatement, parameters: questionId);
+    var db = await _connection; /// get the static connection
+    var result = await db.execute(sqlStatement, parameters: questionId);
     if (result.isEmpty) {
       return null;
     } else {
@@ -68,10 +66,11 @@ class QuestionRepository implements IQuestionRepository{
   Future<List<Question>> getQuestions() async {
     // TODO: implement getQuestions
     String sqlStatement = """SELECT * FROM tbl_questions""";
-    var queryResult = await _connection.execute(sqlStatement);
+    var db = await _connection; /// get the static connection
+    var result = await db.execute(sqlStatement);
       
     /// unpack the result by leveraging the row mapping function
-    return queryResult.map((row) => _mapRowToQuestion(row.toColumnMap())).toList();
+    return result.map((row) => _mapRowToQuestion(row.toColumnMap())).toList();
   }
 
   @override
@@ -81,7 +80,8 @@ class QuestionRepository implements IQuestionRepository{
                             SET content = @content, order_in_form = @order,
                                 form_id = @formId, response_enum = @responseEnum
                             WHERE question_id = @questionId;""";
-    var result = await _connection.execute(
+var db = await _connection; /// get the static connection
+    var result = await db.execute(      
       Sql.named(sqlStatement),
       parameters: {
         'content': question.content,
