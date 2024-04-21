@@ -15,8 +15,8 @@ class FormService {
   final Uuid _uuid = const Uuid(); // finding out if we need this at the moment
 
   /// TODO: make more specific get-based functions that query smaller 
-  FormService(this._formRepository, this._questionRepository);
   /// subsets, such as ones suited for students vs staff for example
+  FormService(this._formRepository, this._questionRepository);
     // _init(spreadsheetId);
     // return _formRepository.getAllForms();
   
@@ -72,10 +72,10 @@ class FormService {
   /// Called by FormBuilderPage when loading a form.  If an id isn't supplied, we know it's 
   /// a new form and can simply construct and return a [StaffForm] with the populated ID from 
   /// the DB.
-  Future<IGenericForm> fetchOrCreateForm(String formId, String formName, String sport) async {
+  Future<IGenericForm> fetchOrCreateForm({required String formId, String? formName, String? sport}) async {
     /// route to [_formFactory] if [formId] is null
     if(formId.isEmpty) {
-     return _formFactory.createStaffForm(formName: formName, sport: sport);
+     return _formFactory.createStaffForm(formName: formName!, sport: sport);
       /// now we'll grab the form's newly assigned id
       // var persistedForm = await createFormWithQuestions(newForm as Form, []) ;
       // // verify the conversion was successful
@@ -84,7 +84,9 @@ class FormService {
       // newForm.formId = persistedForm.formId;  /// ...and update [newForm] to match
       // return newForm;
     } else {  /// fetch the Form
-      var existingForm = await _formRepository.getFormById(formId);
+      var existingForm = await getFormById(formId);
+      // var existingForm = await _formRepository.getFormById(formId);
+
       /// TODO: examine necessity of this if statement
       if (existingForm != null) {
         return existingForm; /// cast because [IGenericForm] expected
