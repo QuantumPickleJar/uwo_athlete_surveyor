@@ -8,7 +8,7 @@ import 'package:athlete_surveyor/services/db.dart';
 // Concrete implementation of the FormRepository
 class FormRepository implements IFormRepository {
   // final Connection _connection;
-  Future<Connection> get _connection async => await PostgresDB.connection;
+  Future<Connection> get _connection async => await PostgresDB.getConnection();
   // static FormRepository? _db_instance;
 
   FormRepository();
@@ -18,7 +18,7 @@ class FormRepository implements IFormRepository {
 
   @override
   Future<GenericForm> createForm(GenericForm form) async {
-    // Insert form into the database and return the inserted form
+    try {// Insert form into the database and return the inserted form
     String sqlStatement = """INSERT INTO tbl_forms 
                             (form_id, user_id, form_title, last_modified, create_date)
                             VALUES (@formId, @userId, @formTitle, @lastModified, @createDate) 
@@ -43,6 +43,9 @@ class FormRepository implements IFormRepository {
     } 
     /// use our helper function to map the resulting columns out to a [Form]
     return _mapRowToForm(result.first.toColumnMap());
+    } finally {
+      PostgresDB.closeConnection();
+    }
   }
 
   /// Hhelper function to convert a database row to a Form object
@@ -59,22 +62,28 @@ class FormRepository implements IFormRepository {
   /// Deletes a form and its questions from tbl_forms
   @override
   Future<bool> deleteForm(String formId) async {
-    String sqlStatement = "DELETE FROM tbl_forms WHERE form_id LIKE @formId";
-    var db = await _connection;
-    var result = await db.execute(
-      Sql.named(sqlStatement), parameters: { 'formId': formId }
-    );
-    /// provide feedback about the operation's success/failure
-    if (result.affectedRows > 0) {
-      return Future.value(true);
-    } else {
-      return Future.value(false);
+    try { 
+      String sqlStatement = "DELETE FROM tbl_forms WHERE form_id LIKE @formId";
+      var db = await _connection;
+      var result = await db.execute(
+        Sql.named(sqlStatement), parameters: { 'formId': formId }
+      );
+      /// provide feedback about the operation's success/failure
+      if (result.affectedRows > 0) {
+        return Future.value(true);
+      } else {
+        return Future.value(false);
+      }
+    } finally {
+      PostgresDB.closeConnection();
     }
   }
   
   
   @override
   Future<List<GenericForm>> getAllForms() async {
+    try {
+
     String sqlStatement = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
     var db = await _connection;
     final result = await db.execute(Sql.named(sqlStatement));
@@ -90,44 +99,55 @@ class FormRepository implements IFormRepository {
     // }
     
     return result.map((row) => _mapRowToForm(row.toColumnMap())).toList();
+    } finally {
+      PostgresDB.closeConnection();
+    }
   }
   
   /// Retrieves a form by its id
   @override
   Future<GenericForm?> getFormById(String formId) async {
-    // TODO: implement getFormById
-    // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
-    String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
-    var db = await _connection;
-    
-    var result = await db.execute(sqlStatement, parameters: formId);
-    if(result.isEmpty) {
-      return null;
+    try {
+      // TODO: implement getFormById
+      // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
+      String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
+      var db = await _connection;
+      
+      var result = await db.execute(sqlStatement, parameters: formId);
+      if(result.isEmpty) {
+        return null;
+      }
+      return _mapRowToForm(result.first.toColumnMap());
+     } finally {
+      PostgresDB.closeConnection();
     }
-    return _mapRowToForm(result.first.toColumnMap());
   }
   
   /// similar to the insert method, but avoids an additional query by returning args over existing
   @override
   Future<GenericForm> updateForm(GenericForm form) async {
-    // TODO: implement updateForm
-    /// don't modify creation date, only the modification date
-    String sqlStatement = """UPDATE public.tbl_forms
-                    SET user_id=?, form_title='', last_modified=current_date()
-                    WHERE form_id=gen_random_uuid();""";
-    var db = await _connection;
-    var result = await db.execute(
-      sqlStatement, parameters: {
-        'userId': 'user-id', // For now, since you don't have auth
-        'formTitle': form.formName,
-        'lastModified': DateTime.now(),
-        'createDate': DateTime.now()
-    });
-    if (result.isEmpty) {
-      print(form);
-      throw Exception("Failed to update the form!");
-    } else {
-      return _mapRowToForm(result.first.toColumnMap());
+    try {
+      // TODO: implement updateForm
+      /// don't modify creation date, only the modification date
+      String sqlStatement = """UPDATE public.tbl_forms
+                      SET user_id=?, form_title='', last_modified=current_date()
+                      WHERE form_id=gen_random_uuid();""";
+      var db = await _connection;
+      var result = await db.execute(
+        sqlStatement, parameters: {
+          'userId': 'user-id', // For now, since you don't have auth
+          'formTitle': form.formName,
+          'lastModified': DateTime.now(),
+          'createDate': DateTime.now()
+      });
+      if (result.isEmpty) {
+        print(form);
+        throw Exception("Failed to update the form!");
+      } else {
+        return _mapRowToForm(result.first.toColumnMap());
+      } 
+    } finally {
+      PostgresDB.closeConnection();
     }
   }
 }

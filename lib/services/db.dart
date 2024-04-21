@@ -11,7 +11,7 @@ class PostgresDB {
   /// 
   /// Returns:
   ///   A [Future] that completes with a [Connection] object.
-  static Future<Connection> get connection async {
+  static Future<Connection> getConnection() async {
     /// re-open connection if not done already
     if(_connection == null || !_connection!.isOpen) {
       _connection = await Connection.open(
@@ -25,5 +25,11 @@ class PostgresDB {
       );
     }
     return _connection!;
+  }
+
+  /// closes the connection so other processes may use it
+  static void closeConnection() {
+    _connection?.close();
+    _connection = null;
   }
 }
