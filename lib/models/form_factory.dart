@@ -22,14 +22,13 @@ abstract class FormFactory {
 class ConcreteFormFactory extends FormFactory {
   @override
   IGenericForm createStudentForm({required String formName}) {
-    String newUuid = const Uuid().v4();    // get the UUID
     return StudentForm(
-      formId: newUuid,
+      formId: '',
       formName: formName,
-      sport: "",
+      sport: 'test student sport',  // get from service?
       /// TODO: change below line, this is dirty code
       formDateReceived: DateTime.now(), /// should be read from the spreadsheet
-      formDateCompleted: null
+      formDateCompleted: null, questions: []
     );
   }
 
@@ -37,13 +36,13 @@ class ConcreteFormFactory extends FormFactory {
   /// A staff member does not complete forms, so they only see [formDateCreated]
   @override
   IGenericForm createStaffForm({required String formName, String? sport}) {
-    String newUuid = const Uuid().v4();    // get the UUID
     return StaffForm(
-      formId: newUuid,
+      formId: '',
       formName: formName,
       formDateCreated: DateTime.now(),
       sport: sport ?? "test sport",
-      questions: []
+      attachments: [],
+      List.empty()  // questions
     );
   }
 }

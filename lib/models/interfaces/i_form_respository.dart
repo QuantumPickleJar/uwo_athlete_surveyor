@@ -2,9 +2,9 @@ import "package:athlete_surveyor/models/forms/base_form.dart";
 
 // Form repository interface
 abstract class IFormRepository {
-  Future<Form> createForm(Form form);
-  Future<Form?> getFormById(String formId);
-  Future<List<Form>> getAllForms();
-  Future<void> updateForm(Form form);
+  Future<GenericForm> createForm(GenericForm form);
+  Future<GenericForm?> getFormById(String formId);
+  Future<List<GenericForm>> getAllForms();
+  Future<void> updateForm(GenericForm form);
   Future<void> deleteForm(String formId);
 }

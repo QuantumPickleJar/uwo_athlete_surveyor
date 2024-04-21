@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
-
-import '../interfaces/i_generic_form.dart';
+import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
+import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
+
 
 /// A concrete implementation of [IGenericForm], tailored for what students will see.
 /// This includes the loading of a form to *take* a survey, as well as the ability to 
@@ -17,39 +17,41 @@ import 'package:uuid/uuid.dart';
 /// 
 /// The nested [ResponseType] is intended be read by a service on the Form Editor page that 
 /// would allow the alteration of the desired format. 
-class StaffForm extends ChangeNotifier implements IGenericForm {
+class StaffForm extends GenericForm {
 
-  @override String formId;            // from super
-  @override String formName;        // from super
-  @override String sport;           // from super
-
-  /// TODO: this should be populated by the form_file_service, if not form_service
-  @override List<File>? attachments;
-  
-  DateTime? formDateCreated;
+  final DateTime? formDateCreated;
 
   // Map<Question, List<Response>> used later in analytics, ABOVE this scope
-  List<Question> questions;
+  final List<Question> questions;
 
   /// Constructs a new StaffForm, loaded with [questions]
-  StaffForm({
-    required this.formId,
-    required this.formName,
-    required this.sport,
-    this.formDateCreated,
-    required this.questions
-  });
-  
+  // ignore: use_super_parameters
+  StaffForm(this.questions, {
+    required formId,
+    required formName,
+    required sport,
+    super.attachments,
+    this.formDateCreated
+  }) : super(
+        formId: formId,
+        formName: formName,
+        sport: sport,
+        formDateCreated: formDateCreated,
+        questions: [],
+      );
+
   /// Constructs a new StaffForm from an existing [IGenericForm].
   /// Intended to be used when creating new forms, NOT on existing
-  StaffForm.fromGenericForm(IGenericForm genericForm): 
-      formId = genericForm.formId,
-      formName = genericForm.formName,
-      sport = genericForm.sport,
-      attachments = genericForm.attachments,
-      formDateCreated = null,
-      questions = [];
-  
+  StaffForm.fromGenericForm(IGenericForm genericForm, this.formDateCreated, this.questions):
+  super( 
+      formId : genericForm.formId,
+      formName : genericForm.formName,
+      sport: genericForm.sport,
+      questions: [],
+      attachments: genericForm.attachments,
+      formDateCreated: formDateCreated
+      );
+
     /// Called when updates to the form's responses have been made 
   @override 
   void saveForm() {
@@ -63,10 +65,10 @@ class StaffForm extends ChangeNotifier implements IGenericForm {
     // This would populate the questions list with existing data, including drafts
   }
 
-  void updateFormTitle(String newTitle) {
-    formName = newTitle;
-    notifyListeners();
-  }
+  // void updateFormTitle(String newTitle) {
+  //   super() = newTitle;
+  //   notifyListeners();
+  // }
 
   void addQuestion(Question question) {
     questions.add(question);
@@ -77,4 +79,7 @@ class StaffForm extends ChangeNotifier implements IGenericForm {
     questions.remove(question);
     notifyListeners();
   }
+  
+  @override
+  set attachments(List<File>? attachments) {}
 }

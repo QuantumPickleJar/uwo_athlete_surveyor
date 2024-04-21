@@ -13,16 +13,11 @@ class FormRepository implements IFormRepository {
 
   FormRepository();
   
-  /// static FormRepository getInstance(Connection connection) {
-  ///   _db_instance ??= FormRepository._internal();
-  ///   return _db_instance!;
-  /// }
-  
   /// Private constructor
   FormRepository._internal();
 
   @override
-  Future<Form> createForm(Form form) async {
+  Future<GenericForm> createForm(GenericForm form) async {
     // Insert form into the database and return the inserted form
     String sqlStatement = """INSERT INTO tbl_forms 
                             (form_id, user_id, form_title, last_modified, create_date)
@@ -51,8 +46,8 @@ class FormRepository implements IFormRepository {
   }
 
   /// Hhelper function to convert a database row to a Form object
-  Form _mapRowToForm(Map<String, dynamic> row) {
-    return Form(
+  GenericForm _mapRowToForm(Map<String, dynamic> row) {
+    return GenericForm(
       formId: row['form_id'],
       formName: row['form_title'],
       sport: 'Sport Placeholder', // Replace with actual value if it's available
@@ -79,7 +74,7 @@ class FormRepository implements IFormRepository {
   
   
   @override
-  Future<List<Form>> getAllForms() async {
+  Future<List<GenericForm>> getAllForms() async {
     String sqlStatement = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
     var db = await _connection;
     final result = await db.execute(Sql.named(sqlStatement));
@@ -99,7 +94,7 @@ class FormRepository implements IFormRepository {
   
   /// Retrieves a form by its id
   @override
-  Future<Form?> getFormById(String formId) async {
+  Future<GenericForm?> getFormById(String formId) async {
     // TODO: implement getFormById
     // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
     String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
@@ -114,7 +109,7 @@ class FormRepository implements IFormRepository {
   
   /// similar to the insert method, but avoids an additional query by returning args over existing
   @override
-  Future<Form> updateForm(Form form) async {
+  Future<GenericForm> updateForm(GenericForm form) async {
     // TODO: implement updateForm
     /// don't modify creation date, only the modification date
     String sqlStatement = """UPDATE public.tbl_forms

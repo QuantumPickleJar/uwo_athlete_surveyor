@@ -20,7 +20,7 @@ class FormService {
     // _init(spreadsheetId);
     // return _formRepository.getAllForms();
   
-  Future<Form?> getFormById(String formUuid) async{
+  Future<GenericForm?> getFormById(String formUuid) async{
     try {
       var retrievedForm = await _formRepository.getFormById(formUuid);
       
@@ -35,16 +35,16 @@ class FormService {
     return null;
   }
 
-  Future<Form> createNewForm(String formName, String sport) async {
+  Future<GenericForm> createNewForm(String formName, String sport) async {
     /// TODO: ensure another form with this name doesn't exist
     IGenericForm newForm = _formFactory.createStaffForm(formName: formName, sport: sport);
 
-    await _formRepository.createForm(newForm as Form);
+    await _formRepository.createForm(newForm as GenericForm);
     return newForm;
   }
 
-  Future<Form> createFormWithQuestions(Form form, List<Question> questions) async {
-    Form newForm = await _formRepository.createForm(form);    // form needs the id from DB first
+  Future<GenericForm> createFormWithQuestions(GenericForm form, List<Question> questions) async {
+    GenericForm newForm = await _formRepository.createForm(form);    // form needs the id from DB first
     for (var question in questions) {
       question.formId = newForm.formId;   // bind the question to the form it's adding into
       // newForm.questions.add(question);
@@ -54,13 +54,13 @@ class FormService {
   }
 
   /// TODO: implement
-  Future<Form?> getFormDetails(String formId) async {
+  Future<GenericForm?> getFormDetails(String formId) async {
     /// TODO: wrap with safe uuid parse
     return _formRepository.getFormById(formId);
   }
 
   /// Called when updates to the form's responses have been made 
-  Future<Form> saveForm(Form form) async {
+  Future<GenericForm> saveForm(GenericForm form) async {
     if (form.formId.isEmpty) {  /// do we need to create it?
       return await _formRepository.createForm(form);
     } else {

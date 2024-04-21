@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
@@ -16,10 +17,7 @@ import 'package:uuid/uuid.dart';
 /// 
 /// The nested [ResponseType] is intended be read by something on the UI layer to provide
 /// a widget based on the question being viewed.
-class StudentForm implements IGenericForm {
-  @override final String formId;            // from super
-  final String formName;        // from super
-  final String sport;           // from super
+class StudentForm extends GenericForm {
   
   late final DateTime? formDateReceived;
   final DateTime? formDateCompleted;
@@ -32,17 +30,19 @@ class StudentForm implements IGenericForm {
 
   /// Constructs a new StudentForm
   StudentForm({
-    required this.formId,
-    required this.formName,
-    required this.sport,
+    required formId,
+    required formName,
+    required sport,
     this.formDateReceived,
     this.formDateCompleted,
-  });
+    this.attachments, required super.questions
+  }) : super(formId: formId, formName: formName, sport: sport);
   
     /// Called when updates to the form's responses have been made 
   @override 
   void saveForm() {
     // Save logic for the form, including saving drafts to local cache + remote storage
+    notifyListeners();
   }
 
   /// Loads the form content and any existing drafts for the questions
@@ -50,6 +50,7 @@ class StudentForm implements IGenericForm {
   void loadForm(Uuid formUuid) {
     // Load form data from a remote source or local cache
     // This would populate the questions list with existing data, including drafts
+    notifyListeners();
   }
   
 }
