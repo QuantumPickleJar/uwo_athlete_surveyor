@@ -42,14 +42,14 @@ class StaffForm extends GenericForm {
 
   /// Constructs a new StaffForm from an existing [IGenericForm].
   /// Intended to be used when creating new forms, NOT on existing
-  StaffForm.fromGenericForm(IGenericForm genericForm, this.formDateCreated, this.questions):
+  StaffForm.fromGenericForm(IGenericForm genericForm, this.questions, this.formDateCreated):
   super( 
       formId : genericForm.formId,
       formName : genericForm.formName,
       sport: genericForm.sport,
       questions: [],
       attachments: genericForm.attachments,
-      formDateCreated: formDateCreated
+      formDateCreated: formDateCreated ?? DateTime.now()
       );
 
     /// Called when updates to the form's responses have been made 

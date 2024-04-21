@@ -35,14 +35,14 @@ class ConcreteFormFactory extends FormFactory {
 
   /// A staff member does not complete forms, so they only see [formDateCreated]
   @override
-  IGenericForm createStaffForm({required String formName, String? sport}) {
+  IGenericForm createStaffForm({required String formName, String? sport, DateTime? formDateCreated}) {
     return StaffForm(
       formId: '',
       formName: formName,
-      formDateCreated: DateTime.now(),
+      formDateCreated: formDateCreated ?? DateTime.now(),
       sport: sport ?? "test sport",
       attachments: [],
-      List.empty()  // questions
+      List.empty()
     );
   }
 }

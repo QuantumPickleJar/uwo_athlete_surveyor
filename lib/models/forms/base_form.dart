@@ -7,7 +7,7 @@ import "package:uuid/uuid.dart";
 
 /// Concrete (but soft) implementation of IGenericForm.  
 /// Abstract base class that we use for keeping in line with DRY + Liskov's Substitution
-abstract class GenericForm extends ChangeNotifier implements IGenericForm {
+class GenericForm extends ChangeNotifier implements IGenericForm {
   @override final String formId;
   @override final String formName;
   @override final String sport;
@@ -21,16 +21,22 @@ abstract class GenericForm extends ChangeNotifier implements IGenericForm {
     required this.formName,
     required this.sport,
     this.formDateCreated,
-    required List<Question> questions,
+    required this.questions,
     this.attachments
-  }) { this.questions = questions; }
+  });
 
 
   /// To be used in saving drafts, if at all.  May need to be 
   /// removed to respect SOLID principles.
   @override
   void saveForm() {
-    // TODO: Implement saveForm
+    /// TODO: Implement saveForm
     notifyListeners();
   }
+  
+  @override
+  set attachments(List<File>? _attachments) {
+    /// TODO: implement attachments
+  }
+  
 }
