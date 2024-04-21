@@ -1,5 +1,6 @@
 import 'package:athlete_surveyor/models/form_factory.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
+import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/services/questions/question_repository.dart';
@@ -67,24 +68,24 @@ class FormService {
     }
   }
 
-  /// using the supplied [formUuid] as an indexing key of sorts, queries the spreadsheet
-  /// accordingly so that the content can be loaded for a **specific student**.
-  /// 
-  /// Returns `null` if the form was unable to be found.
-  Future<Form?> loadForm(String formUuid) async {
-    /// List<Question>? questions = (get from query);
-    try {
-      var retrievedForm = await _formRepository.getFormById(formUuid);
-      if (retrievedForm != null) {
-        /// TODO: implemement during auth stage
-        /// based on questions, load into a [StudentForm] or [StaffForm]
-        return retrievedForm;
+  /// TEMPORARY FUNCTION FOR MILESTONE
+  /// Called by FormBuilderPage when loading a form.  If an id isn't supplied, we know it's 
+  /// a new form and can simply construct and return a [StaffForm] with the populated ID from 
+  /// the DB.
+  Future<StaffForm> fetchOrCreateForm(String formId, String formName, String sport) async {
+    /// route to [_formFactory] if [formId] is null
+    if(formId.isEmpty) {
+      return _formFactory.createStaffForm(formName: formName, sport: sport) as StaffForm;
+    } else {  /// fetch the Form
+      var form = await getFormById(formId);
+      /// TODO: examine necessity of this if statement
+      if (form != null && form is StaffForm) {
+        return form as StaffForm;
+      } else {
+        throw Exception('Unable to find the form, or not the right form type!');
       }
-    } on Exception catch (e) {
-      print('Failed to load a form with id $formUuid:\n Error: $e');
-    } 
-    return null;
-  }
+    }
+  } 
 
   /// handles the saving of a draft, called when either:
   /// - a form's content is modified in any way (staff only)
