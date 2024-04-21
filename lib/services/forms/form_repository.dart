@@ -7,16 +7,17 @@ import 'package:athlete_surveyor/services/db.dart';
 
 // Concrete implementation of the FormRepository
 class FormRepository implements IFormRepository {
-  final Connection _connection;
+  // final Connection _connection;
+  Future<Connection> get _connection async => await PostgresDB.connection;
   static FormRepository? _db_instance;
 
-  static FormRepository getInstance(Connection connection) {
-    _db_instance ??= FormRepository._internal(connection);
-    return _db_instance!;
-  }
+  // static FormRepository getInstance(Connection connection) {
+  //   _db_instance ??= FormRepository._internal(connection);
+  //   return _db_instance!;
+  // }
   
   /// Private constructor
-  FormRepository._internal(this._connection);
+  FormRepository._internal();
 
   @override
   Future<Form> createForm(Form form) async {
@@ -31,15 +32,15 @@ class FormRepository implements IFormRepository {
     // var result = await _connection.runTx((insertForm) {
     //   final persistedForm = await insertForm.execute()
     // });
-
-   var result = await _connection.execute(
-      sqlStatement, parameters: {
-        'userId': 'user-id', // For now, since you don't have auth
-        'formTitle': form.formName,
-        'lastModified': DateTime.now(),
-        'createDate': DateTime.now(), 
-      }
-    );
+    var db = await _connection;
+    var result = await db.execute(
+        sqlStatement, parameters: {
+          'userId': 'user-id', // For now, since you don't have auth
+          'formTitle': form.formName,
+          'lastModified': DateTime.now(),
+          'createDate': DateTime.now(), 
+        }
+      );
     if (result.isEmpty) {
       throw Exception('Failed creating form.');
     } 
@@ -62,7 +63,8 @@ class FormRepository implements IFormRepository {
   @override
   Future<bool> deleteForm(String formId) async {
     String sqlStatement = "DELETE FROM tbl_forms WHERE form_id LIKE @formId";
-    var result = await _connection.execute(
+    var db = await _connection;
+    var result = await db.execute(
       Sql.named(sqlStatement), parameters: { 'formId': formId }
     );
     /// provide feedback about the operation's success/failure
@@ -77,7 +79,8 @@ class FormRepository implements IFormRepository {
   @override
   Future<List<Form>> getAllForms() async {
     String sqlStatement = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
-    final result = await _connection.execute(Sql.named(sqlStatement));
+    var db = await _connection;
+    final result = await db.execute(Sql.named(sqlStatement));
 
     // if(result.isNotEmpty) {
     //   for (var row in result) {
@@ -98,7 +101,9 @@ class FormRepository implements IFormRepository {
     // TODO: implement getFormById
     // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
     String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
-    var result = await _connection.execute(sqlStatement, parameters: formId);
+    var db = await _connection;
+    
+    var result = await db.execute(sqlStatement, parameters: formId);
     if(result.isEmpty) {
       return null;
     }
@@ -113,14 +118,14 @@ class FormRepository implements IFormRepository {
     String sqlStatement = """UPDATE public.tbl_forms
                     SET user_id=?, form_title='', last_modified=current_date()
                     WHERE form_id=gen_random_uuid();""";
-       var result = await _connection.execute(
-        sqlStatement, parameters: {
-          'userId': 'user-id', // For now, since you don't have auth
-          'formTitle': form.formName,
-          'lastModified': DateTime.now(),
-          'createDate': DateTime.now()
-      }
-    );
+    var db = await _connection;
+    var result = await db.execute(
+      sqlStatement, parameters: {
+        'userId': 'user-id', // For now, since you don't have auth
+        'formTitle': form.formName,
+        'lastModified': DateTime.now(),
+        'createDate': DateTime.now()
+    });
     if (result.isEmpty) {
       print(form);
       throw Exception("Failed to update the form!");
