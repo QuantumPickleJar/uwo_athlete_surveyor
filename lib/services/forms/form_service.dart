@@ -37,7 +37,7 @@ class FormService {
 
   Future<Form> createNewForm(String formName, String sport) async {
     /// TODO: ensure another form with this name doesn't exist
-    IGenericForm newForm = _formFactory.createStudentForm(formName: formName);
+    IGenericForm newForm = _formFactory.createStaffForm(formName: formName, sport: sport);
 
     await _formRepository.createForm(newForm as Form);
     return newForm;
