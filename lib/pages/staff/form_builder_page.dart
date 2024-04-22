@@ -40,7 +40,8 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       try {
         var loadedForm = await _formService.fetchOrCreateForm(formId: formId);
         setState(() {
-          _currentForm = StaffForm.fromGenericForm(loadedForm); // Set the loaded form to the current form
+          _currentForm = 
+          StaffForm.fromGenericForm(loadedForm, [], DateTime.now()); // Set the loaded form to the current form
         });
       } catch (e) { /// an exception will occur if not found
         /// a bit dirty--we handle the not found case in the catch
@@ -48,10 +49,10 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
         /// CREATE a new form if we didn't receive a `formId`
         setState(() {
           _currentForm = StaffForm(
-            formId: '', 
+            [], 
+            formId: '',
             formName: 'Untitled Form', 
-            sport: "SOME SPORT", 
-            questions: []
+            sport: "SOME SPORT",
           );
         });
 
