@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:athlete_surveyor/models/form_factory.dart';
 import 'package:athlete_surveyor/models/forms/staff_form.dart';
+import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:athlete_surveyor/widgets/ExpandedTextField.dart';
@@ -38,10 +40,10 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
 
   Future<void> _loadForm(String formId) async {
       try {
-        var loadedForm = await _formService.fetchOrCreateForm(formId: formId);
+        Form loadedForm = (await _formService.fetchOrCreateForm(formId: formId)) as Form;
         setState(() {
-          _currentForm = 
-          StaffForm.fromGenericForm(loadedForm, [], DateTime.now()); // Set the loaded form to the current form
+          _currentForm = StaffForm.fromGenericForm(loadedForm as IGenericForm, [], DateTime.now()); // Set the loaded form to the current form
+          /// could also call the form factor 
         });
       } catch (e) { /// an exception will occur if not found
         /// a bit dirty--we handle the not found case in the catch
@@ -49,10 +51,10 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
         /// CREATE a new form if we didn't receive a `formId`
         setState(() {
           _currentForm = StaffForm(
-            [], 
-            formId: '',
+            formId: '', 
             formName: 'Untitled Form', 
-            sport: "SOME SPORT",
+            sport: "SOME SPORT", 
+            List.empty()
           );
         });
 
