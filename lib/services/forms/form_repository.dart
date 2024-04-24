@@ -31,7 +31,8 @@ class FormRepository implements IFormRepository {
     // });
     var db = await _connection;
     var result = await db.execute(
-        sqlStatement, parameters: {
+        Sql.named(sqlStatement), parameters: {
+          // 'formId': '', // send empty string to trigger db's default value
           'userId': 'user-id', // For now, since you don't have auth
           'formTitle': form.formName,
           'lastModified': DateTime.now(),
@@ -113,7 +114,9 @@ class FormRepository implements IFormRepository {
       String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
       var db = await _connection;
       
-      var result = await db.execute(sqlStatement, parameters: formId);
+      var result = await db.execute(
+        Sql.named(sqlStatement),
+        parameters: formId);
       if(result.isEmpty) {
         return null;
       }
