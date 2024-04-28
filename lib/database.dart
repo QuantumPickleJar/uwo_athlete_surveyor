@@ -17,6 +17,7 @@ class Database
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport) VALUES (@studentName, @grade, @sport)";
   static const String _getUserPassword = "SELECT * FROM users WHERE user_name = @user_name";
+  static const String _insertNewUser = "INSERT INTO tbl_users (username,password,is_admin) VALUES (@username,@password,@is_admin)";
 
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
@@ -125,7 +126,7 @@ class Database
     } 
   }
 
-  /// Get a user's password based on their provided username (usualy to check against the password they provided for login).
+  /// Get a user's password based on their provided username (usually to check against the password they provided for login).
   static Future<Result> fetchUserPassword(String userName) async
   {
     Connection? conn;
@@ -147,5 +148,31 @@ class Database
     {
       conn?.close();
     } 
+  }
+
+  /// Insert a new user to the DB; bool response shows whether or not it was successful.
+  static Future<bool> insertNewUser(String username, String password, bool isAdmin) async
+  {
+    Connection? conn;
+    try
+    {
+      conn = await getOpenConnection(); 
+      await conn.execute
+      (
+        Sql.named(_insertNewUser),
+        parameters: {'username': username, 'password': password, 'is_admin': isAdmin}
+      );
+    }
+    catch (e)
+    {
+      print('Error inserting data: $e');
+      return false; // insertion not successful
+    }
+    finally
+    {
+      conn?.close();
+    } 
+
+    return true;
   }
 }

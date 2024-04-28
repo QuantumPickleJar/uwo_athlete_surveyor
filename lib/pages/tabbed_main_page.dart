@@ -11,9 +11,6 @@ import 'package:provider/provider.dart';
 class TabbedMainPage extends StatefulWidget
 {
   const TabbedMainPage({super.key, required this.isAdmin});
-
-  //final InboxModel inboxModel = InboxModel();
-  //final PreviousFormsModel previousformsModel = PreviousFormsModel();
   final bool isAdmin;
 
   @override

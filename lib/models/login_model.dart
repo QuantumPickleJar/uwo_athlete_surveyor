@@ -5,8 +5,8 @@ import 'dart:math';
 
 class LoginModel extends ChangeNotifier
 {
-  /// Method for Generating Random Temporary passwords for newly added accounts. Intended to be changed on first login.
-  String _generateRandomTemporaryPassword() 
+  /// Method for Generating Random Temporary passwords for newly added accounts; 15 characters is the standard for passwords nowadays. Intended to be changed on first login.
+  String generateRandomTemporaryPassword()
   {
     final random = Random();
     const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*()_+';
@@ -18,6 +18,7 @@ class LoginModel extends ChangeNotifier
           random.nextInt(characters.length)]; // Generate a random password
     }
 
+    print('Random pass: $password\n'); //testing; remove later
     return password;
   }
 
@@ -48,6 +49,14 @@ class LoginModel extends ChangeNotifier
 
     print(passwordMatches); //testing; remove later
     return passwordMatches;
+  }
+
+  Future<bool> testingInsertAdminAccount()
+  {
+    String username = 'admin@uwosh.edu';
+    String hashedPassword = BCrypt.hashpw(generateRandomTemporaryPassword(), BCrypt.gensalt());
+
+    return Database.insertNewUser(username, hashedPassword, true);
   }
 
 }
