@@ -3,6 +3,7 @@
 import 'package:postgres/postgres.dart';
 
 /// Static database class to handle all SQL transactions.
+/// TODO: consolidate common SQL query methods
 class Database 
 {
   static const String _dbHost = "cs361-lab3-13043.5xj.gcp-us-central1.cockroachlabs.cloud";
@@ -15,6 +16,7 @@ class Database
   static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList"; 
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport) VALUES (@studentName, @grade, @sport)";
+  static const String _getUserPassword = "SELECT * FROM users WHERE user_name = @user_name";
 
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
@@ -115,6 +117,30 @@ class Database
     catch (e)
     {
       print('Error inserting data: $e');
+      rethrow;
+    }
+    finally
+    {
+      conn?.close();
+    } 
+  }
+
+  /// Get a user's password based on their provided username (usualy to check against the password they provided for login).
+  static Future<Result> fetchUserPassword(String userName) async
+  {
+    Connection? conn;
+    try
+    {
+      conn = await getOpenConnection(); 
+      return await conn.execute
+      (
+        Sql.named(_getUserPassword),
+        parameters: {'user_name': userName}
+      );
+    }
+    catch (e)
+    {
+      print('Error fetching data: $e');
       rethrow;
     }
     finally
