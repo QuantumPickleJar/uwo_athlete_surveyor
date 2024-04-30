@@ -1,8 +1,13 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+//import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
+
 
 class AddStudent extends StatefulWidget 
 {
@@ -13,14 +18,27 @@ class AddStudent extends StatefulWidget
   State<AddStudent> createState() => _AddStudentState();
 }
 
-class _AddStudentState extends State<AddStudent> 
-{
+class _AddStudentState extends State<AddStudent> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _gradeController = TextEditingController();
   final TextEditingController _sportController = TextEditingController();
+  String? _imageUrl; // Store the URL of the picked image
 
-  void _submitForm() 
-  {
+Future<void> _pickImage() async {
+  final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+
+  setState(() {
+    if (pickedFile != null) {
+      _imageUrl = pickedFile.path;
+    } else {
+      print('No image selected.');
+    }
+  });
+}
+
+  
+
+  void _submitForm() {
     // Validate form fields and retrieve data
     String name = _nameController.text;
     String grade = _gradeController.text;
@@ -46,9 +64,10 @@ class _AddStudentState extends State<AddStudent>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: defaultAppBar(
-        buildContext: context, 
-        title: "Add New Athlete", 
-        hasBackButton: true),
+        buildContext: context,
+        title: "Add New Athlete",
+        hasBackButton: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -60,16 +79,34 @@ class _AddStudentState extends State<AddStudent>
                 style: TextStyle(fontSize: 30),
               ),
             ),
-            const SizedBox(height: 20), 
+            const SizedBox(height: 20),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.network(
-                  'https://via.placeholder.com/150', 
-                  width: 150,
-                  height: 150,
-                ),
-                const SizedBox(width: 16.0), 
+              Column(
+                children: [
+                  _imageUrl != null
+                  ? Image.file(
+                      File(_imageUrl!), // Display the picked image if available
+                      width: 150,
+                      height: 150,
+                    )
+                  : GestureDetector(
+                      onTap: _pickImage, // Call _pickImage method when tapped
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        color: Colors.grey, // Placeholder for the image
+                        child: Icon(Icons.add_photo_alternate),
+                      ),
+                    ),
+                    ElevatedButton(onPressed: () {
+                      _pickImage(); // Call _pickImage to select an image
+                      _submitForm(); // Call _submitForm to submit the form
+                    }, child: Text('Insert Image')),
+                ],
+              ),
+                const SizedBox(width: 16.0),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,3 +197,4 @@ class _AddStudentState extends State<AddStudent>
     );
   }
 }
+

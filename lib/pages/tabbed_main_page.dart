@@ -36,7 +36,7 @@ class _TabbedMainPageState extends State<TabbedMainPage>
   void _handleTap(int index)
   {
     setState(() {
-      selectedIndex = index;
+      selectedIndex = index; 
     });
   }
 
