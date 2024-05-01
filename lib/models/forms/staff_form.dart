@@ -26,7 +26,7 @@ class StaffForm extends GenericForm {
   /// TODO: verify, probably with a test
   /// Constructs a new StaffForm, loaded with [questions]
   // ignore: use_super_parameters
-  StaffForm(questions, {
+  StaffForm(staffQuestions, {
     required formId,
     required formName,
     required sport,
