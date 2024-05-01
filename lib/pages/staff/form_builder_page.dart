@@ -5,6 +5,10 @@ import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Page responsible for creating and modifying forms. 
+/// 
+/// Per the object family defined, the presented form is built from
+/// a [GenericForm] holding (existing, if any) data, which is then 
 class FormBuilderPage extends StatefulWidget {
   final String? formId;  // id linking page to the form
   // final StaffForm currentForm;    /// the form currently opened
@@ -17,7 +21,10 @@ class FormBuilderPage extends StatefulWidget {
 
 class _FormBuilderPageState extends State<FormBuilderPage> {
   late double _sliderValue;
-  late bool _isOpenedFormNew;
+  late bool _isOpenedFormNew;  
+
+  /// looks at formName to determine if the name is still untouched\
+  /// e.g if (formName.contains("New Form")){ ... }
   late final FormService _formService;
   late StaffForm _currentForm;
 
