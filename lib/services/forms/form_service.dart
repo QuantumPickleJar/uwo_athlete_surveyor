@@ -39,8 +39,9 @@ class FormService {
     /// TODO: ensure another form with this name doesn't exist
     IGenericForm newForm = _formFactory.createStaffForm(formName: formName, sport: sport);
 
-    await _formRepository.createForm(newForm as GenericForm);
-    return newForm;
+    /// [IGenericForm] can't store a formId, so we must inject the newly spawned one:
+    GenericForm persistedForm = await _formRepository.createForm(newForm as GenericForm);
+    return persistedForm;
   }
 
   Future<GenericForm> createFormWithQuestions(GenericForm form, List<Question> questions) async {

@@ -4,6 +4,7 @@ import 'package:athlete_surveyor/models/interfaces/i_form_respository.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:postgres/postgres.dart';
 import 'package:athlete_surveyor/services/db.dart';
+import 'package:uuid/v4.dart';
 
 // Concrete implementation of the FormRepository
 class FormRepository implements IFormRepository {
@@ -16,12 +17,15 @@ class FormRepository implements IFormRepository {
   /// Private constructor
   FormRepository._internal();
 
+  /// used temporarily to streamline the demo
+  final String DEVELOPER_UUID = "79892b1b-61a9-455a-bc4d-ac90cff75798";
+  
   @override
   Future<GenericForm> createForm(GenericForm form) async {
     try {// Insert form into the database and return the inserted form
     String sqlStatement = """INSERT INTO tbl_forms 
-                            (form_id, user_id, form_title, last_modified, create_date)
-                            VALUES (@formId, @userId, @formTitle, @lastModified, @createDate) 
+                            (user_id, form_title, last_modified, create_date)
+                            VALUES (@userId, @formTitle, @lastModified, @createDate) 
                             RETURNING *;""";
 
     /// TODO: run the question query separately, in a tx
@@ -31,13 +35,16 @@ class FormRepository implements IFormRepository {
     // });
     var db = await _connection;
     var result = await db.execute(
+        // Sql.named(sqlStatement), parameters: {
+        /// TODO: remove the LOGICAL reliance on a hard-coded UUID
         Sql.named(sqlStatement), parameters: {
-          // 'formId': '', // send empty string to trigger db's default value
-          'userId': 'user-id', // For now, since you don't have auth
+          'userId': DEVELOPER_UUID, // For now, since you don't have auth
           'formTitle': form.formName,
-          'lastModified': DateTime.now(),
-          'createDate': DateTime.now(), 
+          'lastModified': DateTime.now().toIso8601String(),
+          'createDate': DateTime.now().toIso8601String(), 
         }
+
+        
       );
     if (result.isEmpty) {
       throw Exception('Failed creating form.');
@@ -114,9 +121,7 @@ class FormRepository implements IFormRepository {
       String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
       var db = await _connection;
       
-      var result = await db.execute(
-        Sql.named(sqlStatement),
-        parameters: formId);
+      var result = await db.execute(Sql.named(sqlStatement), parameters: formId);
       if(result.isEmpty) {
         return null;
       }
@@ -130,14 +135,15 @@ class FormRepository implements IFormRepository {
   @override
   Future<GenericForm> updateForm(GenericForm form) async {
     try {
-      // TODO: implement updateForm
       /// don't modify creation date, only the modification date
       String sqlStatement = """UPDATE public.tbl_forms
-                      SET user_id=?, form_title='', last_modified=current_date()
-                      WHERE form_id=gen_random_uuid();""";
+                      SET user_id = @userId, form_title = @formTitle, 
+                          last_modified = current_date() 
+                      WHERE form_id = @formId""";
       var db = await _connection;
       var result = await db.execute(
-        sqlStatement, parameters: {
+        Sql.named(sqlStatement), parameters: {
+          'formId': null, /// TODO: adjust query and remove
           'userId': 'user-id', // For now, since you don't have auth
           'formTitle': form.formName,
           'lastModified': DateTime.now(),

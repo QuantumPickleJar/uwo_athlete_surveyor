@@ -50,11 +50,11 @@ class AdminHomePage extends StatelessWidget {
                   onPressed: () async { 
                     var formService = Provider.of<FormService>(context, listen: false);
                     var newForm = await formService.createNewForm('NewForm', 'Sport');
-                    
+                    print(newForm.formId);
                     /// push the existing form (if, for example, a previous form's thumnbnail was tapped)
                     /// otherwise send them there with a new one to be provided an ID on dbsubmittal 
                     Navigator.of(context).push(MaterialPageRoute(builder: 
-                        (context) => FormBuilderPage(formId: newForm.formId)
+                      (context) => FormBuilderPage(formId: newForm.formId)
                       ));
                     },
                   style: ButtonStyle(

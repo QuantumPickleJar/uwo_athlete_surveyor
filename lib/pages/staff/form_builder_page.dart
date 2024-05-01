@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FormBuilderPage extends StatefulWidget {
-  final String formId;  // id linking page to the form
+  final String? formId;  // id linking page to the form
+  // final StaffForm currentForm;    /// the form currently opened
   const FormBuilderPage({Key? key, required this.formId}) : super(key: key);
 
   @override
@@ -34,8 +35,9 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
   @override
   void initState() {
     super.initState();
+    print(widget.formId);  // Ensure this prints the expected UUID
     _formService = Provider.of<FormService>(context, listen: false);
-    _loadForm(widget.formId);
+    _loadForm(widget.formId!) as StaffForm;
   }
 
   Future<void> _loadForm(String formId) async {
@@ -60,10 +62,10 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
 
         } else { /// else it must be an UPDATE
           // TODO: consider an is loading here for displaying a spinner
-          _formService.getFormById(widget.formId);
+          _formService.getFormById(widget.formId!);
         }
       /// check if we need to make an additional call to the DB (should happen behind)
-      _isOpenedFormNew = widget.formId.isEmpty;
+      _isOpenedFormNew = widget.formId!.isEmpty;
       }
     }
   
