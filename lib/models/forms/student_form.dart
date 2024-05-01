@@ -23,10 +23,9 @@ class StudentForm extends GenericForm {
   final DateTime? formDateCompleted;
   
   /// TODO: this should be populated by the form_file_service
-  @override
-  List<File>? attachments;
-
-  List<Question> questions = [];
+  // @override
+  // List<File>? attachments;
+  // List<Question> questions = [];
 
   /// Constructs a new StudentForm
   StudentForm({
@@ -35,7 +34,8 @@ class StudentForm extends GenericForm {
     required sport,
     this.formDateReceived,
     this.formDateCompleted,
-    this.attachments, required super.questions
+    super.attachments, 
+    required super.questions
   }) : super(formId: formId, formName: formName, sport: sport);
   
     /// Called when updates to the form's responses have been made 
@@ -45,12 +45,12 @@ class StudentForm extends GenericForm {
     notifyListeners();
   }
 
-  /// Loads the form content and any existing drafts for the questions
-  @override
-  void loadForm(Uuid formUuid) {
-    // Load form data from a remote source or local cache
-    // This would populate the questions list with existing data, including drafts
-    notifyListeners();
-  }
+  // /// Loads the form content and any existing drafts for the questions
+  // @override
+  // void loadForm(Uuid formUuid) {
+  //   // Load form data from a remote source or local cache
+  //   // This would populate the questions list with existing data, including drafts
+  //   notifyListeners();
+  // }
   
 }

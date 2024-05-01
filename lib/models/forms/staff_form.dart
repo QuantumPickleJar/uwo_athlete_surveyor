@@ -22,12 +22,11 @@ class StaffForm extends GenericForm {
   final DateTime? formDateCreated;
 
   // Map<Question, List<Response>> used later in analytics, ABOVE this scope
-  final List<Question> questions;
 
   /// TODO: verify, probably with a test
   /// Constructs a new StaffForm, loaded with [questions]
   // ignore: use_super_parameters
-  StaffForm(this.questions, {
+  StaffForm(questions, {
     required formId,
     required formName,
     required sport,
@@ -38,17 +37,16 @@ class StaffForm extends GenericForm {
         formName: formName,
         sport: sport,
         formDateCreated: formDateCreated,
-        questions: [],
+        questions: questions,
       );
 
   /// Constructs a new StaffForm from an existing [IGenericForm].
   /// Intended to be used when creating new forms, NOT on existing
-  StaffForm.fromGenericForm(IGenericForm genericForm, this.questions, this.formDateCreated):
+  StaffForm.fromGenericForm(IGenericForm genericForm, this.formDateCreated, {required super.questions}):
   super( 
       formId : genericForm.formId,
       formName : genericForm.formName,
       sport: genericForm.sport,
-      questions: [],
       attachments: genericForm.attachments,
       formDateCreated: formDateCreated ?? DateTime.now()
       );
@@ -60,11 +58,11 @@ class StaffForm extends GenericForm {
   }
 
   /// Loads the form content and any existing drafts for the questions
-  @override
-  void loadForm(Uuid formUuid) {
+  // @override
+  // void loadForm(Uuid formUuid) {
     // Load form data from a remote source or local cache
     // This would populate the questions list with existing data, including drafts
-  }
+  // }
 
   // void updateFormTitle(String newTitle) {
   //   super() = newTitle;
@@ -72,12 +70,12 @@ class StaffForm extends GenericForm {
   // }
 
   void addQuestion(Question question) {
-    questions.add(question);
+    super.questions.add(question);
     notifyListeners();
   }
 
   void removeQuestion(Question question) {
-    questions.remove(question);
+    super.questions.remove(question);
     notifyListeners();
   }
   
