@@ -1,0 +1,50 @@
+import 'package:athlete_surveyor/models/forms/base_form.dart';
+import 'package:athlete_surveyor/models/forms/staff_form.dart';
+import 'package:athlete_surveyor/models/forms/student_form.dart';
+import 'package:athlete_surveyor/pages/staff/form_builder_page.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+    
+/// Acts as an in-between for Student and Staff alike, so that 
+/// whenever either of them needs to interact with a form, the
+/// [SecureFormProvider] will check the user's role in the DB
+/// and use that to determine what page we take the user to.
+class SecureFormProvider extends StatelessWidget {
+  final String formId;
+  const SecureFormProvider({ Key? key, required this.formId }) : super(key: key);
+  
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<GenericForm>(
+      future: _loadFormByUserRole(formId), /// TODO: may be a call to userservice
+      builder: (context, snapshot) {
+        /// TODO: check if user is logged in here
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+          return Provider<GenericForm>.value(
+            value: snapshot.data!,
+            child: Consumer<GenericForm>(builder: (context, form, child) {
+            /// TODO: implement student survey page
+            return (form is StaffForm) ? FormBuilderPage(formId: formId) : throw UnimplementedError();
+          })
+        );
+        } else {
+          return CircularProgressIndicator();
+        }
+      }, 
+    );
+  }
+  
+  /// returns the appropriate form based on the 
+  _loadFormByUserRole(String formId) {
+    // TEMPORARY HARD-CODED
+     bool isAdmin = true; // This should be determined based on the user's logged-in status
+    if (isAdmin) {
+      // Fetch details required to instantiate StaffForm
+      // return StaffForm(...); // Provide necessary parameters
+    } else {
+      // Fetch details required to instantiate StudentForm
+      // return StudentForm(...); // Provide necessary parameters
+    }
+    return isAdmin;
+  }
+}
