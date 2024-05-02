@@ -8,6 +8,7 @@
 /// Authors: Josh, Vince, Amanda.
 /// Version:          0.0.1
 
+import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/login_model.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
@@ -82,9 +83,9 @@ class _MainAppState extends State<MainApp>
   {
     if(_formKey.currentState!.validate())
     {
-      bool? isAdmin = await widget.loginModel.checkExistingPassword(usernameController.text, passwordController.text);
+      LoggedInUser? currentUser = await widget.loginModel.checkExistingPassword(usernameController.text, passwordController.text);
  
-      if(context.mounted && isAdmin != null) { navigateToPage(context, TabbedMainPage(isAdmin: isAdmin)); }
+      if(context.mounted && currentUser != null) { navigateToPage(context, TabbedMainPage(currentUser: currentUser)); }
     }
   }
 
@@ -131,9 +132,7 @@ class _MainAppState extends State<MainApp>
               Visibility(
                 visible: foundation_dart.kDebugMode, //only visible in debug mode
                 child: ElevatedButton(
-                  onPressed: (){ navigateToPage( //TODO: add test account for student and insertion method for debug
-                    context, 
-                    const TabbedMainPage(isAdmin: false)); }, 
+                  onPressed: (){ }, //TODO: add test account for student and insertion method for debug 
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
                   child: const SizedBox(child: Center(child: Text('DEBUG: Login as Student', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
               ),

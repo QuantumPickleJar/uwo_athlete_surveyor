@@ -1,3 +1,4 @@
+import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/database.dart';
 import 'package:flutter/material.dart';
 import 'package:bcrypt/bcrypt.dart'; 
@@ -37,7 +38,7 @@ class LoginModel extends ChangeNotifier
   }
 
   /// Grab the hashed password on the server and check it against the user-provided password.
-  Future<bool?> checkExistingPassword(String userName, String password) async 
+  Future<LoggedInUser?> checkExistingPassword(String userName, String password) async 
   { 
     final result = await Database.fetchUserPassword(userName);
     if (result.length != 1) 
@@ -48,7 +49,12 @@ class LoginModel extends ChangeNotifier
     bool passwordMatches = BCrypt.checkpw(password, hashedPassword);
 
     print(passwordMatches); //testing; remove later
-    return passwordMatches ? result[0][2] as bool : null; //if password matches username, return result[0][2], which is the column 'isAdmin' as a bool; otherwise null
+    return passwordMatches ? LoggedInUser(result[0][2] as bool, 
+                                          result[0][4] as bool, 
+                                          result[0][3] as String, 
+                                          result[0][5] as String, 
+                                          result[0][6] as String) 
+                            : null; //if password matches username, return an instance of LoggedInUser; otherwise null
   }
 
   Future<bool> testingInsertAdminAccount()
