@@ -13,9 +13,12 @@ import 'package:athlete_surveyor/models/login_model.dart';
 import 'package:athlete_surveyor/models/previous_forms_model.dart';
 import 'package:athlete_surveyor/pages/tabbed_main_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'models/student_model.dart';
+import 'package:flutter/foundation.dart' as foundation_dart;
 
 /// Driver code.
 void main() 
@@ -46,22 +49,54 @@ class MainApp extends StatefulWidget
 /// 
 class _MainAppState extends State<MainApp>
 {
-  //Convert class to form to make use of automatic validation functionality? See previous lab.
-  //Admin pass: A)msBslYwXnnmb9W
-  //Admin user: admin@uwosh.edu
   String? username;
   String? password;
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>(); // so we can reference the Form where we need it
+
+  /// 
+  String? validateUsername(String username)
+  {
+    return username.isNotEmpty ? null : 'Username field left blank, please enter username';
+  }
+
+  /// 
+  String? validatePassword(String password)
+  {
+    return password.isNotEmpty ? null : 'Password field left blank, please enter username';
+  }
+
+  /// Used specifically to speed up admin account login for testing purposes.
+  void buttonPressTestAdminLogin(BuildContext context) async
+  {
+    usernameController.text = 'admin@uwosh.edu';
+    passwordController.text = 'A)msBslYwXnnmb9W';
+
+    validateLogin(context);
+  }
+
+  /// General validate login method.
+  void validateLogin(BuildContext context) async
+  {
+    if(_formKey.currentState!.validate())
+    {
+      bool? isAdmin = await widget.loginModel.checkExistingPassword(usernameController.text, passwordController.text);
+ 
+      if(context.mounted && isAdmin != null) { navigateToPage(context, TabbedMainPage(isAdmin: isAdmin)); }
+    }
+  }
 
   @override
   Widget build(BuildContext context) 
   {
     return Scaffold(
-      body: Container(alignment: Alignment.center,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+      body: Container(
+        padding: const EdgeInsets.all(8.0),
+        alignment: Alignment.center,
+        child: Form(
+          key: _formKey,
           child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Container(
@@ -73,34 +108,42 @@ class _MainAppState extends State<MainApp>
                 ),
               ),
               const Text('Be Better Initiative', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-              TextField(
-                onChanged: (value) => username = value,
+              TextFormField(
                 controller: usernameController,
+                validator: (username) => validateUsername(username!),
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(), 
-                  hintText:'Enter Username')),
-              TextField(
-                onChanged: (value) => password = value,
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter Username')),
+              TextFormField(
                 controller: passwordController,
+                validator: (password) => validatePassword(password!),
+                obscureText: true,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(), 
-                  hintText:'Enter Password')),
-              ElevatedButton(
-                onPressed: (){ widget.loginModel.testingInsertAdminAccount(); },
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
-                child: const SizedBox(child: Center(child: Text('DEBUG: Print random pass to console', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
-              ElevatedButton(
-                onPressed: (){ navigateToPage(
-                  context, 
-                  const TabbedMainPage(isAdmin: false)); }, 
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
-                child: const SizedBox(child: Center(child: Text('DEBUG: Login as Student', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
-              ElevatedButton(
-                onPressed: (){ navigateToPage(
-                  context, 
-                  const TabbedMainPage(isAdmin: true)); }, 
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
-                child: const SizedBox(child: Center(child: Text('DEBUG: Login as Staff (ADMIN)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))))
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter Password')),
+              Visibility(
+                visible: foundation_dart.kDebugMode, //only visible in debug mode
+                child: ElevatedButton(
+                  onPressed: (){ widget.loginModel.testingInsertAdminAccount(); },
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
+                  child: const SizedBox(child: Center(child: Text('DEBUG: Print random pass to console', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
+              ),
+              Visibility(
+                visible: foundation_dart.kDebugMode, //only visible in debug mode
+                child: ElevatedButton(
+                  onPressed: (){ navigateToPage( //TODO: add test account for student and insertion method for debug
+                    context, 
+                    const TabbedMainPage(isAdmin: false)); }, 
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
+                  child: const SizedBox(child: Center(child: Text('DEBUG: Login as Student', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
+              ),
+              Visibility(
+                visible: foundation_dart.kDebugMode, //only visible in debug mode
+                child: ElevatedButton(
+                  onPressed: (){ buttonPressTestAdminLogin(context); }, 
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
+                  child: const SizedBox(child: Center(child: Text('DEBUG: Login as Staff (ADMIN)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
+              )
             ]),
         )));
   }

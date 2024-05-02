@@ -37,18 +37,18 @@ class LoginModel extends ChangeNotifier
   }
 
   /// Grab the hashed password on the server and check it against the user-provided password.
-  Future<bool> checkExistingPassword(String userName, String password) async 
+  Future<bool?> checkExistingPassword(String userName, String password) async 
   { 
     final result = await Database.fetchUserPassword(userName);
     if (result.length != 1) 
     { // either the user doesn't exist or some error occurred where more than 1 row returned.
-      return false; 
+      return null; 
     }
     String hashedPassword = result[0][1] as String; 
     bool passwordMatches = BCrypt.checkpw(password, hashedPassword);
 
     print(passwordMatches); //testing; remove later
-    return passwordMatches;
+    return passwordMatches ? result[0][2] as bool : null; //if password matches username, return result[0][2], which is the column 'isAdmin' as a bool; otherwise null
   }
 
   Future<bool> testingInsertAdminAccount()

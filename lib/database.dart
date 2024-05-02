@@ -16,7 +16,7 @@ class Database
   static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList"; 
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport) VALUES (@studentName, @grade, @sport)";
-  static const String _getUserPassword = "SELECT * FROM users WHERE user_name = @user_name";
+  static const String _getUserPassword = "SELECT * FROM tbl_users WHERE username = @username";
   static const String _insertNewUser = "INSERT INTO tbl_users (username,password,is_admin) VALUES (@username,@password,@is_admin)";
 
   /// Open connection to the database.
@@ -136,7 +136,7 @@ class Database
       return await conn.execute
       (
         Sql.named(_getUserPassword),
-        parameters: {'user_name': userName}
+        parameters: {'username': userName}
       );
     }
     catch (e)
