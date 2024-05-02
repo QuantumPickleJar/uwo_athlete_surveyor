@@ -19,36 +19,36 @@ import 'package:uuid/uuid.dart';
 /// would allow the alteration of the desired format. 
 class StaffForm extends GenericForm {
 
-  final DateTime? formDateCreated;
+  // @override final DateTime formDateCreated;
 
   // Map<Question, List<Response>> used later in analytics, ABOVE this scope
 
   /// TODO: verify, probably with a test
   /// Constructs a new StaffForm, loaded with [questions]
   // ignore: use_super_parameters
-  StaffForm(staffQuestions, {
+  StaffForm(List<Question> staffQuestions, {
     required formId,
     required formName,
     required sport,
     super.attachments,
-    this.formDateCreated
+    super.formDateCreated
   }) : super(
         formId: formId,
         formName: formName,
         sport: sport,
-        formDateCreated: formDateCreated,
-        questions: questions,
+        questions: staffQuestions
       );
 
   /// Constructs a new StaffForm from an existing [IGenericForm].
   /// Intended to be used when creating new forms, NOT on existing
-  StaffForm.fromGenericForm(IGenericForm genericForm, this.formDateCreated, {required super.questions}):
+  StaffForm.fromGenericForm(IGenericForm genericForm, {required super.questions}):
   super( 
       formId : genericForm.formId,
       formName : genericForm.formName,
       sport: genericForm.sport,
       attachments: genericForm.attachments,
-      formDateCreated: formDateCreated ?? DateTime.now()
+      formDateCreated: genericForm is GenericForm ? genericForm.formDateCreated : 
+        DateTime.parse(DateTime.now().toIso8601String())
       );
 
     /// Called when updates to the form's responses have been made 
