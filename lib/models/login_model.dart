@@ -56,13 +56,4 @@ class LoginModel extends ChangeNotifier
                                           result[0][6] as String) 
                             : null; //if password matches username, return an instance of LoggedInUser; otherwise null
   }
-
-  Future<bool> testingInsertAdminAccount()
-  {
-    String username = 'admin@uwosh.edu';
-    String hashedPassword = BCrypt.hashpw(generateRandomTemporaryPassword(), BCrypt.gensalt());
-
-    return Database.insertNewUser(username, hashedPassword, true);
-  }
-
 }
