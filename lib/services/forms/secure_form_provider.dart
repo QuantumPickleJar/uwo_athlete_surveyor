@@ -2,6 +2,7 @@ import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/forms/student_form.dart';
 import 'package:athlete_surveyor/pages/staff/form_builder_page.dart';
+import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
     
@@ -16,7 +17,7 @@ class SecureFormProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<GenericForm>(
-      future: _loadFormByUserRole(formId), /// TODO: may be a call to userservice
+      future: _loadFormByUserRole(context, formId), /// TODO: may be a call to userservice
       builder: (context, snapshot) {
         /// TODO: check if user is logged in here
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
@@ -27,6 +28,9 @@ class SecureFormProvider extends StatelessWidget {
             return (form is StaffForm) ? FormBuilderPage(formId: formId) : throw UnimplementedError();
           })
         );
+        /// handle errors in a visuale manner before rendering loading progress
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
         } else {
           return CircularProgressIndicator();
         }
@@ -35,16 +39,23 @@ class SecureFormProvider extends StatelessWidget {
   }
   
   /// returns the appropriate form based on the 
-  _loadFormByUserRole(String formId) {
+  _loadFormByUserRole(BuildContext context, String formId) async {
     // TEMPORARY HARD-CODED
-     bool isAdmin = true; // This should be determined based on the user's logged-in status
+    bool isAdmin = true; // This should be determined based on the user's logged-in status
+    /// reach up the widget tree to get [FormService]
+    FormService formService = Provider.of<FormService>(context, listen: false);
+
     if (isAdmin) {
-      // Fetch details required to instantiate StaffForm
+      var form = await formService.fetchOrCreateForm(formId: formId);
+      return StaffForm.fromGenericForm(form, questions: []);
       // return StaffForm(...); // Provide necessary parameters
-    } else {
+    } 
+    /*
+    else {
       // Fetch details required to instantiate StudentForm
       // return StudentForm(...); // Provide necessary parameters
     }
+    */
     return isAdmin;
   }
 }
