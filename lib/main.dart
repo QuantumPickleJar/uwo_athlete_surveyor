@@ -62,7 +62,7 @@ class _MainAppState extends State<MainApp>
   /// Form validation; check entered password.
   String? _validatePassword(String password)
   {
-    return password.isNotEmpty ? null : 'Password field left blank, please enter username';
+    return password.isNotEmpty ? null : 'Password field left blank, please enter password';
   }
 
   /// Used specifically to speed up student account login for testing purposes.
