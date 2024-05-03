@@ -1,3 +1,5 @@
+// ignore_for_file: override_on_non_overriding_member
+
 import "dart:io";
 
 import "package:athlete_surveyor/models/interfaces/i_generic_form.dart";
@@ -12,18 +14,19 @@ class GenericForm extends ChangeNotifier implements IGenericForm {
   @override final String formName;
   @override final String sport;
   @override final List<File>? attachments;
-  
-  DateTime? formDateCreated;
+  /// assert that forms will have a date
+  @override DateTime formDateCreated;
   late List<Question> questions;
-
+  
   GenericForm({
     required this.formId,
     required this.formName,
     required this.sport,
-    this.formDateCreated,
+    this.attachments,
+    DateTime? formDateCreated,
     required this.questions,
-    this.attachments
-  });
+  }) : formDateCreated = /// set the date if it came in null for some reason
+  formDateCreated ?? DateTime.parse(DateTime.now().toIso8601String());
 
 
   /// To be used in saving drafts, if at all.  May need to be 
