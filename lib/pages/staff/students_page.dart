@@ -8,7 +8,7 @@ import '/models/student_model.dart';
 
 class StudentsWidget extends StatefulWidget {
   final StudentsModel studentModel;
-  const StudentsWidget(this.studentModel, {Key? key}) : super(key: key);
+const StudentsWidget(this.studentModel, {super.key});
 
   @override
   State<StudentsWidget> createState() => _StudentsWidgetState();
@@ -19,11 +19,16 @@ class _StudentsWidgetState extends State<StudentsWidget> {
   bool _sortBySport = false;
   bool _sortByGrade = false;
 
+@override
+  void initState() {
+    super.initState();
+    // Fetch students from the database when the widget is initialized
+    widget.studentModel.fetchStudentsFromDatabase();
+  }
+
   @override
   Widget build(BuildContext context) {
-  
-  var model_of_student = Provider.of<StudentsModel>;
-    // Sort data based on sorting criteria
+    // Sorting logic should be applied after fetching students
     if (_sortBySport) {
       widget.studentModel.students.sort((a, b) => a.sport.compareTo(b.sport));
     } else if (_sortByGrade) {
@@ -144,11 +149,11 @@ class _StudentsWidgetState extends State<StudentsWidget> {
   }
 
   void _moreInfo(BuildContext context, Student studentData) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => IndividualStudentScreen(studentData: studentData)),
-    );
-  }
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => IndividualStudentScreen(studentData: studentData)),
+  );
+}
 
   void _addAthlete(BuildContext context) {
   Navigator.push(
