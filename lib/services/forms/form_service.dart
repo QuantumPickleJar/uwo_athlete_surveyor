@@ -86,11 +86,20 @@ class FormService {
       // return newForm;
     } else {  /// fetch the Form
       var existingForm = await getFormById(formId);
-      // var existingForm = await _formRepository.getFormById(formId);
-
+      
       /// TODO: examine necessity of this if statement
       if (existingForm != null) {
-        return existingForm; /// cast because [IGenericForm] expected
+        // create the form since it doesn't exist yet
+         
+         return StaffForm([], 
+          formId: formId,
+          formName: formName ?? 'New Form',
+          sport: sport ?? 'New form',
+          attachments: [],
+          formDateCreated: DateTime.now()
+        ); /// cast because [IGenericForm] expected
+
+
       } else {
         /// temporary for milestone demo: the "or create" part.  In really bad spot...
         /// ad-hoc; make a new one on the fly
