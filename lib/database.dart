@@ -80,7 +80,7 @@ class Database
     } 
   }
 
-  //fetching the student list
+ //fetching the student list
   static Future<Result> fetchStudents() async 
   { 
     Connection? conn; 
