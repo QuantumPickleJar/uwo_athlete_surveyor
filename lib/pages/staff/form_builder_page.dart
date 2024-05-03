@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:athlete_surveyor/models/form_factory.dart';
+import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
@@ -42,28 +43,30 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
 
   Future<void> _loadForm(String formId) async {
       try {
-        Form loadedForm = (await _formService.fetchOrCreateForm(formId: formId)) as Form;
+        GenericForm loadedForm =
+         (await _formService.fetchOrCreateForm(formId: formId)) as GenericForm;
         setState(() {
-          _currentForm = StaffForm.fromGenericForm(loadedForm as IGenericForm, [], DateTime.now()); // Set the loaded form to the current form
-          /// could also call the form factor 
+          /// Set the loaded form to the current form
+          _currentForm = StaffForm.fromGenericForm(loadedForm, questions: []); 
         });
       } catch (e) { /// an exception will occur if not found
         /// a bit dirty--we handle the not found case in the catch
-        if(formId.isEmpty) {
-        /// CREATE a new form if we didn't receive a `formId`
-        setState(() {
-          _currentForm = StaffForm(
-            formId: '', 
-            formName: 'Untitled Form', 
-            sport: "SOME SPORT", 
-            List.empty()
-          );
-        });
+        // if(formId.isEmpty) {
+        // /// CREATE a new form if we didn't receive a `formId`
+        // setState(() {
+        //   _currentForm = StaffForm(
+        //     formId: '', 
+        //     formName: 'Untitled Form', 
+        //     sport: "SOME SPORT", 
+        //     List.empty()
+        //   );
+        // });
 
-        } else { /// else it must be an UPDATE
+        // } else { /// else it must be an UPDATE
           // TODO: consider an is loading here for displaying a spinner
-          _formService.getFormById(widget.formId!);
-        }
+        //   _formService.getFormById(widget.formId!);
+        //   debugPrint(e.toString());
+        // }
       /// check if we need to make an additional call to the DB (should happen behind)
       _isOpenedFormNew = widget.formId!.isEmpty;
       }

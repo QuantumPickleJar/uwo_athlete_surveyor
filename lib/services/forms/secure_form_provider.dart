@@ -25,13 +25,15 @@ class SecureFormProvider extends StatelessWidget {
             value: snapshot.data!,
             child: Consumer<GenericForm>(builder: (context, form, child) {
             /// TODO: implement student survey page
-            return (form is StaffForm) ? FormBuilderPage(formId: formId) : throw UnimplementedError();
+            return (form is StaffForm) ? 
+                FormBuilderPage(formId: formId) : throw UnimplementedError();
           })
         );
         /// handle errors in a visuale manner before rendering loading progress
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
+          // TODO: resize, spans entire screen
           return CircularProgressIndicator();
         }
       }, 
@@ -39,11 +41,13 @@ class SecureFormProvider extends StatelessWidget {
   }
   
   /// returns the appropriate form based on the 
-  _loadFormByUserRole(BuildContext context, String formId) async {
+  Future<GenericForm> _loadFormByUserRole(BuildContext context, String formId) async {
     // TEMPORARY HARD-CODED
     bool isAdmin = true; // This should be determined based on the user's logged-in status
     /// reach up the widget tree to get [FormService]
     FormService formService = Provider.of<FormService>(context, listen: false);
+
+    /// TODO: check loggedInUser 
 
     if (isAdmin) {
       var form = await formService.fetchOrCreateForm(formId: formId);
@@ -55,7 +59,7 @@ class SecureFormProvider extends StatelessWidget {
       // Fetch details required to instantiate StudentForm
       // return StudentForm(...); // Provide necessary parameters
     }
-    */
     return isAdmin;
+    */
   }
 }
