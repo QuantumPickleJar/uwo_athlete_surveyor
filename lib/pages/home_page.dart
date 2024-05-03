@@ -42,8 +42,11 @@ class HomePage extends StatelessWidget {
                     /// push the existing form (if, for example, a previous form's thumnbnail was tapped)
                     /// otherwise send them there with a new one to be provided an ID on dbsubmittal 
                     Navigator.of(context).push(MaterialPageRoute(builder: 
-                      // (context) => FormBuilderPage(formId: newForm.formId)
-                        (context) => SecureFormProvider(formId: newForm.formId)
+                      /// Depending on the user, send to a Survey form or FormBuilderPage
+                        (context) => SecureFormProvider(
+                          formId: newForm.formId, 
+                          hasAdminPrivileges: hasAdminPrivileges
+                        )
                       ));
                     },
                   style: ButtonStyle(

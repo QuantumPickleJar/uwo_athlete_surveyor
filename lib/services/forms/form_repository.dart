@@ -18,7 +18,7 @@ class FormRepository implements IFormRepository {
   FormRepository._internal();
 
   /// used temporarily to streamline the demo
-  final String DEVELOPER_UUID = "79892b1b-61a9-455a-bc4d-ac90cff75798";
+  final String DEVELOPER_UUID = "a23e1679-d5e9-4d97-9902-bb338b38e468";
   
   @override
   Future<GenericForm> createForm(GenericForm form) async {
@@ -28,11 +28,7 @@ class FormRepository implements IFormRepository {
                             VALUES (@userId, @formTitle, @lastModified, @createDate) 
                             RETURNING *;""";
 
-    /// TODO: run the question query separately, in a tx
-    ///  until we have a service for it
-    // var result = await _connection.runTx((insertForm) {
-    //   final persistedForm = await insertForm.execute()
-    // });
+    
     var db = await _connection;
     var result = await db.execute(
         // Sql.named(sqlStatement), parameters: {
@@ -121,7 +117,7 @@ class FormRepository implements IFormRepository {
       String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
       var db = await _connection;
       
-      var result = await db.execute(Sql.named(sqlStatement), parameters: formId);
+      var result = await db.execute(Sql.named(sqlStatement), parameters: { 'formId': formId });
       if(result.isEmpty) {
         return null;
       }
