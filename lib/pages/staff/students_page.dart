@@ -114,14 +114,6 @@ class _StudentsWidgetState extends State<StudentsWidget> {
               itemCount: widget.studentModel.students.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  leading: SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: Image.asset(
-                      'assets/download-7.jpg', // Load image from asset
-                      fit: BoxFit.cover,
-                    ),
-                  ),
                   title: Text(widget.studentModel.students[index].name),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
