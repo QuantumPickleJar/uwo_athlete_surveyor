@@ -61,13 +61,16 @@ class ComposeMessagePage extends StatelessWidget {
                 Column(           /// Attachments
                   children: [
                     Text("Attachments", style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text("No attachments", style: TextStyle(fontSize: 24, color: Colors.blueGrey))
+                      Text("No attachments", style: TextStyle(fontSize: 24, color: Colors.blueGrey)),
+                      FloatingActionButton(onPressed: null, child: Icon(Icons.attach_file) )
                     ],
-                )
+                ),
               ],
+              
             ),
-          )
-        ])
-        );
+            
+          ),
+        ]),
+      );
   }
 }

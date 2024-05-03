@@ -1,14 +1,14 @@
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
-//import 'package:provider/provider.dart';
-import 'individual_student_page.dart'; // Import the individual student screen
-import 'add_athlete_page.dart'; // Import the add athlete screen
+import 'package:provider/provider.dart';
+import '../individual_student_page.dart'; // Import the individual student screen
+import '../add_athlete_page.dart'; // Import the add athlete screen
 import '/models/student_model.dart';
 
 
 class StudentsWidget extends StatefulWidget {
   final StudentsModel studentModel;
-  const StudentsWidget(this.studentModel, {super.key});
+  const StudentsWidget(this.studentModel, {Key? key}) : super(key: key);
 
   @override
   State<StudentsWidget> createState() => _StudentsWidgetState();
@@ -20,17 +20,9 @@ class _StudentsWidgetState extends State<StudentsWidget> {
   bool _sortByGrade = false;
 
   @override
-  void initState()
-  {
-    super.initState();
-
-    widget.studentModel.fetchStudentsFromDatabase();
-  }
-
-  @override
   Widget build(BuildContext context) {
   
-  //var model_of_student = Provider.of<StudentsModel>;
+  var model_of_student = Provider.of<StudentsModel>;
     // Sort data based on sorting criteria
     if (_sortBySport) {
       widget.studentModel.students.sort((a, b) => a.sport.compareTo(b.sport));
@@ -121,7 +113,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                     width: 50,
                     height: 50,
                     child: Image.asset(
-                      'lib/resources/images/download-7.jpg', // Load image from asset
+                      'assets/download-7.jpg', // Load image from asset
                       fit: BoxFit.cover,
                     ),
                   ),
