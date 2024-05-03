@@ -92,7 +92,16 @@ class FormService {
       if (existingForm != null) {
         return existingForm; /// cast because [IGenericForm] expected
       } else {
-        throw Exception('Unable to find the form, or not the right form type!');
+        /// temporary for milestone demo: the "or create" part.  In really bad spot...
+        /// ad-hoc; make a new one on the fly
+        StaffForm newForm = StaffForm([], /// empty list of questions
+          formId: formId,
+          formName: formName ?? 'Untitled form', 
+          sport: sport ?? 'Untitled sport',
+          attachments: [],
+          formDateCreated: DateTime.parse(DateTime.now().toIso8601String())); 
+          return newForm;
+       /// throw Exception('Unable to find the form, or not the right form type!');
       }
     }
   } 

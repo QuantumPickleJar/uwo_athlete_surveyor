@@ -43,7 +43,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
     _loadForm(widget.formId!) as StaffForm;
   }
 
-  Future<void> _loadForm(String formId) async {
+  Future<StaffForm> _loadForm(String formId) async {
       try {
         GenericForm loadedForm =
          (await _formService.fetchOrCreateForm(formId: formId)) as GenericForm;
@@ -52,24 +52,15 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
           _currentForm = StaffForm.fromGenericForm(loadedForm, questions: []); 
         });
       } catch (e) { /// an exception will occur if not found
-        /// a bit dirty--we handle the not found case in the catch
-        // if(formId.isEmpty) {
-        // /// CREATE a new form if we didn't receive a `formId`
-        // setState(() {
-        //   _currentForm = StaffForm(
-        //     formId: '', 
-        //     formName: 'Untitled Form', 
-        //     sport: "SOME SPORT", 
-        //     List.empty()
-        //   );
-        // });
 
+        /// a bit dirty--we handle the not found case in the catch
         // } else { /// else it must be an UPDATE
           // TODO: consider an is loading here for displaying a spinner
         //   _formService.getFormById(widget.formId!);
         //   debugPrint(e.toString());
         // }
       /// check if we need to make an additional call to the DB (should happen behind)
+      print(e);
       _isOpenedFormNew = widget.formId!.isEmpty;
       }
     }
