@@ -21,7 +21,7 @@ class IndividualStudentScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(4.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -7,6 +7,16 @@ import 'package:postgres/postgres.dart';
 class StudentsModel extends ChangeNotifier {
   final List<Student> students = [];
 
+
+void sortByGrade(){
+  students.sort((a,b) => a.grade.compareTo(b.grade));
+  notifyListeners();
+}
+
+void sortBySport(){
+  students.sort((a,b) => a.sport.compareTo(b.sport));
+  notifyListeners();
+}
 //inserts students into the database 
 Future<void> addStudentToDatabase(String name, String grade, String sport) async {
   try {
