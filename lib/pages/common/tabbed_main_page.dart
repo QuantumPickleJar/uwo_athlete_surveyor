@@ -1,20 +1,17 @@
+import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
-import 'package:athlete_surveyor/pages/staff/admin_home_page.dart';
+import 'package:athlete_surveyor/pages/home_page.dart';
 import 'package:athlete_surveyor/pages/common/inbox_page.dart';
 import 'package:athlete_surveyor/pages/previous_forms_page.dart';
-import 'package:athlete_surveyor/pages/students/student_home_page.dart';
 import 'package:athlete_surveyor/resources/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TabbedMainPage extends StatefulWidget
 {
-  TabbedMainPage({super.key, required this.isAdmin});
-
-  //final InboxModel inboxModel = InboxModel();
-  //final PreviousFormsModel previousformsModel = PreviousFormsModel();
-  final bool isAdmin;
+  const TabbedMainPage({super.key, required this.currentUser});
+  final LoggedInUser currentUser;
 
   @override
   State<TabbedMainPage> createState() => _TabbedMainPageState();
@@ -46,20 +43,21 @@ class _TabbedMainPageState extends State<TabbedMainPage>
   {
     super.initState();
     
-    List<Widget> defaultTabs = 
-      [
-        Consumer<InboxModel>(
-          builder: (context, inboxModel, _) {
-            return InboxPage(inboxModel);
-        }),
-        Consumer<PreviousFormsModel>(
-          builder: (context, previousFormsModel, _) {
-            return PreviousFormsPage(previousFormsModel);
-        })
-      ];
-
-    tabViews.add(widget.isAdmin ? const AdminHomePage() : const StudentHomePage());
-    tabViews.addAll(defaultTabs);
+    tabViews = 
+    [
+      HomePage(
+        displayName: widget.currentUser.firstName, 
+        hasAdminPrivileges: widget.currentUser.hasAdminPrivileges
+      ),
+      Consumer<InboxModel>(
+        builder: (context, inboxModel, _) {
+          return InboxPage(inboxModel);
+      }),
+      Consumer<PreviousFormsModel>(
+        builder: (context, previousFormsModel, _) {
+          return PreviousFormsPage(previousFormsModel);
+      })
+    ];
   }
 
   @override
