@@ -27,9 +27,9 @@ class StaffForm extends GenericForm {
   /// Constructs a new StaffForm, loaded with [questions]
   // ignore: use_super_parameters
   StaffForm(List<Question> staffQuestions, {
-    required formId,
-    required formName,
-    required sport,
+    required String formId,
+    required String formName,
+    required String sport,
     super.attachments,
     super.formDateCreated
   }) : super(
