@@ -5,7 +5,8 @@ import 'package:athlete_surveyor/models/student_model.dart';
 class IndividualStudentScreen extends StatelessWidget {
   final Student studentData;
 
-  const IndividualStudentScreen({super.key, required this.studentData});
+  const IndividualStudentScreen({Key? key, required this.studentData}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
