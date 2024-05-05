@@ -14,7 +14,6 @@ class QuestionRepository implements IQuestionRepository{
 
   @override
   Future<Question> createQuestion(Question question, String formId) async {
-    // TODO: implement createQuestion
     String sql = """INSERT INTO public.tbl_questions (content, order_in_form, form_id, response_enum
                         VALUES (@content, @order, @formId, @responseEnum) 
                         RETURNING *;""";
@@ -33,15 +32,14 @@ class QuestionRepository implements IQuestionRepository{
     return _mapRowToQuestion(result.first.toColumnMap());
   }
 
-
   /// Removes a question from the database by its id. 
   @override
   Future<bool> deleteQuestion(String questionId) async {
     try {
       // TODO: implement deleteQuestion
-      String sqlStatement = """DELETE * FROM public.tbl_questions WHERE question_id LIKE @questionId;""";
+      String sqlStatement = """DELETE * FROM public.tbl_questions WHERE question_id = @questionId;""";
       var db = await _connection; /// get the static 
-      var result = await db.execute(sqlStatement, parameters: questionId);
+      var result = await db.execute(sqlStatement, parameters: { 'questionId' : questionId});
       if (result.isEmpty) {
         return false;
       } else {
@@ -57,9 +55,9 @@ class QuestionRepository implements IQuestionRepository{
     try {
       // TODO: implement getQuestionById
       String sqlStatement = """SELECT content, order_in_form, form_id, question_id, response_enum
-                              FROM public.tbl_questions WHERE question_id LIKE @questionId;""";
+                              FROM public.tbl_questions WHERE question_id = @questionId;""";
       var db = await _connection; /// get the static connection
-      var result = await db.execute(sqlStatement, parameters: questionId);
+      var result = await db.execute(sqlStatement, parameters: { 'questionId' : questionId});
       if (result.isEmpty) {
         return null;
       } else {
@@ -70,20 +68,37 @@ class QuestionRepository implements IQuestionRepository{
     }
   }
 
-  @override
-  Future<List<Question>> getQuestions() async {
+  @override Future<List<Question>> getQuestions() async {
     try {
        // TODO: implement getQuestions
       String sqlStatement = """SELECT * FROM tbl_questions""";
       var db = await _connection; /// get the static connection
       var result = await db.execute(sqlStatement);
         
-      /// unpack the result by leveraging the row mapping function
+      /// unpack the result by leveraging the row mapping function (since we have a List of Questions)
       return result.map((row) => _mapRowToQuestion(row.toColumnMap())).toList();
     } finally {
       PostgresDB.closeConnection();
     }
   }
+
+  /// Fetches all of the questions that belong to a form, by their [formId].  
+  /// TODO: migrate the `form_id` col from `tbl_questions` to a junc table `tbl_form_question`
+  @override Future<List<Question>> resolveQuestionsByFormId({required String formId}) async {
+    try {
+      String sqlStatement = """SELECT * from tbl_questions WHERE form_id = @formId""";
+      //   String sqlStatement = """SELECT content, order_in_form, form_id, question_id, response_enum
+      //                        FROM public.tbl_questions WHERE question_id = @questionId;""";
+      var db = await _connection; /// get the static connection
+      var result = await db.execute(Sql.named(sqlStatement), parameters: { 'formId': formId });
+        
+      /// unpack the result by leveraging the row mapping function (since we have a List of Questions)
+      return result.map((row) => _mapRowToQuestion(row.toColumnMap())).toList();
+    } finally {
+      PostgresDB.closeConnection();
+    }
+  }
+
 
   @override
   Future<void> updateQuestion(Question question) async {
@@ -112,6 +127,29 @@ class QuestionRepository implements IQuestionRepository{
     }
   }
 
+/// called when saving the entire form
+/// 
+/// Removes all existing questions for a form, in order to re-add the newest ones (in [questions])
+Future<void> updateFormQuestions({required List<Question> questions, required String formId}) async {
+  try {
+    var db = await _connection; /// get the static connection
+
+    // Remove existing questions for the form
+    String deleteSql = "DELETE FROM public.tbl_questions WHERE form_id = @formId";
+    await db.execute(deleteSql, parameters: {'formId': formId});
+
+    // Insert new questions for the form
+    String insertSql = "INSERT INTO public.tbl_questions (content, order_in_form, form_id, response_enum) VALUES ";
+    List<String> values = [];
+    for (var question in questions) {
+      values.add("('${question.content}', ${question.ordinal}, '$formId', ${question.resFormat.widgetType})");
+    }
+    insertSql += values.join(", ");
+    await db.execute(insertSql);
+  } finally {
+    PostgresDB.closeConnection();
+  }
+}
 }
 
 Question _mapRowToQuestion(Map<String, dynamic> row) {
