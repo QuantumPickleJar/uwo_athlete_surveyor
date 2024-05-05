@@ -18,6 +18,7 @@ class FormRepository implements IFormRepository {
   FormRepository._internal();
 
   /// used temporarily to streamline the demo
+  /// TODO: replace with Adam In's id
   final String DEVELOPER_UUID = "a23e1679-d5e9-4d97-9902-bb338b38e468";
   
   @override
@@ -38,9 +39,7 @@ class FormRepository implements IFormRepository {
           'formTitle': form.formName,
           'lastModified': DateTime.now().toIso8601String(),
           'createDate': DateTime.now().toIso8601String(), 
-        }
-
-        
+        }        
       );
     if (result.isEmpty) {
       throw Exception('Failed creating form.');
@@ -55,10 +54,10 @@ class FormRepository implements IFormRepository {
   /// Hhelper function to convert a database row to a Form object
   GenericForm _mapRowToForm(Map<String, dynamic> row) {
     return GenericForm(
-      formId: row['form_id'],
-      formName: row['form_title'],
-      sport: 'Sport Placeholder', // Replace with actual value if it's available
-      formDateCreated: row['create_date'],
+      formId: row['form_id'] ?? 'SQLERR_formid_parse_fail',
+      formName: row['form_title'] ?? 'SQLERR_title_parse_fail',
+      sport: (row['sport'] != null) ? row['sport'] : 'Unfetched', // Replace with actual value if it's available
+      formDateCreated: row['create_date'] ?? DateTime.now(),
       questions: [], // This needs to be filled with actual questions from a related query
     );
   }
@@ -67,7 +66,7 @@ class FormRepository implements IFormRepository {
   @override
   Future<bool> deleteForm(String formId) async {
     try { 
-      String sqlStatement = "DELETE FROM tbl_forms WHERE form_id LIKE @formId";
+      String sqlStatement = "DELETE FROM tbl_forms WHERE form_id = @formId";
       var db = await _connection;
       var result = await db.execute(
         Sql.named(sqlStatement), parameters: { 'formId': formId }
@@ -114,7 +113,8 @@ class FormRepository implements IFormRepository {
     try {
       // TODO: implement getFormById
       // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
-      String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
+      String sqlStatement = """SELECT form_title, last_modified, create_date 
+                               FROM public.tbl_forms WHERE form_id = @formId;""";
       var db = await _connection;
       
       var result = await db.execute(Sql.named(sqlStatement), parameters: { 'formId': formId });
@@ -147,7 +147,7 @@ class FormRepository implements IFormRepository {
       });
       if (result.isEmpty) {
         print(form);
-        throw Exception("Failed to update the form!");
+        throw Exception('Failed to update the form!');
       } else {
         return _mapRowToForm(result.first.toColumnMap());
       } 
