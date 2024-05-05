@@ -92,25 +92,19 @@ class FormService {
   /// Called by FormBuilderPage when loading a form.  If an id isn't supplied, we know it's 
   /// a new form and can simply construct and return a [StaffForm] with the populated ID from 
   /// the DB.
-  Future<IGenericForm> fetchOrCreateForm({required String formId, String? formName, String? sport}) async {
+  Future<GenericForm> fetchOrCreateForm({required String formId, String? formName, String? sport}) async {
     /// route to [_formFactory] if [formId] is null
     if(formId.isEmpty) {
       /// TODO: if this throws null ptr, init params to "Untitled Foo" etc
-      StaffForm? newForm = _formFactory.createStaffForm(
-        formName: (formName != null && formName.isNotEmpty) ? formName : 'New Form',
-        sport: (sport != null && sport.isNotEmpty) ? sport : 'untitled sport') as StaffForm?;
-
+      
+      // Ensure newForm is a GenericForm and initialize its ID with the new ID from the DB.
+      var newForm = _formFactory.createStaffForm(
+        formName:  formName ?? 'New Form', sport: sport ?? 'untitled sport');
 
       /// now we'll grab the form's newly assigned id, and its questions
-      var persistedForm = await createNewForm(formName ?? 'New Form (f_svc)', sport ?? 'New Sport (f_svc)');
-      List<Question> formQuestions = await _questionRepository.resolveQuestionsByFormId(formId: formId);
+      // var persistedForm = await createNewForm(formName ?? 'New Form (f_svc)', sport ?? 'New Sport (f_svc)');
+      return await createNewForm(newForm.formName, newForm.sport);
       
-      // newForm.formId = persistedForm.formId;  /// ...and update [newForm] to match
-      // verify the conversion was successful
-      print("dates: ${newForm?.formDateCreated.toString()} and ${persistedForm.formDateCreated.toString()}");
-      
-      return persistedForm;
-
     } else {  /// fetch the Form
       var existingForm = await getFormById(formId);
       
@@ -118,25 +112,10 @@ class FormService {
       if (existingForm != null) {
         /// if the questions should be a parameter of the [FormFactory]:
         /// return _formFactory.createStaffForm(formName: formName, sport: sport)       
-      
-        return StaffForm(existingForm.questions, 
-          formId: formId,
-          formName: (formName != null && formName.isNotEmpty) ? formName : 'Untitled form (f_svc)',
-          sport: (sport != null && sport.isNotEmpty) ? sport : 'untitled sport (f_svc)',
-          attachments: [],
-          formDateCreated: DateTime.now()
-        ); /// cast because [IGenericForm] expected
+        existingForm.questions = await _questionRepository.resolveQuestionsByFormId(formId: formId);
+        return existingForm;
       } else {
-        /// temporary for milestone demo: the "or create" part.  In really bad spot...
-        /// ad-hoc; make a new one on the fly
-        StaffForm newForm = StaffForm([], /// empty list of questions
-          formId: formId,
-          formName: (formName != null && formName.isNotEmpty) ? formName : 'New Form (f_svc)',
-          sport: (sport != null && sport.isNotEmpty) ? sport : 'untitled sport (f_svc)',
-          attachments: [],
-          formDateCreated: DateTime.parse(DateTime.now().toIso8601String())); 
-        return newForm;
-       /// throw Exception('Unable to find the form, or not the right form type!');
+        throw Exception('Unable to find the form, or not the right form type!');
       }
     }
   } 
