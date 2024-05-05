@@ -19,19 +19,25 @@ class FormService {
     // return _formRepository.getAllForms();
   
   Future<GenericForm?> getFormById(String formId) async{
-    try {
-      var retrievedForm = await _formRepository.getFormById(formId);
-      
-      if (retrievedForm != null) {
-        /// TODO: check if there are any questions to be retrieved:
-        /// for now this if from tbl_questions, but will eventually be from tbl_form_question
-        retrievedForm.questions = await _questionRepository.resolveQuestionsByFormId(formId: formId);
-        return retrievedForm;
+    if (Uuid.isValidUUID(fromString: formId)) {
+      try {
+        var retrievedForm = await _formRepository.getFormById(formId);
+        
+        if (retrievedForm != null) {
+          /// TODO: check if there are any questions to be retrieved:
+          /// for now this if from tbl_questions, but will eventually be from tbl_form_question
+          retrievedForm.questions = await _questionRepository.resolveQuestionsByFormId(formId: formId);
+          return retrievedForm;
+        } 
+        
+      } catch (e) {
+        print('Error getting Form with id $formId: \n Error: $e');
+        return null;
       }
-    } on Exception catch (e) {
-      print('Error getting Form with id $formId: \n Error: $e');
+    } else {
+        print("Invalid or missing formId: $formId");
+        return null;
     }
-    return null;
   }
 
   /// Creates a new form in the database, returning an instance containing
@@ -92,30 +98,25 @@ class FormService {
   /// Called by FormBuilderPage when loading a form.  If an id isn't supplied, we know it's 
   /// a new form and can simply construct and return a [StaffForm] with the populated ID from 
   /// the DB.
-  Future<GenericForm> fetchOrCreateForm({required String formId, String? formName, String? sport}) async {
+  Future<GenericForm> fetchOrCreateForm({String? formId, String? formName, String? sport}) async {
     /// route to [_formFactory] if [formId] is null
-    if(formId.isEmpty) {
-      /// TODO: if this throws null ptr, init params to "Untitled Foo" etc
-      
+    if(formId == null || formId.isEmpty) {
       // Ensure newForm is a GenericForm and initialize its ID with the new ID from the DB.
-      var newForm = _formFactory.createStaffForm(
+      IGenericForm newForm = _formFactory.createStaffForm(
         formName:  formName ?? 'New Form', sport: sport ?? 'untitled sport');
 
       /// now we'll grab the form's newly assigned id, and its questions
-      // var persistedForm = await createNewForm(formName ?? 'New Form (f_svc)', sport ?? 'New Sport (f_svc)');
-      return await createNewForm(newForm.formName, newForm.sport);
-      
-    } else {  /// fetch the Form
+      GenericForm persistedForm = await _formRepository.createForm(newForm as GenericForm);
+
+      return persistedForm;
+    } else {                    /// fetch an existing Form
       var existingForm = await getFormById(formId);
       
-        /// TODO: adjust to have questions resolved through [_questionRepository]
       if (existingForm != null) {
-        /// if the questions should be a parameter of the [FormFactory]:
-        /// return _formFactory.createStaffForm(formName: formName, sport: sport)       
         existingForm.questions = await _questionRepository.resolveQuestionsByFormId(formId: formId);
         return existingForm;
       } else {
-        throw Exception('Unable to find the form, or not the right form type!');
+      throw Exception('Unable to find the form with id $formId');
       }
     }
   } 

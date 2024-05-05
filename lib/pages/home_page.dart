@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
                         child: ElevatedButton(
                   onPressed: () async { 
                     var formService = Provider.of<FormService>(context, listen: false);
-                    var newForm = await formService.createNewForm('NewForm', 'Sport');
+                    var newForm = await formService.createNewForm('Untitled Form', '[None]');
                     print(newForm.formId);
                     /// push the existing form (if, for example, a previous form's thumnbnail was tapped)
                     /// otherwise send them there with a new one to be provided an ID on dbsubmittal 

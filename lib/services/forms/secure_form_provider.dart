@@ -22,23 +22,34 @@ class SecureFormProvider extends StatelessWidget {
       builder: (context, snapshot) {
         /// TODO: check if user is logged in here
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(
+            child: SizedBox(height: 25, width: 25, child: CircularProgressIndicator())
+            );
         } else if (snapshot.hasError) {
           /// handle errors in a visuale manner before rendering loading progress
-          return Center(child: Text('Error: ${snapshot.error}'));
+          return Center(child: Text('SecFormProv Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           /// only render to Consumer if data is present
           return ChangeNotifierProvider<GenericForm>.value(
             value: snapshot.data!,
             child: Consumer<GenericForm>(builder: (context, form, child) {
-            /// TODO: implement student survey page
-            return (form is StaffForm) ? 
-                FormBuilderPage(formId: formId) : throw UnimplementedError("The form type is not supported yet.");
+              /// TODO: implement student survey page   
+              if (form is StaffForm) {
+                // Ensure formId is passed correctly
+                return FormBuilderPage(formId: form.formId); 
+              } else {
+                return const Text('Unsupported form type encountered.');
+              }
+            
+              // TODO: uncomment when resolved null string error
+              // return (form is StaffForm) ? 
+              // FormBuilderPage(formId: formId) : 
+              // throw UnimplementedError("The form type is not supported yet.");
           })
         );
         } 
         /// edge case:  no error, no data, and not waiting (shouldn't be possible, but safe to cover)
-          return const Text('Unexpected state');
+          return const Text('No data available for this form.');
       }, 
     );
   }
@@ -53,12 +64,25 @@ class SecureFormProvider extends StatelessWidget {
 
      // This should be determined based on the user's logged-in status
     if (hasAdminPrivileges) {
-      var form = await formService.fetchOrCreateForm(formId: formId);
-      return StaffForm.fromGenericForm(form, questions: []);
-      // return StaffForm(...); // Provide necessary parameters
+      // var form = await formService.fetchOrCreateForm(formId: formId);
+      try {  
+        GenericForm? form = await formService.getFormById(formId);
+
+        /// ensure the form is valid before trying to load it as a [StaffForm]
+        if (form != null && form.formId.isNotEmpty) { 
+          print("Form loaded successfully: ${form.formId}");
+          return StaffForm.fromGenericForm(form);
+        }
+        print("Failed to load form: form is null or formId is empty.");
+        throw Exception('The form failed to load or was not found (Id: $formId)');
+        // return Future<GenericForm>.error('The form failed to load (Id: $formId)');    
+      } catch (e) { 
+        print("Exception caught in _loadFormByUserRole: $e");
+        rethrow; // This will allow you to see where exactly the null is occurring.
+      }
     } else { 
       /// TODO: implement StudentForm.fromGenericForm
-      throw new UnimplementedError();
+      throw UnimplementedError('StudentForm not yet implemented (SFP)');
     }
     /*
     else {
