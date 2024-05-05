@@ -40,28 +40,30 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
     super.initState();
     print(widget.formId);  // Ensure this prints the expected UUID
     _formService = Provider.of<FormService>(context, listen: false);
-    _loadForm(widget.formId!) as StaffForm;
+    // _loadForm(widget.formId!) as StaffForm;
+    /// if this is a **NEW** form, it'll (briefly) have a null `form_id`
+    _isOpenedFormNew = widget.formId == null || widget.formId!.isEmpty;
   }
 
   Future<StaffForm> _loadForm(String formId) async {
       try {
-        GenericForm loadedForm =
-         (await _formService.fetchOrCreateForm(formId: formId)) as GenericForm;
-        setState(() {
+        GenericForm loadedForm = await _formService.fetchOrCreateForm(formId: formId);
+        
+        // setState(() {
           /// Set the loaded form to the current form
-          _currentForm = StaffForm.fromGenericForm(loadedForm, questions: []); 
-        });
+          // _currentForm = StaffForm.fromGenericForm(loadedForm); 
+        // });
+         if (loadedForm is StaffForm) {
+          return loadedForm;
+         } else {
+          // Convert GenericForm to StaffForm using the dedicated constructor
+          return StaffForm.fromGenericForm(loadedForm);
+        }
       } catch (e) { /// an exception will occur if not found
-
-        /// a bit dirty--we handle the not found case in the catch
-        // } else { /// else it must be an UPDATE
-          // TODO: consider an is loading here for displaying a spinner
-        //   _formService.getFormById(widget.formId!);
-        //   debugPrint(e.toString());
-        // }
+        print('Error loading form: $e');
       /// check if we need to make an additional call to the DB (should happen behind)
-      print(e);
-      _isOpenedFormNew = widget.formId!.isEmpty;
+      // _isOpenedFormNew = widget.formId!.isEmpty;
+      throw Exception('Failed to load form: ${e.toString()}');
       }
     }
   
@@ -71,22 +73,29 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
     /// give [_sliderValue] a valid number
     _sliderValue = 0.5;
     /// update [_currentForm]
-    return Consumer<StaffForm>(
-      builder: (context, form, child) {
+    return FutureBuilder<StaffForm>(
+      future: _loadForm(widget.formId!),
+      builder: (context, snapshot) {
         // _currentForm = _formService.;
-
-        return buildQuestions(form);
-      }, 
-      child: Scaffold(
-        appBar: AppBar(title: Text('Form Builder - ${_currentForm.formName}')),
-        body: const Center(
-         child: Column(children: [
-            Row(children: [
-              SizedBox(height: 20, child: Text("Test content!"))      
-            ])
-          ],) 
-        )
-      ),
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(height: 35, width: 35,child: CircularProgressIndicator());
+        } else if (snapshot.hasError || snapshot.data == null) {
+          return Text('Error: ${snapshot.error ?? "No data available for the form."}');
+          // return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {  
+          /// we KNOW it will have a form inside, so we use '!'
+        
+          return Scaffold(
+            appBar: AppBar(title: Text('Form Builder - ${snapshot.data!.formName}')),
+            body: buildQuestions(snapshot.data!),
+            floatingActionButton: FloatingActionButton(
+              onPressed: _addNewQuestion(),tooltip: 'Add Question',
+              child: const Icon(Icons.add_circle)),
+          );
+        } else {
+          return Text('No data available for the form.');
+        }
+      } 
     );
   }
 
