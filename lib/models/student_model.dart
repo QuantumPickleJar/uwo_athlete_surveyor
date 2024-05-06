@@ -32,7 +32,19 @@ Future<void> addStudentToDatabase(String name, String grade, String sport) async
   }
 }
 
-
+Future<void> deleteStudent(String name, String grade, String sport) async {
+  try {
+    Connection conn = await Database.getOpenConnection();
+    await conn.execute("DElETE FROM tbl_studentlist WHERE student_name = \$1 AND grade = \$2 and sport = \$3",
+        parameters: [name, grade, sport]);
+        students.clear();
+        fetchStudentsFromDatabase();//will repopulate the List with the new added student
+        notifyListeners();
+  } catch (e) {
+    print('Error deleteing student to database: $e');
+    rethrow;
+  }
+}
   // Method to fetch students from the database
   Future<void> fetchStudentsFromDatabase() async {
     try {

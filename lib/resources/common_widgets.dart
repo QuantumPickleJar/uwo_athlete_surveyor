@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 AppBar defaultAppBar({required BuildContext buildContext, required String title, required bool hasBackButton, IconButton? actionButton})
 {
   return  AppBar(
-            title: Text(title),
-            centerTitle: true,
+            //title: Text(title),
+            //centerTitle: true,
             backgroundColor: titanYellow,
             leading: //if hasBackButton==true then the button will generate, otherwise 'null' is used.
               hasBackButton ? Padding(

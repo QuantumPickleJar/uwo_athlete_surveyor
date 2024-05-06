@@ -16,9 +16,6 @@ class StudentsWidget extends StatefulWidget {
 }
 
 class _StudentsWidgetState extends State<StudentsWidget> {
-  // defaults _sortBy 
-  bool _sortBySport = false;
-  bool _sortByGrade = false;
 
   @override
   void initState() {
@@ -54,8 +51,6 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            _sortBySport = false;
-                            _sortByGrade = true;
                             widget.studentModel.sortBySport(); // Call sorting method
                           });
                         },
@@ -126,19 +121,31 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                               Text(studentModel.students[index].sport),
                             ],
                           ),
-                          trailing: ElevatedButton(
-                            onPressed: () {
-                              _moreInfo(
-                                context,
-                                studentModel.students[index],
-                              );
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.yellow,
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  _moreInfo(
+                                    context,
+                                    studentModel.students[index],
+                                  );
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(
+                                    Colors.yellow,
+                                  ),
+                                ),
+                                child: const Text('More Info'),
                               ),
-                            ),
-                            child: const Text('More Info'),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  
+                                  widget.studentModel.deleteStudent(studentModel.students[index].name ,studentModel.students[index].grade, studentModel.students[index].sport);
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ),

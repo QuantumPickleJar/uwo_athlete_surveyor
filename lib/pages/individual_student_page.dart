@@ -18,25 +18,21 @@ class IndividualStudentScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Row(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    'lib/resources/images/download-7.jpg', // Load image from asset
-                    fit: BoxFit.cover,
-                  ),
+                  Text(
+                    '${studentData.name}',
+                     style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Name: ${studentData.name}',
-                        ),
                         const SizedBox(height: 20), // Spacer between lines
                         Text(
                           'Grade: ${studentData.grade}',
