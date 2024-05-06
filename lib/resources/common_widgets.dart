@@ -23,6 +23,40 @@ AppBar defaultAppBar({required BuildContext buildContext, required String title,
                   child: actionButton)]);
 }
 
+/// An ElevatedButton that can have it's visibility toggled based on the provided boolean parameter 'visibilityToggle'.
+/// This can be a one-time check or can be used to dynamically decided if the button is available based on the current
+/// environment.
+Widget toggleVisibleButton({required bool visibilityToggle, 
+                            required void Function() onPressed, 
+                            required String buttonText})
+{
+  return Visibility(
+    visible: visibilityToggle,
+    child: ElevatedButton(
+      onPressed: onPressed, 
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
+      child: SizedBox(
+        child: Center(child: Text(
+          buttonText, 
+          style: const TextStyle(
+            fontSize: 20, 
+            fontWeight: FontWeight.bold))))));
+}
+
+/// The default style for a TextFormField.
+TextFormField defaultTextFormField({required TextEditingController controller, 
+                                    required String? Function(String?) validator, 
+                                    required String hintText})
+{
+  return TextFormField(
+    controller: controller,
+    validator: validator,
+    obscureText: true,
+    decoration: InputDecoration(
+      border: const OutlineInputBorder(),
+      hintText: hintText));
+}
+
 // The default style for an IconButton that should be used with the defaultAppBar widget.
 IconButton defaultActionButton({required IconData actionIcon, required void Function() onPressed})
 {
