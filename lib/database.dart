@@ -14,10 +14,10 @@ class Database
   static const String _getEmailsQuery = "SELECT date_received, address_from, subject_line, body FROM tbl_inbox;";
   static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList"; 
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
-  static const String _getUserPassword = "SELECT * FROM tbl_users WHERE username = @username";
+  static const String _getSpecificUser = "SELECT * FROM tbl_users WHERE username = @username";
   // SQL insert query strings. ***Note on inserts; add "RETURNING <column_name>" to end of insert queries to get a Result from them, with <column name> usually being the ID that gets assigned to it.
   static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport) VALUES (@studentName, @grade, @sport)";
-  static const String _insertNewUser = "INSERT INTO tbl_users (username,password,is_admin) VALUES (@username,@password,@is_admin) RETURNING uuid_user";
+  static const String _insertNewUser = "INSERT INTO tbl_users (username,password,first_name,last_name,is_admin) VALUES (@username,@password,@first_name,@last_name,@is_admin) RETURNING uuid_user";
 
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
@@ -73,10 +73,12 @@ class Database
   /// Fetching the student list
   static Future<Result> fetchStudents() async { return executeSQLCommand(_getStudentList,null); }
 
-  /// Get a user's password based on their provided username (usually to check against the password they provided for login).
-  static Future<Result> fetchUserPassword(String username) async
+  /// Get a user's profile based on their provided username.
+  static Future<Result> fetchUser(String username) async
   {
-    return executeSQLCommand(_getUserPassword, 
+    // return executeSQLCommand(_getSpecificUser, 
+    //                         {'username':username});
+    return executeSQLCommand(_getSpecificUser, 
                             {'username':username});
   }
 
@@ -88,9 +90,9 @@ class Database
   }
 
   /// Insert a new user to the DB; bool response shows whether or not it was successful.
-  static Future<Result> insertNewUser(String username, String password, bool isAdmin) async
+  static Future<Result> insertNewUser(String username, String password, String firstName, String lastName, bool isAdmin) async
   {
     return executeSQLCommand(_insertNewUser, 
-                            {'username': username, 'password': password, 'is_admin': isAdmin});
+                            {'username':username, 'password':password, 'first_name':firstName, 'last_name':lastName, 'is_admin':isAdmin});
   }
 }

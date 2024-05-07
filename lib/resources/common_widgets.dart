@@ -46,12 +46,13 @@ Widget toggleVisibleButton({required bool visibilityToggle,
 /// The default style for a TextFormField.
 TextFormField defaultTextFormField({required TextEditingController controller, 
                                     required String? Function(String?) validator, 
-                                    required String hintText})
+                                    required String hintText,
+                                    required bool obscureText})
 {
   return TextFormField(
     controller: controller,
     validator: validator,
-    obscureText: true,
+    obscureText: obscureText,
     decoration: InputDecoration(
       border: const OutlineInputBorder(),
       hintText: hintText));
