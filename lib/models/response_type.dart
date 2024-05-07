@@ -12,6 +12,11 @@ class ResponseType {
   final Map<String, dynamic> config;
 
   ResponseType({required this.widgetType, this.config = const {}});
+
+  /// Returns the default value of the [ResponseWidgetType] enum, which is `text`.
+  static ResponseWidgetType getDefaultWidgetType() {
+    return ResponseWidgetType.text;
+  }
 }
 
 /// Used to represent the various formats that students wll be 
