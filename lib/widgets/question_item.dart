@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 /// Designed to be used independent of a user's role, so that the editor 
 /// controls can be loaded separate from the loading of a question's info
 /// into a [Card].  This may 
-class QuestionItem extends StatefulWidget {
+class QuestionItem extends StatelessWidget {
   final Question question;      /// the question held within
   
   /// existing items can only be MODIFIED or DELETED:
@@ -20,29 +20,15 @@ class QuestionItem extends StatefulWidget {
     required this.onUpdate
     }) : super(key: key);
 
-
-
-  @override
-  _QuestionItemState createState() => _QuestionItemState();
-}
-
-class _QuestionItemState extends State<QuestionItem> {
- 
-  /// Invoke dialog to edit question and pass the result to onUpdate
-  void _editQuestion() async {
-    throw UnimplementedError(); 
-  }
-  
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text('Question'),
-      onTap: _editQuestion, 
+      title: Text(question.header),
+      onTap: () => onUpdate(question), 
       trailing: IconButton(
         icon: const Icon(Icons.delete_forever),
-        onPressed: () => widget.onDelete(widget.question),
+        onPressed: () => onDelete(question),
       )
-
     );
   }
 }
