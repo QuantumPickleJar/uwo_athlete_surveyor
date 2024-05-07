@@ -12,29 +12,36 @@ class FormService {
   final QuestionRepository _questionRepository;
   final FormFactory _formFactory = ConcreteFormFactory();
   
-  final Uuid _uuid = const Uuid(); // finding out if we need this at the moment
-
   /// TODO: make more specific get-based functions that query smaller 
   /// subsets, such as ones suited for students vs staff for example
   FormService(this._formRepository, this._questionRepository);
     // _init(spreadsheetId);
     // return _formRepository.getAllForms();
   
-  Future<GenericForm?> getFormById(String formUuid) async{
-    try {
-      var retrievedForm = await _formRepository.getFormById(formUuid);
-      
-      if (retrievedForm != null) {
-        /// TODO: implemement during auth stage
-        /// based on questions, load into a [StudentForm] or [StaffForm]
-        return retrievedForm;
+  Future<GenericForm?> getFormById(String formId) async{
+    if (Uuid.isValidUUID(fromString: formId)) {
+      try {
+        var retrievedForm = await _formRepository.getFormById(formId);
+        
+        if (retrievedForm != null) {
+          /// TODO: check if there are any questions to be retrieved:
+          /// for now this if from tbl_questions, but will eventually be from tbl_form_question
+          retrievedForm.questions = await _questionRepository.resolveQuestionsByFormId(formId: formId);
+          return retrievedForm;
+        } 
+        
+      } catch (e) {
+        print('Error getting Form with id $formId: \n Error: $e');
+        return null;
       }
-    } on Exception catch (e) {
-      print("Error getting Form with id $formUuid: \n Error: $e");
+    } else {
+        print("Invalid or missing formId: $formId");
+        return null;
     }
-    return null;
   }
 
+  /// Creates a new form in the database, returning an instance containing
+  /// the id assigned from the SQL server.
   Future<GenericForm> createNewForm(String formName, String sport) async {
     /// TODO: ensure another form with this name doesn't exist
     IGenericForm newForm = _formFactory.createStaffForm(formName: formName, sport: sport);
@@ -44,21 +51,39 @@ class FormService {
     return persistedForm;
   }
 
-  Future<GenericForm> createFormWithQuestions(GenericForm form, List<Question> questions) async {
-    GenericForm newForm = await _formRepository.createForm(form);    // form needs the id from DB first
-    for (var question in questions) {
-      question.formId = newForm.formId;   // bind the question to the form it's adding into
-      // newForm.questions.add(question);
-      await _questionRepository.createQuestion(question, form.formId);    // now add this ref to tbl_questions
-    }
-    return newForm;
+
+  /// Checks if [existingForm]'s questions contain all that [questions] does by 
+  /// leveraging the fact that a [Question] knows its order in a form: allowing 
+  /// the conversion of the List to a Set
+  bool _areFormQuestionsEqual(GenericForm existingForm, List<Question> questions) {
+    var setA = existingForm.questions.toSet();
+    var setB = questions.toSet();
+
+    return setA.containsAll(setB) && setB.containsAll(setA);
   }
 
-  /// TODO: implement
-  Future<GenericForm?> getFormDetails(String formId) async {
-    /// TODO: wrap with safe uuid parse
-    return _formRepository.getFormById(formId);
+  /// When 
+  // Future<GenericForm> createFormWithQuestions(GenericForm form, List<Question> questions) async {
+  Future<void> saveFormQuestions({required GenericForm existingForm, 
+                                         required List<Question> newQuestions}) async {
+    try {
+      // GenericForm newForm = await _formRepository.createForm(form);    // form needs the id from DB first
+        
+      /// make sure all of [newQuestions] is present in [existingForm] before making req. to DB
+      if (!_areFormQuestionsEqual(existingForm, newQuestions)) { /// add them if not 
+        /// note that existing questions should contain formId from Widget Tree (in form_builder_page) 
+        await _questionRepository.updateFormQuestions(questions: newQuestions, formId: existingForm.formId);    
+      }
+    } catch (e) {
+      throw Exception('Form ID was null on the attempted operation.');
+    }
   }
+
+  // /// TODO: implement
+  // Future<GenericForm?> getFormDetails(String formId) async {
+  //   /// TODO: wrap with safe uuid parse
+  //   return _formRepository.getFormById(formId);
+  // }
 
   /// Called when updates to the form's responses have been made 
   Future<GenericForm> saveForm(GenericForm form) async {
@@ -73,26 +98,25 @@ class FormService {
   /// Called by FormBuilderPage when loading a form.  If an id isn't supplied, we know it's 
   /// a new form and can simply construct and return a [StaffForm] with the populated ID from 
   /// the DB.
-  Future<IGenericForm> fetchOrCreateForm({required String formId, String? formName, String? sport}) async {
+  Future<GenericForm> fetchOrCreateForm({String? formId, String? formName, String? sport}) async {
     /// route to [_formFactory] if [formId] is null
-    if(formId.isEmpty) {
-     return _formFactory.createStaffForm(formName: formName!, sport: sport);
-      /// now we'll grab the form's newly assigned id
-      // var persistedForm = await createFormWithQuestions(newForm as Form, []) ;
-      // // verify the conversion was successful
-      // print("dates: ${newForm.formDateCreated.toString()} and ${persistedForm.formDateCreated.toString()}");
-      
-      // newForm.formId = persistedForm.formId;  /// ...and update [newForm] to match
-      // return newForm;
-    } else {  /// fetch the Form
-      var existingForm = await getFormById(formId);
-      // var existingForm = await _formRepository.getFormById(formId);
+    if(formId == null || formId.isEmpty) {
+      // Ensure newForm is a GenericForm and initialize its ID with the new ID from the DB.
+      IGenericForm newForm = _formFactory.createStaffForm(
+        formName:  formName ?? 'New Form', sport: sport ?? 'untitled sport');
 
-      /// TODO: examine necessity of this if statement
+      /// now we'll grab the form's newly assigned id, and its questions
+      GenericForm persistedForm = await _formRepository.createForm(newForm as GenericForm);
+
+      return persistedForm;
+    } else {                    /// fetch an existing Form
+      var existingForm = await getFormById(formId);
+      
       if (existingForm != null) {
-        return existingForm; /// cast because [IGenericForm] expected
+        existingForm.questions = await _questionRepository.resolveQuestionsByFormId(formId: formId);
+        return existingForm;
       } else {
-        throw Exception('Unable to find the form, or not the right form type!');
+      throw Exception('Unable to find the form with id $formId');
       }
     }
   } 

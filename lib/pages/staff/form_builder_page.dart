@@ -2,12 +2,20 @@ import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
+import 'package:athlete_surveyor/widgets/question_item.dart';
+import  'package:athlete_surveyor/models/response_type.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
+/// Page responsible for creating and modifying forms. 
+/// 
+/// Per the object family defined, the presented form is built from
+/// a [GenericForm] holding (existing, if any) data, which is then 
 class FormBuilderPage extends StatefulWidget {
   final String? formId;  // id linking page to the form
-  // final StaffForm currentForm;    /// the form currently opened
+ 
   const FormBuilderPage({Key? key, required this.formId}) : super(key: key);
 
   @override
@@ -16,82 +24,67 @@ class FormBuilderPage extends StatefulWidget {
 
 
 class _FormBuilderPageState extends State<FormBuilderPage> {
+  GenericForm? _currentForm;        /// the form currently opened
+  late Future<GenericForm?> _formFuture;        /// the form currently opened
   late double _sliderValue;
-  late bool _isOpenedFormNew;
+  late bool _isOpenedFormNew;  
+  
+  /// Allows modifying a *single* [QuestionItem] at a time.  This *should*
+  /// allow the transition to an expanded-style question widget as 
+  /// opposed to the existing [AlertDialog]-based solution
+  late final TextEditingController _questionTextController;
+  
+  /// looks at formName to determine if the name is still untouched\
+  /// e.g if (formName.contains("New Form")){ ... }
   late final FormService _formService;
-  late StaffForm _currentForm;
 
   /// the form currently being modified
 
-  /// Temporary placeholder to allow the slider to be enabled
-  void _onSliderTap() {
-    return;
-  }
+  // /// Temporary placeholder to allow the slider to be enabled
+  // void _onSliderTap() {
+  //   return;
+  // }
 
   @override
   void initState() {
     super.initState();
     print(widget.formId);  // Ensure this prints the expected UUID
     _formService = Provider.of<FormService>(context, listen: false);
-    _loadForm(widget.formId!) as StaffForm;
+    _questionTextController = TextEditingController();
+    /// if this is a **NEW** form, it'll (briefly) have a null `form_id`
+    _isOpenedFormNew = widget.formId == null || widget.formId!.isEmpty;
+    // _loadForm(widget.formId!);
+    _formFuture = _loadForm();
   }
 
-  Future<void> _loadForm(String formId) async {
-      try {
-        GenericForm loadedForm =
-         (await _formService.fetchOrCreateForm(formId: formId)) as GenericForm;
-        setState(() {
-          /// Set the loaded form to the current form
-          _currentForm = StaffForm.fromGenericForm(loadedForm, questions: []); 
-        });
-      } catch (e) { /// an exception will occur if not found
-        /// a bit dirty--we handle the not found case in the catch
-        // if(formId.isEmpty) {
-        // /// CREATE a new form if we didn't receive a `formId`
-        // setState(() {
-        //   _currentForm = StaffForm(
-        //     formId: '', 
-        //     formName: 'Untitled Form', 
-        //     sport: "SOME SPORT", 
-        //     List.empty()
-        //   );
-        // });
+  /// needed for using the [TextEditingController]
+  @override dispose() {
+    _questionTextController.dispose();
+    super.dispose();
+  }
 
-        // } else { /// else it must be an UPDATE
-          // TODO: consider an is loading here for displaying a spinner
-        //   _formService.getFormById(widget.formId!);
-        //   debugPrint(e.toString());
-        // }
-      /// check if we need to make an additional call to the DB (should happen behind)
-      _isOpenedFormNew = widget.formId!.isEmpty;
+  /// reaches out and fetches form contents from the resolved [formId]
+  Future<GenericForm?> _loadForm() async {
+      if (widget.formId != null && widget.formId!.isNotEmpty) {
+      try {
+       GenericForm? loadedForm = await _formService.fetchOrCreateForm(formId: widget.formId);
+        if (loadedForm != null) {
+          // setState(() {
+          //   _currentForm = loadedForm; // Update the state with loaded form
+          // // Convert GenericForm to StaffForm using the dedicated constructor
+          // });
+          return loadedForm;
+          } 
+      } catch (e) { 
+        /// an exception will occur if not found
+        print('Error loading form: $e');
+        /// check if we need to make an additional call to the DB (should happen behind)
+        /// _isOpenedFormNew = widget.formId!.isEmpty;
+        return null;
+        }
       }
     }
   
-
-  @override
-  Widget build(BuildContext context) {
-    /// give [_sliderValue] a valid number
-    _sliderValue = 0.5;
-    /// update [_currentForm]
-    return Consumer<StaffForm>(
-      builder: (context, form, child) {
-        // _currentForm = _formService.;
-
-        return buildQuestions(form);
-      }, 
-      child: Scaffold(
-        appBar: AppBar(title: Text('Form Builder - ${_currentForm.formName}')),
-        body: const Center(
-         child: Column(children: [
-            Row(children: [
-              SizedBox(height: 20, child: Text("Test content!"))      
-            ])
-          ],) 
-        )
-      ),
-    );
-  }
-
   
   /// Builds the scaffold for displaying a StaffForm's [questions] .
   ///
@@ -100,19 +93,163 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
   ///
   /// Each question is displayed as a [ListTile] with the question
   /// header as the title and the question content as the subtitle.
-  Widget buildQuestions(StaffForm form) {
+  Widget buildQuestions(List<Question>? questions) {
     return ListView.builder(
-      itemCount: form.questions.length,
+      itemCount: questions?.length ?? 0,
       itemBuilder: (context, index) {
-      Question question = form.questions[index];
+        Question? question = questions?[index]; 
 
-      /// this is where we unpack the contents of the question
+      /// this is where we unpack the contents of the question.
+      /// TODO: the button to modify a question should be inside the Card
       return Card(
       child: ListTile(
-        title: Text(question.header),
-        subtitle: Text(question.content),
+        title: Text(question?.header ?? 'New Question'),
+        subtitle: Text(question?.content ?? 'no content provided'),
       ),
     );
    });
+  }
+
+  Column launchQuestionEditor(Question? question) { 
+    _questionTextController.text = question?.content ?? '';
+    ResponseWidgetType selectedResponseType = question?.resFormat as ResponseWidgetType ?? ResponseType.getDefaultWidgetType();
+
+    return Column(
+      children: [
+        TextField(
+          controller: _questionTextController,
+          decoration: InputDecoration(
+            labelText: 'Question Content',
+          ),
+        ),
+        DropdownButton<ResponseType>(
+          value: selectedResponseType as ResponseType,
+          onChanged: (ResponseType? newValue) {
+            setState(() {
+              selectedResponseType = newValue! as ResponseWidgetType;
+            });
+          },
+          items: ResponseWidgetType.values.map<DropdownMenuItem<ResponseType>>(
+            (ResponseWidgetType responseType) {
+            return DropdownMenuItem<ResponseType>(
+              value: responseType as ResponseType,
+              child: Text(responseType.toString()), // shouldn't this use the .name? 
+            );
+          }).toList(),
+        ),
+        CheckboxListTile(
+          title: const Text('Response Required'),
+          value: question?.resRequired ?? false,
+          onChanged: (bool? newValue) {
+            setState(() {
+              question?.resRequired = newValue!;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  /// used to add a new EMPTY question at the tail end of [_currentForm]'s questions
+  void _addNewQuestion() {
+  }
+  
+  /// Adds an empty question to the currently loaded form.
+  /// Collects necessary parameters from an awaited call to
+  /// an [AlertDialog] configured to return a [Question] 
+  Future<void> _addOrEditQuestion(Question? question) async {
+    // If we're editing an existing question, set the text controller to the question's content
+    if (question != null) {
+      _questionTextController.text = question.content;
+    } else {
+      _questionTextController.clear();
+    }
+
+    final Question? modifiedQuestion = await showDialog<Question>(
+      context: context, 
+      builder: (BuildContext context) {
+          return AlertDialog(
+          title: Text(question == null ? 'Add New Question' : 'Edit Question'),
+          content: 
+          /// TODO: make in edit_question (or, would it be `edit_question_widget`, since we just need UI elements for accepting input, preloaded with existing information on edit operations)
+          // EditQuestionWidget(question), 
+
+            Builder(
+              builder: (context) => launchQuestionEditor(question),
+            ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Save'),
+              onPressed: () {
+                var newQuestion = Question(
+                  formId: widget.formId!,
+                  /// generate a new Id if we have to
+                  questionId: question?.questionId ?? const Uuid().v4(),
+                  ordinal: question?.ordinal ?? -1,
+                  header: question?.header ?? getHeader(question),
+                  content: _questionTextController.text,
+                  // we only need the enum, none of the UI func that comes with it, hence this "as" 
+                  resFormat: question?.resFormat ?? ResponseType.getDefaultWidgetType() as ResponseType,
+                  resRequired: false,
+                  linkedFileKey: null
+                );
+                Navigator.of(context).pop(question);
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  
+  @override
+  Widget build(BuildContext context) {
+    /// give [_sliderValue] a valid number
+    _sliderValue = 0.5;
+    /// update [_currentForm]
+    
+
+    return FutureBuilder<GenericForm?>(
+      future: _loadForm(),
+      builder: (context, snapshot) {
+        // _currentForm = _formService.;
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(height: 35, width: 35,child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error ?? "No data available for the form."}');
+          // return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {  
+          /// we KNOW it will have a form inside, so we use '!'
+        
+          return Scaffold(
+            // appBar: AppBar(title: Text('Form Builder - ${snapshot.data!.formName}')),
+            appBar: AppBar(title: Text('Form Builder - ${_currentForm?.formName}')),
+            body: buildQuestions(_currentForm?.questions),
+            floatingActionButton: FloatingActionButton(
+              onPressed: _addNewQuestion,
+              tooltip: 'Add Question',
+              child: const Icon(Icons.add_circle)),
+          );
+        } else {
+          return Text('No data available for the form.');
+        }
+      } 
+    );
+  }
+  
+  /// used to allow the shorthand ?? syntax in the onPressed for the dialog
+  String getHeader(Question? question) {
+    if (question != null) {
+      return 'Question ${question.ordinal}';
+    } else {
+      return 'New Question';
+    }
   }
 }

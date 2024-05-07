@@ -4,6 +4,7 @@ import 'package:athlete_surveyor/models/interfaces/i_form_respository.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:postgres/postgres.dart';
 import 'package:athlete_surveyor/services/db.dart';
+import 'package:uuid/uuid.dart';
 import 'package:uuid/v4.dart';
 
 // Concrete implementation of the FormRepository
@@ -18,51 +19,57 @@ class FormRepository implements IFormRepository {
   FormRepository._internal();
 
   /// used temporarily to streamline the demo
-  final String DEVELOPER_UUID = "79892b1b-61a9-455a-bc4d-ac90cff75798";
+  /// TODO: replace with Adam In's id
+  final String DEVELOPER_UUID = "a23e1679-d5e9-4d97-9902-bb338b38e468";
   
   @override
   Future<GenericForm> createForm(GenericForm form) async {
-    try {// Insert form into the database and return the inserted form
-    String sqlStatement = """INSERT INTO tbl_forms 
+    var db = await _connection;
+    try {
+      return await db.runTx((tx) async {
+      /// query 1 of 2: inserting the form into the database
+      String insertSql = """INSERT INTO tbl_forms 
                             (user_id, form_title, last_modified, create_date)
                             VALUES (@userId, @formTitle, @lastModified, @createDate) 
-                            RETURNING *;""";
-
-    /// TODO: run the question query separately, in a tx
-    ///  until we have a service for it
-    // var result = await _connection.runTx((insertForm) {
-    //   final persistedForm = await insertForm.execute()
-    // });
-    var db = await _connection;
-    var result = await db.execute(
-        // Sql.named(sqlStatement), parameters: {
-        /// TODO: remove the LOGICAL reliance on a hard-coded UUID
-        Sql.named(sqlStatement), parameters: {
-          'userId': DEVELOPER_UUID, // For now, since you don't have auth
+                            RETURNING form_id, form_title, create_date;""";
+      
+      var insertResult = await tx.execute(
+        Sql.named(insertSql), parameters: {
+          'userId': DEVELOPER_UUID,             /// TODO: get user's ID dynamically
           'formTitle': form.formName,
           'lastModified': DateTime.now().toIso8601String(),
-          'createDate': DateTime.now().toIso8601String(), 
+          'createDate': DateTime.now().toIso8601String(),
         }
-
-        
       );
-    if (result.isEmpty) {
-      throw Exception('Failed creating form.');
-    } 
-    /// use our helper function to map the resulting columns out to a [Form]
-    return _mapRowToForm(result.first.toColumnMap());
-    } finally {
-      PostgresDB.closeConnection();
-    }
+      print("Database returned: ${insertResult.first.toColumnMap()}");
+
+      if (insertResult.isEmpty || insertResult.first.isEmpty) {
+        throw Exception('Failed creating form.');
+      }
+
+      return _mapRowToForm(insertResult.first.toColumnMap());
+    });
+  } finally {
+    PostgresDB.closeConnection();
+  }
   }
 
-  /// Hhelper function to convert a database row to a Form object
-  GenericForm _mapRowToForm(Map<String, dynamic> row) {
+    /// Hhelper function to convert a database row to a Form object
+    GenericForm _mapRowToForm(Map<String, dynamic> row) {
+      /// temporary debugging code: 
+      assert(row['form_id'] != null, 'Database returned null for form_id');
+      assert(row['form_title'] != null, 'Database returned null for form_title');
+
+      if (row['form_id'] == null || row['form_title'] == null) {
+        throw Exception('Database returned null for a required field.');
+      }
+        
+    
     return GenericForm(
       formId: row['form_id'],
-      formName: row['form_title'],
-      sport: 'Sport Placeholder', // Replace with actual value if it's available
-      formDateCreated: row['create_date'],
+      formName: row['form_title'] ?? 'SQLERR_title_parse_fail',
+      sport: row['sport'] ?? 'Unfetched', // Replace with actual value if it's available
+      formDateCreated: row['create_date'] ?? DateTime.now(),
       questions: [], // This needs to be filled with actual questions from a related query
     );
   }
@@ -71,7 +78,7 @@ class FormRepository implements IFormRepository {
   @override
   Future<bool> deleteForm(String formId) async {
     try { 
-      String sqlStatement = "DELETE FROM tbl_forms WHERE form_id LIKE @formId";
+      String sqlStatement = "DELETE FROM tbl_forms WHERE form_id = @formId";
       var db = await _connection;
       var result = await db.execute(
         Sql.named(sqlStatement), parameters: { 'formId': formId }
@@ -96,16 +103,6 @@ class FormRepository implements IFormRepository {
     var db = await _connection;
     final result = await db.execute(Sql.named(sqlStatement));
 
-    // if(result.isNotEmpty) {
-    //   for (var row in result) {
-    //     var cols = row.toColumnMap(); // unpack the columns into an object
-    //     // _forms.add(
-    //     results.add(
-    //       Form(formId: cols['form_id'], formName: cols['form_title'], sport: "NOT_STORED_IN_TABLE", questions: [])
-    //     );
-    //   }
-    // }
-    
     return result.map((row) => _mapRowToForm(row.toColumnMap())).toList();
     } finally {
       PostgresDB.closeConnection();
@@ -115,13 +112,16 @@ class FormRepository implements IFormRepository {
   /// Retrieves a form by its id
   @override
   Future<GenericForm?> getFormById(String formId) async {
+        if (!Uuid.isValidUUID(fromString: formId)) {
+        print("[FORM_REPO] Invalid UUID: $formId");
+        return null;
+    }
     try {
-      // TODO: implement getFormById
-      // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
-      String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
+      String sqlStatement = """SELECT form_id, form_title, last_modified, create_date 
+                               FROM public.tbl_forms WHERE form_id = @formId;""";
       var db = await _connection;
       
-      var result = await db.execute(Sql.named(sqlStatement), parameters: formId);
+      var result = await db.execute(Sql.named(sqlStatement), parameters: { 'formId': formId });
       if(result.isEmpty) {
         return null;
       }
@@ -151,7 +151,7 @@ class FormRepository implements IFormRepository {
       });
       if (result.isEmpty) {
         print(form);
-        throw Exception("Failed to update the form!");
+        throw Exception('Failed to update the form!');
       } else {
         return _mapRowToForm(result.first.toColumnMap());
       } 
