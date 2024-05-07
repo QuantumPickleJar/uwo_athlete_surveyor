@@ -25,14 +25,14 @@ class _AddStudentState extends State<AddStudent>
     String name = _nameController.text;
     String grade = _gradeController.text;
     String sport = _sportController.text;
-
+    
     widget.studentsModel.addStudentToDatabase(name, grade, sport)
         .then((_) {
       // Clear form fields
       _nameController.clear();
       _gradeController.clear();
       _sportController.clear();
-
+   
       // Navigate back to the previous screen
       Navigator.pop(context);
     }).catchError((error) {
@@ -131,6 +131,7 @@ class _AddStudentState extends State<AddStudent>
                         ],
                       ),
                       const SizedBox(height: 20),
+                     
                     ],
                   ),
                 ),

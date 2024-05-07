@@ -119,6 +119,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                             children: [
                               Text(studentModel.students[index].grade),
                               Text(studentModel.students[index].sport),
+                             
                             ],
                           ),
                           trailing: Row(
@@ -141,7 +142,6 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                               IconButton(
                                 icon: const Icon(Icons.delete),
                                 onPressed: () {
-                                  
                                   widget.studentModel.deleteStudent(studentModel.students[index].name ,studentModel.students[index].grade, studentModel.students[index].sport);
                                 },
                               ),

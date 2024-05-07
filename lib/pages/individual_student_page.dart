@@ -25,9 +25,20 @@ class IndividualStudentScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'lib/resources/images/individual-icon-1.png', // Load image from images
+                        width: 200,
+                        height: 200,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   Text(
                     '${studentData.name}',
-                     style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),),
+                     style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -43,6 +54,7 @@ class IndividualStudentScreen extends StatelessWidget {
                           'Sport: ${studentData.sport}',
                         ),
                         const SizedBox(height: 20),
+                        
                       ],
                     ),
                   ), // Spacer between lines
@@ -89,7 +101,7 @@ class IndividualStudentScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Text("Analytics of 'Student's name'"),
+                  Text('Analytics of ${studentData.name}'),
                   Image.network(
                     'https://via.placeholder.com/300', // Replace with the student's headshot
                     width: 300,
