@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget
     var newForm = await formService.createNewForm('NewForm', 'Sport');
     print(newForm.formId);
 
-    if(context.mounted) { navigateToPage(context, SecureFormProvider(formId: newForm.formId)); }
+    if(context.mounted) { navigateToPage(context, SecureFormProvider(formId: newForm.formId, hasAdminPrivileges: hasAdminPrivileges)); }
   }
 
   @override
