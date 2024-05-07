@@ -3,6 +3,7 @@ import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 /// Page responsible for creating and modifying forms. 
@@ -16,17 +17,18 @@ class FormBuilderPage extends StatefulWidget {
 
   @override
   _FormBuilderPageState createState() => _FormBuilderPageState();
+  final TextEditingController _questionTextController;
 }
 
 
 class _FormBuilderPageState extends State<FormBuilderPage> {
+  
   late double _sliderValue;
   late bool _isOpenedFormNew;  
-
+  
   /// looks at formName to determine if the name is still untouched\
   /// e.g if (formName.contains("New Form")){ ... }
   late final FormService _formService;
-  late StaffForm _currentForm;
 
   /// the form currently being modified
 
@@ -40,7 +42,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
     super.initState();
     print(widget.formId);  // Ensure this prints the expected UUID
     _formService = Provider.of<FormService>(context, listen: false);
-    // _loadForm(widget.formId!) as StaffForm;
+
     /// if this is a **NEW** form, it'll (briefly) have a null `form_id`
     _isOpenedFormNew = widget.formId == null || widget.formId!.isEmpty;
   }
@@ -66,8 +68,65 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       throw Exception('Failed to load form: ${e.toString()}');
       }
     }
-  
+    
+  /// Builds the scaffold for displaying a StaffForm's [questions] .
+  ///
+  /// Takes a [StaffForm] object and returns a [Scaffold]  widget that
+  /// displays the questions in a [ListView.builder].
+  ///
+  /// Each question is displayed as a [ListTile] with the question
+  /// header as the title and the question content as the subtitle.
+  Widget buildQuestions(StaffForm form) {
+    return ListView.builder(
+      itemCount: form.questions.length,
+      itemBuilder: (context, index) {
+      Question question = form.questions[index];
 
+      /// this is where we unpack the contents of the question.
+      /// TODO: the button to modify a question should be inside the Card
+      return Card(
+      child: ListTile(
+        title: Text(question.header),
+        subtitle: Text(question.content),
+      ),
+    );
+   });
+  }
+  
+  /// Adds an empty question to the currently loaded form.
+  /// Collects necessary parameters from an awaited call to
+  /// an [AlertDialog] configured to return a [Question] 
+  void _addNewQuestion() {
+    final Question? newQuestion = await showDialog<Question>(
+      context: context, 
+      builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Add New Question'),
+            actions: <Widget>[
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Save'),
+            onPressed: () {
+              var _questionTextController;
+              var question = QuestionItem(
+                content: _questionTextController.text,
+                // Additional question details initialization
+              );
+              Navigator.of(context).pop(question);
+            },
+          ),
+        ],
+        );
+      }
+    );
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     /// give [_sliderValue] a valid number
@@ -89,7 +148,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
             appBar: AppBar(title: Text('Form Builder - ${snapshot.data!.formName}')),
             body: buildQuestions(snapshot.data!),
             floatingActionButton: FloatingActionButton(
-              onPressed: _addNewQuestion(),tooltip: 'Add Question',
+              onPressed: _addNewQuestion,tooltip: 'Add Question',
               child: const Icon(Icons.add_circle)),
           );
         } else {
@@ -97,29 +156,5 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
         }
       } 
     );
-  }
-
-  
-  /// Builds the scaffold for displaying a StaffForm's [questions] .
-  ///
-  /// Takes a [StaffForm] object and returns a [Scaffold]  widget that
-  /// displays the questions in a [ListView.builder].
-  ///
-  /// Each question is displayed as a [ListTile] with the question
-  /// header as the title and the question content as the subtitle.
-  Widget buildQuestions(StaffForm form) {
-    return ListView.builder(
-      itemCount: form.questions.length,
-      itemBuilder: (context, index) {
-      Question question = form.questions[index];
-
-      /// this is where we unpack the contents of the question
-      return Card(
-      child: ListTile(
-        title: Text(question.header),
-        subtitle: Text(question.content),
-      ),
-    );
-   });
   }
 }
