@@ -62,15 +62,25 @@ Future<void> editStudent(String name, String grade, String sport) async {
   }
 }
 
-Future<void> updateStudentInDatabase(String name, String newName, String grade, String sport) async {
+Future<void> updateStudentInDatabase(String name, String ?newName, String grade, String sport) async {
   try {
     Connection conn = await Database.getOpenConnection();
-    await conn.execute(
+    if(newName != null){
+       await conn.execute(
       "UPDATE tbl_studentlist SET student_name = '$newName', grade = '$grade', sport = '$sport' WHERE student_name = '$name'",
     );
     students.clear();
     await fetchStudentsFromDatabase(); // Repopulate the List with the updated student information
     notifyListeners();
+    }else{
+      await conn.execute(
+      "UPDATE tbl_studentlist SET student_name = '$newName', grade = '$grade', sport = '$sport' WHERE sport = '$sport'",
+    );
+    students.clear();
+    await fetchStudentsFromDatabase(); // Repopulate the List with the updated student information
+    notifyListeners();
+    }
+    
   } catch (e) {
     print('Error updating student in database: $e');
     rethrow;

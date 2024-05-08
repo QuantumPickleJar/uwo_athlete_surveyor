@@ -49,7 +49,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                   widget.studentData.name, // Original name of the student
                   _nameController.text,    // New name entered in the text field
                   _gradeController.text,
-                  _sportController.text,
+                  _sportController.text
                   );
                 }
               });
