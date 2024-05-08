@@ -143,7 +143,7 @@ class FormRepository implements IFormRepository {
       var db = await _connection;
       var result = await db.execute(
         Sql.named(sqlStatement), parameters: {
-          'formId': null, /// TODO: adjust query and remove
+          'formId': form.formId, /// TODO: adjust query and remove
           'userId': 'user-id', // For now, since you don't have auth
           'formTitle': form.formName,
           'lastModified': DateTime.now(),

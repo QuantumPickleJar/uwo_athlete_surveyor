@@ -14,8 +14,9 @@ class ResponseType {
   ResponseType({required this.widgetType, this.config = const {}});
 
   /// Returns the default value of the [ResponseWidgetType] enum, which is `text`.
-  static ResponseWidgetType getDefaultWidgetType() {
-    return ResponseWidgetType.text;
+  static ResponseType getDefaultWidgetType() {
+    //return ResponseWidgetType.text;
+    return ResponseType(widgetType: ResponseWidgetType.text);
   }
 }
 

@@ -27,7 +27,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
   GenericForm? _currentForm;        /// the form currently opened
   late Future<GenericForm?> _formFuture;        /// the form currently opened
   late double _sliderValue;
-  late bool _isOpenedFormNew;  
+  late bool _isCurrentFormNew;  
   
   /// Allows modifying a *single* [QuestionItem] at a time.  This *should*
   /// allow the transition to an expanded-style question widget as 
@@ -52,7 +52,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
     _formService = Provider.of<FormService>(context, listen: false);
     _questionTextController = TextEditingController();
     /// if this is a **NEW** form, it'll (briefly) have a null `form_id`
-    _isOpenedFormNew = widget.formId == null || widget.formId!.isEmpty;
+    _isCurrentFormNew = widget.formId == null || widget.formId!.isEmpty;
     // _loadForm(widget.formId!);
     _formFuture = _loadForm();
   }
@@ -73,6 +73,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
           //   _currentForm = loadedForm; // Update the state with loaded form
           // // Convert GenericForm to StaffForm using the dedicated constructor
           // });
+          _currentForm = loadedForm;
           return loadedForm;
           } 
       } catch (e) { 
@@ -101,7 +102,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
 
       /// this is where we unpack the contents of the question.
       /// TODO: the button to modify a question should be inside the Card
-      return Card(
+      return Card( 
       child: ListTile(
         title: Text(question?.header ?? 'New Question'),
         subtitle: Text(question?.content ?? 'no content provided'),
@@ -112,13 +113,13 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
 
   Column launchQuestionEditor(Question? question) { 
     _questionTextController.text = question?.content ?? '';
-    ResponseWidgetType selectedResponseType = question?.resFormat as ResponseWidgetType ?? ResponseType.getDefaultWidgetType();
+    ResponseType selectedResponseType = question?.resFormat ?? ResponseType.getDefaultWidgetType();
 
     return Column(
       children: [
         TextField(
           controller: _questionTextController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Question Content',
           ),
         ),
@@ -126,14 +127,13 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
           value: selectedResponseType as ResponseType,
           onChanged: (ResponseType? newValue) {
             setState(() {
-              selectedResponseType = newValue! as ResponseWidgetType;
+              selectedResponseType = newValue ?? ResponseType.getDefaultWidgetType();
             });
           },
-          items: ResponseWidgetType.values.map<DropdownMenuItem<ResponseType>>(
-            (ResponseWidgetType responseType) {
+          items: ResponseWidgetType.values.map((ResponseWidgetType type) {
             return DropdownMenuItem<ResponseType>(
-              value: responseType as ResponseType,
-              child: Text(responseType.toString()), // shouldn't this use the .name? 
+              value: ResponseType(widgetType: type),
+              child: Text(type.toString()),
             );
           }).toList(),
         ),
@@ -152,6 +152,16 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
 
   /// used to add a new EMPTY question at the tail end of [_currentForm]'s questions
   void _addNewQuestion() {
+    Question newQuestion = Question(
+      formId: _currentForm!.formId, 
+      questionId: const Uuid().v4(),
+      /// a new form starts with an ordinal of 1, otherwise it's size of [questions]
+      ordinal: (_isCurrentFormNew) ? 1 : _currentForm!.questions.length + 1,   
+      header:"Question ${_currentForm!.questions.length + 1}:",
+      content: 'Enter contextual information for the student to respond to.',
+      resRequired: false, /// TODO: implement a localized persistant setting allowing the desired init value
+      resFormat: ResponseType.getDefaultWidgetType());
+    _currentForm?.questions.add(newQuestion);
   }
   
   /// Adds an empty question to the currently loaded form.
@@ -238,7 +248,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
               child: const Icon(Icons.add_circle)),
           );
         } else {
-          return Text('No data available for the form.');
+          return const Text('No data available for the form.');
         }
       } 
     );
