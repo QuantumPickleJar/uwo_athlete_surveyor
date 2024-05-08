@@ -35,16 +35,48 @@ Future<void> addStudentToDatabase(String name, String grade, String sport) async
 Future<void> deleteStudent(String name, String grade, String sport) async {
   try {
     Connection conn = await Database.getOpenConnection();
-    await conn.execute("DELETE FROM tbl_studentlist WHERE student_name = @name AND grade = @grade AND sport = @sport)",
-        parameters: [name, grade, sport]);
-        students.clear();
-        fetchStudentsFromDatabase();//will repopulate the List with the new added student
-        notifyListeners();
+    await conn.execute(
+      "DELETE FROM tbl_studentlist WHERE student_name = '$name' AND grade = '$grade' AND sport = '$sport'",
+    );
+    students.clear();
+    await fetchStudentsFromDatabase(); // Repopulate the List with the new added student
+    notifyListeners();
   } catch (e) {
-    print('Error deleting student to database: $e');
+    print('Error deleting student from database: $e');
     rethrow;
   }
 }
+
+Future<void> editStudent(String name, String grade, String sport) async {
+  try {
+    Connection conn = await Database.getOpenConnection();
+    await conn.execute(
+      "UPDATE tbl_studentlist SET grade = @grade, sport = @sport WHERE student_name = @name",
+    );
+    students.clear();
+    await fetchStudentsFromDatabase(); // Repopulate the List with the new added student
+    notifyListeners();
+  } catch (e) {
+    print('Error deleting student from database: $e');
+    rethrow;
+  }
+}
+
+Future<void> updateStudentInDatabase(String name, String newName, String grade, String sport) async {
+  try {
+    Connection conn = await Database.getOpenConnection();
+    await conn.execute(
+      "UPDATE tbl_studentlist SET student_name = '$newName', grade = '$grade', sport = '$sport' WHERE student_name = '$name'",
+    );
+    students.clear();
+    await fetchStudentsFromDatabase(); // Repopulate the List with the updated student information
+    notifyListeners();
+  } catch (e) {
+    print('Error updating student in database: $e');
+    rethrow;
+  }
+}
+
   // Method to fetch students from the database
   Future<void> fetchStudentsFromDatabase() async {
     try {
@@ -55,6 +87,7 @@ Future<void> deleteStudent(String name, String grade, String sport) async {
         final String name = row[0] as String;
         final String grade = row[1] as String;
         final String sport = row[2] as String;
+       
         final Student student = Student(name: name, grade: grade, sport: sport);
         students.add(student);
       }
@@ -72,10 +105,13 @@ Future<void> deleteStudent(String name, String grade, String sport) async {
   }
 }
 
+
+
 class Student {
-  final String name;
-  final String grade;
-  final String sport;
+   String name;
+   String grade;
+  String sport;
+  
   
 
   Student({
@@ -85,4 +121,10 @@ class Student {
    
     
   });
+
+  void editStudent(String newName, String newGrade, String newSport) {
+    name = newName;
+    grade = newGrade;
+    sport = newSport;
+  }
 }

@@ -9,7 +9,8 @@ import '/models/student_model.dart';
 class StudentsWidget extends StatefulWidget {
   final StudentsModel studentModel;
 
-  const StudentsWidget(this.studentModel, {Key? key}) : super(key: key);
+
+  const StudentsWidget(this.studentModel, {super.key});
 
   @override
   State<StudentsWidget> createState() => _StudentsWidgetState();
@@ -119,7 +120,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                             children: [
                               Text(studentModel.students[index].grade),
                               Text(studentModel.students[index].sport),
-                             
+                              
                             ],
                           ),
                           trailing: Row(
@@ -161,11 +162,12 @@ class _StudentsWidgetState extends State<StudentsWidget> {
   }
 
   void _moreInfo(BuildContext context, Student studentData) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => IndividualStudentScreen(studentData: studentData)),
-    );
-  }
+  final studentsModel = Provider.of<StudentsModel>(context, listen: false); // Assuming StudentsModel is provided higher up the widget tree
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => IndividualStudentScreen(studentData: studentData, studentsModel: studentsModel)),
+  );
+}
 
   void _addAthlete(BuildContext context) {
     Navigator.push(

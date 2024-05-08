@@ -16,10 +16,10 @@ class Database
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _getSpecificUser = "SELECT * FROM tbl_users WHERE username = @username";
   // SQL insert query strings. ***Note on inserts; add "RETURNING <column_name>" to end of insert queries to get a Result from them, with <column name> usually being the ID that gets assigned to it.
-  static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport) VALUES (@studentName, @grade, @sport)";
-  static const String _getUserPassword = "SELECT * FROM tbl_users WHERE username = @username";
+  static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport, student_id) VALUES (@studentName, @grade, @sport, @id)";
+  //static const String _getUserPassword = "SELECT * FROM tbl_users WHERE username = @username";
   static const String _insertNewUser = "INSERT INTO tbl_users (username,password,is_admin) VALUES (@username,@password,@is_admin)";
-  static const String _deleteAthlete = " DElETE FROM tbl_studentlist WHERE student_name =  @name AND grade = @grade AND sport = @sport";
+  //static const String _deleteAthlete = " DElETE FROM tbl_studentlist WHERE student_name =  @name AND grade = @grade AND sport = @sport";
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
   { 
@@ -84,10 +84,10 @@ class Database
   }
 
   /// Connects the app to the data base and gets the athletes put in on the app into the database
-  static Future<Result> insertAthlete(String studentName, String grade, String sport) async 
+  static Future<Result> insertAthlete(String studentName, String grade, String sport, String id) async 
   {
     return executeSQLCommand(_insertAthlete, 
-                            {'student_name':studentName, 'grade':grade, 'sport':sport});
+                            {'student_name':studentName, 'grade':grade, 'sport':sport, 'student_id': id});
   }
 
   /// Insert a new user to the DB; bool response shows whether or not it was successful.
@@ -97,28 +97,4 @@ class Database
                             {'username':username, 'password':password, 'first_name':firstName, 'last_name':lastName, 'is_admin':isAdmin});
   }
 
-
-  static Future<void> deleteAthlete(String studentName, String grade, String sport) async 
-  {
-    Connection? conn;
-    try
-    {
-      conn = await getOpenConnection(); 
-      await conn.execute
-      (
-        Sql.named(_deleteAthlete),
-        parameters: {'student_name': studentName, 'grade': grade, 'sport': sport}
-      );
-        print('Connected successfully.');
-    }
-    catch (e)
-    {
-      print('Error deleted data: $e');
-      rethrow;
-    }
-    finally
-    {
-      conn?.close();
-    } 
-  }
 }

@@ -4,10 +4,10 @@ import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
 
-class AddStudent extends StatefulWidget 
-{
+class AddStudent extends StatefulWidget {
   final StudentsModel studentsModel;
-  const AddStudent(this.studentsModel, {super.key});
+
+  const AddStudent(this.studentsModel, {Key? key}) : super(key: key);
 
   @override
   State<AddStudent> createState() => _AddStudentState();
@@ -18,7 +18,7 @@ class _AddStudentState extends State<AddStudent>
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _gradeController = TextEditingController();
   final TextEditingController _sportController = TextEditingController();
-
+  
   void _submitForm() 
   {
     // Validate form fields and retrieve data
@@ -32,7 +32,7 @@ class _AddStudentState extends State<AddStudent>
       _nameController.clear();
       _gradeController.clear();
       _sportController.clear();
-   
+    
       // Navigate back to the previous screen
       Navigator.pop(context);
     }).catchError((error) {
@@ -131,7 +131,7 @@ class _AddStudentState extends State<AddStudent>
                         ],
                       ),
                       const SizedBox(height: 20),
-                     
+                       
                     ],
                   ),
                 ),
