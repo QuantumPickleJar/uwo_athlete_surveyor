@@ -32,12 +32,11 @@ class FormService {
         
       } catch (e) {
         print('Error getting Form with id $formId: \n Error: $e');
-        return null;
       }
     } else {
-        print("Invalid or missing formId: $formId");
-        return null;
+        print('Invalid or missing formId: $formId');
     }
+    return null;
   }
 
   /// Creates a new form in the database, returning an instance containing
