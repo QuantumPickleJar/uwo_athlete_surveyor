@@ -28,11 +28,6 @@ class FormRepository implements IFormRepository {
                             VALUES (@userId, @formTitle, @lastModified, @createDate) 
                             RETURNING *;""";
 
-    /// TODO: run the question query separately, in a tx
-    ///  until we have a service for it
-    // var result = await _connection.runTx((insertForm) {
-    //   final persistedForm = await insertForm.execute()
-    // });
     var db = await _connection;
     var result = await db.execute(
         // Sql.named(sqlStatement), parameters: {
@@ -56,7 +51,9 @@ class FormRepository implements IFormRepository {
     }
   }
 
-  /// Hhelper function to convert a database row to a Form object
+  /// Hhelper function to convert a database row to a Form object.
+  /// 
+  /// Does NOT handle the resolution of questions
   GenericForm _mapRowToForm(Map<String, dynamic> row) {
     return GenericForm(
       formId: row['form_id'],
@@ -67,11 +64,11 @@ class FormRepository implements IFormRepository {
     );
   }
   
-  /// Deletes a form and its questions from tbl_forms
+  /// Deletes a form and its questions from tbl_forms + tbl_questions
   @override
   Future<bool> deleteForm(String formId) async {
     try { 
-      String sqlStatement = "DELETE FROM tbl_forms WHERE form_id LIKE @formId";
+      String sqlStatement = "DELETE FROM tbl_forms WHERE form_id = @formId";
       var db = await _connection;
       var result = await db.execute(
         Sql.named(sqlStatement), parameters: { 'formId': formId }
@@ -112,16 +109,34 @@ class FormRepository implements IFormRepository {
     }
   }
   
-  /// Retrieves a form by its id
+  /// Retrieves a form by the id of the user that authored it
+  @override
+  Future<List<GenericForm>> getFormsByUserId({required String userId}) async {
+    try {
+      // TODO: implement getFormById
+      // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
+      String sqlStatement = """SELECT form_id, form_title, last_modified, create_date FROM public.tbl_forms WHERE user_id = @userId;""";
+      var db = await _connection;
+      var result = await db.execute(Sql.named(sqlStatement), parameters: {'userId' : userId });
+      
+      /// invoke [_mapRowToForm] on each row of result
+      return result.map((row) => _mapRowToForm(result.first.toColumnMap())).toList();
+     } finally {
+      PostgresDB.closeConnection();
+    }
+  }
+  
+
+  /// Retrieves a form by its id, if it exists
   @override
   Future<GenericForm?> getFormById(String formId) async {
     try {
       // TODO: implement getFormById
       // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
-      String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id LIKE @formId;";
+      String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;";
       var db = await _connection;
       
-      var result = await db.execute(Sql.named(sqlStatement), parameters: formId);
+      var result = await db.execute(Sql.named(sqlStatement), parameters: { 'formId': formId });
       if(result.isEmpty) {
         return null;
       }
