@@ -102,10 +102,8 @@ class _MainAppState extends State<MainApp>
   /// Validate supplied login information against database.
   void _validateLogin(BuildContext context) async
   {
-    if(_formKey.currentState!.validate())
-    {
+    if(_formKey.currentState!.validate()) {
       LoggedInUser? currentUser = await widget.loginModel.checkExistingPassword(usernameController.text, passwordController.text);
- 
       if(context.mounted && currentUser != null) { navigateToPage(context, TabbedMainPage(currentUser: currentUser)); }
     }
   }
