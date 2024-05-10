@@ -1,5 +1,19 @@
 import 'package:flutter/foundation.dart';
 
+
+/// Used to represent the various formats that students wll be 
+/// using to input their answers.  
+/// This should include whatever we need to:
+/// - (staff) supply the dropdown displayed for this question when loaded in FormEditor
+/// - (student) tell the UI layer what widget to place in the Question
+enum ResponseWidgetType {
+  text,
+  radio,
+  checkbox,
+  slider,
+  dropdown
+}
+
 /// Describes the response type for a question.  To allow enhanced flexibility, 
 /// custom parameters can be passed via [config] to:
 /// - pass validation rules, perhaps for a TextField
@@ -35,22 +49,10 @@ class ResponseType {
 /// has the same runtime type, [widgetType], and [config] as this object.
 /// Otherwise, returns `false`.
 @override
-bool operator ==(Object other) => 
-  identical(this, other) || other is ResponseType &&
-      this == other.runtimeType && 
+bool operator ==(Object other) {
+  return other is ResponseType &&
+      runtimeType == other.runtimeType && 
       widgetType == other.widgetType &&
       mapEquals(config, other.config);
-}
-
-/// Used to represent the various formats that students wll be 
-/// using to input their answers.  
-/// This should include whatever we need to:
-/// - (staff) supply the dropdown displayed for this question when loaded in FormEditor
-/// - (student) tell the UI layer what widget to place in the Question
-enum ResponseWidgetType {
-  text,
-  radio,
-  checkbox,
-  slider,
-  dropdown
+  }
 }
