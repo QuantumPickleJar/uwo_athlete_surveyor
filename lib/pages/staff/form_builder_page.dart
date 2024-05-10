@@ -203,7 +203,10 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
             TextButton(
               child: const Text('Save'),
               onPressed: () {
-                var newQuestion = Question(
+                setState(() {
+                  int index = _currentForm!.questions.indexOf(question);
+                  /// Load the question into the dialog by [index]
+                  _currentForm!.questions[index] = Question(
                   formId: widget.formId!,
                   /// generate a new Id if we have to
                   questionId: question?.questionId ?? const Uuid().v4(),
@@ -214,7 +217,8 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
                   resFormat: question?.resFormat ?? ResponseType.getDefaultWidgetType(),
                   resRequired: false,
                   linkedFileKey: null
-                );
+                  );
+                });
                 /// TODO: confirm the question adds from here
                 Navigator.of(context).pop(question);
               },
@@ -260,19 +264,24 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
             TextButton(
               child: const Text('Save'),
               onPressed: () {
-                var newQuestion = Question(
-                  formId: widget.formId!,
-                  /// generate a new Id if we have to
-                  questionId: question?.questionId ?? const Uuid().v4(),
-                  ordinal: question?.ordinal ?? -1,
-                  header: question?.header ?? getHeader(question),
-                  content: _questionTextController.text,
-                  // we only need the enum, none of the UI func that comes with it, hence this "as" 
-                  resFormat: question?.resFormat ?? ResponseType.getDefaultWidgetType(),
-                  resRequired: false,
-                  linkedFileKey: null
-                );
-                Navigator.of(context).pop(question);
+                if (question != null) {
+                  /// we '!' here because user can't tap on a question before it's added
+                  int index = _currentForm!.questions.indexOf(question);                 
+                    _currentForm!.questions[index] = Question(
+
+                    formId: widget.formId!,
+                    /// generate a new Id if we have to
+                    questionId: question.questionId ?? const Uuid().v4(),
+                    ordinal: question.ordinal ?? -1,
+                    header: question?.header ?? getHeader(question),
+                    content: _questionTextController.text,
+                    // we only need the enum, none of the UI func that comes with it, hence this "as" 
+                    resFormat: question?.resFormat ?? ResponseType.getDefaultWidgetType(),
+                    resRequired: false,
+                    linkedFileKey: null
+                  );
+                  Navigator.of(context).pop(question);
+                }
               },
             ),
           ],
