@@ -6,6 +6,7 @@ import 'package:athlete_surveyor/widgets/question_item.dart';
 import  'package:athlete_surveyor/models/response_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -93,7 +94,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
   /// Takes a [StaffForm] object and returns a [Scaffold]  widget that
   /// displays the questions in a [ListView.builder].
   ///
-  /// Each question is displayed as a [ListTile] with the question
+  /// Each question is displayed as a [QuestionItem] with the question
   /// header as the title and the question content as the subtitle.
   Widget buildQuestions(List<Question>? questions) {
     return ListView.builder(
@@ -122,7 +123,8 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
    });
   }
 
-  Column launchQuestionEditor(Question? question) { 
+  /// Opens a dialog that contains controls for manipulating a question.
+  Column launchQuestionDialog(Question? question) { 
     _questionTextController.text = question?.content ?? '';
     ResponseType selectedResponseType = question?.resFormat ?? ResponseType.getDefaultWidgetType();
 
@@ -134,18 +136,24 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
             labelText: 'Question Content',
           ),
         ),
+        
         DropdownButton<ResponseType>(
           value: selectedResponseType,
           onChanged: (ResponseType? newValue) {
             setState(() {
-              selectedResponseType = newValue ?? ResponseType.getDefaultWidgetType();
+              if (newValue != null) {
+                print("Dropdown items: ${ResponseWidgetType.values.map(
+                  (type) => ResponseType(widgetType: type)).toList()}");
+                // selectedResponseType = newValue ?? ResponseType.getDefaultWidgetType();
+                selectedResponseType = newValue;
+                print("Selected value: ${selectedResponseType.widgetType.name}");
+              }
             });
           },
-          /// TODO: inspect for cause of dropdown ResponseTypefailure
-          items: ResponseWidgetType.values.map((ResponseWidgetType type) {
+          items: ResponseWidgetType.values.map((type) {
             return DropdownMenuItem<ResponseType>(
               value: ResponseType(widgetType: type),
-              child: Text(type.toString()),
+              child: Text(type.name),
             );
           }).toList(),
         ),
@@ -180,18 +188,18 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
     });
   }
 
-  void _editQuestion(Question question) async{
-    
+  
+  void _editQuestion(Question question) async{    
     final Question? modifiedQuestion = await showDialog<Question>(
       context: context, 
       builder: (BuildContext context) {
           return AlertDialog(
-          title: Text(question == null ? 'Add New Question' : 'Edit Question'),
+          title: const Text('Edit Question'),
           content: 
           /// TODO: make in edit_question (or, would it be `edit_question_widget`, since we just need UI elements for accepting input, preloaded with existing information on edit operations)
           // EditQuestionWidget(question), 
             Builder(
-              builder: (context) => launchQuestionEditor(question),
+              builder: (context) => launchQuestionDialog(question),
             ),
           actions: <Widget>[
             TextButton(
@@ -203,18 +211,18 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
             TextButton(
               child: const Text('Save'),
               onPressed: () {
+                print('Saving question ${question.questionId}...');
                 setState(() {
                   int index = _currentForm!.questions.indexOf(question);
                   /// Load the question into the dialog by [index]
                   _currentForm!.questions[index] = Question(
                   formId: widget.formId!,
-                  /// generate a new Id if we have to
-                  questionId: question?.questionId ?? const Uuid().v4(),
-                  ordinal: question?.ordinal ?? -1,
-                  header: question?.header ?? getHeader(question),
+                  questionId: question.questionId,
+                  ordinal: question.ordinal ?? -1,
+                  header: getHeader(question),
                   content: _questionTextController.text,
                   // we only need the enum, none of the UI func that comes with it, hence this "as" 
-                  resFormat: question?.resFormat ?? ResponseType.getDefaultWidgetType(),
+                  resFormat: question.resFormat,
                   resRequired: false,
                   linkedFileKey: null
                   );
@@ -227,68 +235,18 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
         );
       }
     );
-  
-    int qst_ordinal = _currentForm!.questions.indexOf(question);
-    _currentForm?.questions[qst_ordinal] = modifiedQuestion!;
-  }
-  
-  /// Adds an empty question to the currently loaded form.
-  /// Collects necessary parameters from an awaited call to
-  /// an [AlertDialog] configured to return a [Question] 
-  Future<void> _addOrEditQuestion(Question? question) async {
-    // If we're editing an existing question, set the text controller to the question's content
-    if (question != null) {
-      _questionTextController.text = question.content;
-    } else {
-      _questionTextController.clear();
-    }
 
-    final Question? modifiedQuestion = await showDialog<Question>(
-      context: context, 
-      builder: (BuildContext context) {
-          return AlertDialog(
-          title: Text(question == null ? 'Add New Question' : 'Edit Question'),
-          content: 
-          /// TODO: make in edit_question (or, would it be `edit_question_widget`, since we just need UI elements for accepting input, preloaded with existing information on edit operations)
-          // EditQuestionWidget(question), 
-            Builder(
-              builder: (context) => launchQuestionEditor(question),
-            ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Save'),
-              onPressed: () {
-                if (question != null) {
-                  /// we '!' here because user can't tap on a question before it's added
-                  int index = _currentForm!.questions.indexOf(question);                 
-                    _currentForm!.questions[index] = Question(
-
-                    formId: widget.formId!,
-                    /// generate a new Id if we have to
-                    questionId: question.questionId ?? const Uuid().v4(),
-                    ordinal: question.ordinal ?? -1,
-                    header: question?.header ?? getHeader(question),
-                    content: _questionTextController.text,
-                    // we only need the enum, none of the UI func that comes with it, hence this "as" 
-                    resFormat: question?.resFormat ?? ResponseType.getDefaultWidgetType(),
-                    resRequired: false,
-                    linkedFileKey: null
-                  );
-                  Navigator.of(context).pop(question);
-                }
-              },
-            ),
-          ],
-        );
+    /// question is modified, so find old one with via questionId
+    int qstOrdinal = _currentForm!.questions.indexWhere((Question q) => 
+      q.questionId == question.questionId);
+      if (qstOrdinal > -1 && modifiedQuestion != null) {
+        _currentForm?.questions[qstOrdinal] = modifiedQuestion;
       }
-    );
+      else {
+        print('Failed to find the index of the targeted question ${question.questionId}');
+    }
   }
+
 
   /// removes a question from the form.  
   /// TODO: if content not empty, warn with dialogue
@@ -297,8 +255,6 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       _currentForm!.questions.remove(selectedQuestion);
     });
   }
-
-
   
   @override
   Widget build(BuildContext context) {
