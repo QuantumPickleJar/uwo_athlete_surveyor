@@ -19,6 +19,21 @@ class FormService {
   FormService(this._formRepository, this._questionRepository);
     // _init(spreadsheetId);
     // return _formRepository.getAllForms();
+
+  /// Retrieves forms by the 
+  Future<List<GenericForm>> getFormsByUserId({required String userId}) async {
+    try {
+      var createdForms = await _formRepository.getFormsByUserId(userId: userId);
+      if (createdForms != null) {
+        return createdForms;
+      }
+      /// throw an arg-error if it's null
+      throw ArgumentError.notNull('userId');
+    } on Exception catch (e) {
+      print("Error fetching forms for user with id $userId");
+      throw UnimplementedError();
+    }
+  }
   
   Future<GenericForm?> getFormById(String formUuid) async{
     try {
