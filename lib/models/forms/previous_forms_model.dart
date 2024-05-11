@@ -5,10 +5,19 @@ import 'package:athlete_surveyor/services/db.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:flutter/material.dart';
 
-// Temporary model; subject to change.
+
+/// Model to represent a user's forms.  
+/// 
+/// For Staff members, this is used to
+/// display their previously created forms.
+/// 
+/// For Students, this is used in conjuction with a black box to 
+/// log student responses 
 class AuthoredFormsModel extends ChangeNotifier {
   final List<GenericForm> formsList = [];
-  late final FormService _formService; 
+  final FormService _formService; 
+
+  AuthoredFormsModel(this._formService);
 
   /// Get all inbox messages from the database and insert into internal list.
   Future<void> getPreviousFormsFromDatabase({required String userId}) async 
