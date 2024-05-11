@@ -26,7 +26,8 @@ class SecureFormProvider extends StatelessWidget {
             child: Consumer<GenericForm>(builder: (context, form, child) {
             /// TODO: implement student survey page
             return (form is StaffForm) ? 
-                FormBuilderPage(formId: formId) : throw UnimplementedError();
+                FormBuilderPage(formId: formId) : 
+                throw UnimplementedError();
           })
         );
         /// handle errors in a visuale manner before rendering loading progress

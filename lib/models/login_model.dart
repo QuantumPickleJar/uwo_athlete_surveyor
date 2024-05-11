@@ -48,12 +48,15 @@ class LoginModel extends ChangeNotifier
     String hashedPassword = result[0][1] as String; 
     bool passwordMatches = BCrypt.checkpw(password, hashedPassword);
 
-    print(passwordMatches); //testing; remove later
-    return passwordMatches ? LoggedInUser(result[0][2] as bool, 
-                                          result[0][4] as bool, 
-                                          result[0][3] as String, 
-                                          result[0][5] as String, 
-                                          result[0][6] as String) 
+    print("[LoginModel]: Password check: $passwordMatches"); //testing; remove later
+    print("[LoginModel]: User Id: ${result[0][0].toString()}");
+
+    return passwordMatches ? LoggedInUser(result[0][0] as String,     // uuid_user
+                                          result[0][2] as bool,       // is admin
+                                          result[0][4] as bool,       // is_temp_password
+                                          result[0][3] as String,     // username
+                                          result[0][5] as String,     // first_name
+                                          result[0][6] as String)     // last_name
                             : null; //if password matches username, return an instance of LoggedInUser; otherwise null
   }
 }
