@@ -53,7 +53,7 @@ class _TabbedMainPageState extends State<TabbedMainPage>
         builder: (context, inboxModel, _) {
           return InboxPage(inboxModel);
       }),
-      Consumer<PreviousFormsModel>(
+      Consumer<AuthoredFormsModel>(
         builder: (context, previousFormsModel, _) {
           return PreviousFormsPage(previousFormsModel);
       })

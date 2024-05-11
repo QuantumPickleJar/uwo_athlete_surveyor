@@ -44,7 +44,19 @@ void main() async {
         ChangeNotifierProvider(create: (context) => LoginModel()),
         ChangeNotifierProvider(create: (context) => InboxModel()),
         ChangeNotifierProvider(create: (context) => StudentsModel()),
-        ChangeNotifierProvider(create: (context) => PreviousFormsModel()),
+        
+
+
+        /// Combines provision of [FormService] and [AuthoredFormsModel] to provide
+        /// an updated [AuthoredFormsModel] based on changes in the [FormService].
+        ///
+        /// The [ChangeNotifierProxyProvider] is used to create and update the [AuthoredFormsModel]
+        /// based on the changes in the [FormService]. It listens to changes in the [FormService]
+        /// and updates the [AuthoredFormsModel] accordingly.
+        ChangeNotifierProxyProvider<FormService, AuthoredFormsModel>(
+          create: (_) => AuthoredFormsModel(Provider.of<FormService>(_, listen: false)),
+          update: (context, formService, previous) => AuthoredFormsModel(formService),
+        )
       ],
       child: MaterialApp(home: MainApp(LoginModel()))
     )
