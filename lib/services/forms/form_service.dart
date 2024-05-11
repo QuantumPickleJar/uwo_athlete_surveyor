@@ -23,6 +23,7 @@ class FormService {
   /// Retrieves forms by the 
   Future<List<GenericForm>> getFormsByUserId({required String userId}) async {
     try {
+      print("Fetching forms for $userId");
       var createdForms = await _formRepository.getFormsByUserId(userId: userId);
       if (createdForms != null) {
         return createdForms;
