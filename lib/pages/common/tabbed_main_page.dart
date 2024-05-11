@@ -55,7 +55,7 @@ class _TabbedMainPageState extends State<TabbedMainPage>
       }),
       Consumer<AuthoredFormsModel>(
         builder: (context, previousFormsModel, _) {
-          return PreviousFormsPage(previousFormsModel);
+          return PreviousFormsPage(previousFormsModel, currentUser: widget.currentUser);
       })
     ];
   }
