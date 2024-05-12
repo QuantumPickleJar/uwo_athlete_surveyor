@@ -81,7 +81,7 @@ class FormService {
   /// This function checks that the desired question isn't already in the form.
   /// 
   /// While this could be optimized to query by the form's id, we'd need to have a list of questions by
-  /// form_id readily available. Thus, we stick to passing a concrete [GenericForm].
+  /// form_id readily available. Thus, we stick to passing a concrete [GenericForm]
   Future<void> saveQuestionOnForm({required Question newQuestion, required GenericForm existingForm}) {
     // make sure the question doesn't already exist on [existingForm]
     if (existingForm.questions.any((question) => question.content == newQuestion.content)) {
