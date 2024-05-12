@@ -41,7 +41,7 @@ class StaffForm extends GenericForm {
 
   /// Constructs a new StaffForm from an existing [IGenericForm].
   /// Intended to be used when creating new forms, NOT on existing
-  StaffForm.fromGenericForm(IGenericForm genericForm) : super(
+  StaffForm.fromGenericForm(IGenericForm genericForm, [List<Question>? questions]) : super(
     formId: genericForm.formId,
     formName: genericForm.formName,
     sport: genericForm.sport,
