@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 /// log student responses 
 class AuthoredFormsModel extends ChangeNotifier {
   final List<GenericForm> formsList = [];
-  final FormService _formService; 
+  FormService _formService; 
 
   AuthoredFormsModel(this._formService);
 
@@ -29,5 +29,9 @@ class AuthoredFormsModel extends ChangeNotifier {
     formsList.addAll(authoredForms);
 
     notifyListeners();
+  }
+
+  void updateFormService(FormService newContext) {
+    _formService = newContext;
   }
 }
