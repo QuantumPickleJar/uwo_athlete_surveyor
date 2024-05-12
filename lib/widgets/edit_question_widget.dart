@@ -97,15 +97,24 @@ class _EditQuestionWidgetState extends State<EditQuestionWidget> {
           ),
           CheckboxListTile(
             title: const Text('Response Required'),
-            value: widget.question?.resRequired ?? false,
+            value: _resRequired ?? false,
             onChanged: (bool? newValue) {
               setState(() {
-                widget.question?.resRequired = newValue!;
+                _resRequired = newValue!;
               });
             },
           ),
         ],
-            ),
-      );
+      ),
+      actions: [
+        TextButton(
+            onPressed: widget.onCancel as void Function()?,
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          child: const Text('Save'),
+          onPressed: _save,
+        ),
+      ]);
   }
 }
