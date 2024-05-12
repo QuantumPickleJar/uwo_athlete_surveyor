@@ -8,7 +8,7 @@ import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
 ///
 class PreviousFormsPage extends StatefulWidget 
 {
-  final PreviousFormsModel formModel;
+  final AuthoredFormsModel formModel;
   const PreviousFormsPage(this.formModel, {super.key});
 
   @override
@@ -24,7 +24,7 @@ class _PreviousFormsPageState extends State<PreviousFormsPage>
   {
     super.initState();
 
-    widget.formModel.getPreviousFormsFromDatabase();
+    // widget.formModel.getPreviousFormsFromDatabase(userId: widget);
   }
 
   @override
