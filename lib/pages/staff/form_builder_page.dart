@@ -2,9 +2,11 @@ import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
+import 'package:athlete_surveyor/widgets/edit_question_widget.dart';
 import 'package:athlete_surveyor/widgets/question_item.dart';
 import  'package:athlete_surveyor/models/response_type.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -188,7 +190,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
   }
 
   
-  void _editQuestion(Question question) async{    
+  void _editQuestion(Question question) async {    
     final Question? modifiedQuestion = await showDialog<Question>(
       context: context, 
       builder: (BuildContext context) {
@@ -196,10 +198,15 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
           title: const Text('Edit Question'),
           content: 
           /// TODO: make in edit_question (or, would it be `edit_question_widget`, since we just need UI elements for accepting input, preloaded with existing information on edit operations)
-          // EditQuestionWidget(question), 
-            Builder(
-              builder: (context) => launchQuestionDialog(question),
-            ),
+          EditQuestionWidget(question: question, 
+          onCancel:  () { 
+            /// on cancel, just pop [EditQuestionWidget] off the stack, being an [AlertDialogue]
+            Navigator.of(context).pop();
+          },
+          onSave: (updatedQuestion) { /// send the question back through the Navigation stack
+            Navigator.of(context).pop(updatedQuestion);
+            }
+          ), 
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
@@ -211,38 +218,28 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
               child: const Text('Save'),
               onPressed: () {
                 print('Saving question ${question.questionId}...');
-                setState(() {
-                  int index = _currentForm!.questions.indexOf(question);
-                  /// Load the question into the dialog by [index]
-                  _currentForm!.questions[index] = Question(
-                  formId: widget.formId!,
-                  questionId: question.questionId,
-                  ordinal: question.ordinal ?? -1,
-                  header: getHeader(question),
-                  content: _questionTextController.text,
-                  // we only need the enum, none of the UI func that comes with it, hence this "as" 
-                  resFormat: question.resFormat,
-                  resRequired: false,
-                  linkedFileKey: null
-                  );
-                });
-                /// TODO: confirm the question adds from here
-                Navigator.of(context).pop(question);
-              },
+                /// saving happens inside [EditQuestionWidget]
+                }
             ),
           ],
         );
       }
     );
-
-    /// question is modified, so find old one with via questionId
-    int qstOrdinal = _currentForm!.questions.indexWhere((Question q) => 
+  
+    if (modifiedQuestion != null) {
+      /// question is modified, so find old one via questionId
+      int index = _currentForm!.questions.indexWhere((Question q) => 
       q.questionId == question.questionId);
-      if (qstOrdinal > -1 && modifiedQuestion != null) {
-        _currentForm?.questions[qstOrdinal] = modifiedQuestion;
+      if (index > -1) {
+        setState(() {
+          _currentForm?.questions[index] = modifiedQuestion;
+        });
+        /// Persist our changes to the database last
+        _formService.saveQuestionOnForm(newQuestion: modifiedQuestion, existingForm: _currentForm!);
       }
       else {
         print('Failed to find the index of the targeted question ${question.questionId}');
+      }
     }
   }
 
