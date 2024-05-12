@@ -30,13 +30,13 @@ class SecureFormProvider extends StatelessWidget {
           return Center(child: Text('SecFormProv Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           /// only render to Consumer if data is present
-          return ChangeNotifierProvider<GenericForm>.value(
+          // return ChangeNotifierProvider<GenericForm>.value(
+          return Provider<GenericForm>.value(
             value: snapshot.data!,
             child: Consumer<GenericForm>(builder: (context, form, child) {
             /// TODO: implement student survey page
-            return (form is StaffForm) ? 
-                FormBuilderPage(formId: formId) : 
-                throw UnimplementedError();
+                 return form is StaffForm ? FormBuilderPage(formId: formId) : 
+                 const Text('Student form not implemented');
           })
         );
         /// handle errors in a visuale manner before rendering loading progress

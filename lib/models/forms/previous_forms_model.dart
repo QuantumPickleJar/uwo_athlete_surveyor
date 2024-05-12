@@ -34,4 +34,11 @@ class AuthoredFormsModel extends ChangeNotifier {
   void updateFormService(FormService newContext) {
     _formService = newContext;
   }
+
+  /// Creates a new form with the given [description] and [title].
+  /// Returns a [Future] that completes with a [GenericForm] object.
+  Future<GenericForm> createNewForm(String description, String title) async {
+    var newForm = await _formService.createNewForm(title, description);
+    return newForm;
+  }
 }
