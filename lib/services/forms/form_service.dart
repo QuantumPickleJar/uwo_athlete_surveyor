@@ -77,6 +77,28 @@ class FormService {
     return setA.containsAll(setB) && setB.containsAll(setA);
   }
 
+  /// When [EditQuestionWidget] calls its onSave, it needs to add a single question to a form.
+  /// This function checks that the desired question isn't already in the form.
+  /// 
+  /// While this could be optimized to query by the form's id, we'd need to have a list of questions by
+  /// form_id readily available. Thus, we stick to passing a concrete [GenericForm].
+  Future<void> saveQuestionOnForm({required Question newQuestion, required GenericForm existingForm}) {
+    // make sure the question doesn't already exist on [existingForm]
+    if (existingForm.questions.any((question) => question.content == newQuestion.content)) {
+      return Future.error('Question already present when trying to add!');
+    }
+    
+    // Check if ordinal is set, otherwise assign a default value
+    if (newQuestion.ordinal == null) {
+      // Calculate the next ordinal value based on existing questions
+      int maxOrdinal = existingForm.questions.fold(0, (max, question) => 
+        question.ordinal! > max ? question.ordinal! : max);
+      newQuestion.ordinal = maxOrdinal + 1;
+    }
+    existingForm.questions.add(newQuestion);
+    return Future.value('All good!');
+  }
+
   /// When 
   // Future<GenericForm> createFormWithQuestions(GenericForm form, List<Question> questions) async {
   Future<void> saveFormQuestions({required GenericForm existingForm, 
