@@ -22,13 +22,16 @@ class QuestionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(question.header),
-      onTap: () => onUpdate(question), 
-      trailing: IconButton(
-        icon: const Icon(Icons.delete_forever),
-        onPressed: () => onDelete(question),
-      )
+    return Card(
+      child: ListTile(
+        title: Text(question.header),
+        subtitle: Text(question.content),
+        onTap: () => onUpdate(question), 
+        trailing: IconButton(
+          icon: const Icon(Icons.delete_forever),
+          onPressed: () => onDelete(question),
+        )
+      ),
     );
   }
 }
