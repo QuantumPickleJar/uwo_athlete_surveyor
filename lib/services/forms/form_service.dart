@@ -109,10 +109,9 @@ class FormService {
     }
   }
 
-  /// TEMPORARY FUNCTION FOR MILESTONE
-  /// Called by FormBuilderPage when loading a form.  If an id isn't supplied, we know it's 
-  /// a new form and can simply construct and return a [StaffForm] with the populated ID from 
-  /// the DB.
+  /// Called by FormBuilderPage when loading a form.  
+  /// If an id isn't supplied, we know it's a new form and can simply construct and 
+  /// return a [StaffForm] with the populated ID from the DB.
   Future<GenericForm> fetchOrCreateForm({String? formId, String? formName, String? sport}) async {
     /// route to [_formFactory] if [formId] is null
     if(formId == null || formId.isEmpty) {
@@ -135,5 +134,4 @@ class FormService {
       }
     }
   } 
-
 }
