@@ -43,10 +43,7 @@ class HomePage extends StatelessWidget {
                     /// otherwise send them there with a new one to be provided an ID on dbsubmittal 
                     Navigator.of(context).push(MaterialPageRoute(builder: 
                       /// Depending on the user, send to a Survey form or FormBuilderPage
-                        (context) => SecureFormProvider(
-                          formId: newForm.formId, 
-                          hasAdminPrivileges: hasAdminPrivileges
-                        )
+                        (context) => SecureFormProvider(formId: newForm.formId, hasAdminPrivileges: hasAdminPrivileges)
                       ));
                     },
                   style: ButtonStyle(
