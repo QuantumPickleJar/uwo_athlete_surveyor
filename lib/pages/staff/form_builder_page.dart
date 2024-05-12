@@ -6,7 +6,6 @@ import 'package:athlete_surveyor/widgets/question_item.dart';
 import  'package:athlete_surveyor/models/response_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
