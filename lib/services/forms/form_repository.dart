@@ -26,35 +26,35 @@ class FormRepository implements IFormRepository {
   Future<GenericForm> createForm(GenericForm form) async {
     var db = await _connection;
     try {
-      return await db.runTx((tx) async {
-      /// query 1 of 2: inserting the form into the database
-      String insertSql = """INSERT INTO tbl_forms 
-                            (user_id, form_title, last_modified, create_date)
-                            VALUES (@userId, @formTitle, @lastModified, @createDate) 
-                            RETURNING *;""";
+        return await db.runTx((tx) async {
+        /// inserting the form into the database
+        String sqlStatement = """INSERT INTO tbl_forms 
+                              (user_id, form_title, last_modified, create_date)
+                              VALUES (@userId, @formTitle, @lastModified, @createDate) 
+                              RETURNING *;""";
 
-    var db = await _connection;
-    var result = await db.execute(
-        // Sql.named(sqlStatement), parameters: {
-        /// TODO: remove the LOGICAL reliance on a hard-coded UUID
-        Sql.named(sqlStatement), parameters: {
-          'userId': DEVELOPER_UUID, // For now, since you don't have auth
-          'formTitle': form.formName,
-          'lastModified': DateTime.now().toIso8601String(),
-          'createDate': DateTime.now().toIso8601String(),
+      var db = await _connection;
+      var result = await db.execute(
+          // Sql.named(sqlStatement), parameters: {
+          /// TODO: remove the LOGICAL reliance on a hard-coded UUID
+          Sql.named(sqlStatement), parameters: {
+            'userId': DEVELOPER_UUID, // For now, since you don't have auth
+            'formTitle': form.formName,
+            'lastModified': DateTime.now().toIso8601String(),
+            'createDate': DateTime.now().toIso8601String(),
+          }
+        );
+        print("Database returned: ${result.first.toColumnMap()}");
+
+        if (result.isEmpty || result.first.isEmpty) {
+          throw Exception('Failed creating form.');
         }
-      );
-      print("Database returned: ${insertResult.first.toColumnMap()}");
 
-      if (insertResult.isEmpty || insertResult.first.isEmpty) {
-        throw Exception('Failed creating form.');
-      }
-
-      return _mapRowToForm(insertResult.first.toColumnMap());
-    });
-  } finally {
-    PostgresDB.closeConnection();
-  }
+        return _mapRowToForm(result.first.toColumnMap());
+      });
+    } finally {
+      PostgresDB.closeConnection();
+    }
   }
 
   /// Hhelper function to convert a database row to a Form object.
@@ -74,7 +74,6 @@ class FormRepository implements IFormRepository {
   @override
   Future<bool> deleteForm(String formId) async {
     try { 
-      String sqlStatement = "DELETE FROM tbl_forms WHERE form_id = @formId";
       String sqlStatement = "DELETE FROM tbl_forms WHERE form_id = @formId";
       var db = await _connection;
       var result = await db.execute(
@@ -137,7 +136,6 @@ class FormRepository implements IFormRepository {
       String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;";
       var db = await _connection;
       
-      var result = await db.execute(Sql.named(sqlStatement), parameters: { 'formId': formId });
       var result = await db.execute(Sql.named(sqlStatement), parameters: { 'formId': formId });
       if(result.isEmpty) {
         return null;
