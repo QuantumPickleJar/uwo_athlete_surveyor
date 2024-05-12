@@ -1,4 +1,5 @@
 import 'package:athlete_surveyor/models/question.dart';
+import 'package:athlete_surveyor/models/response_type.dart';
 import 'package:flutter/material.dart';
     
 /// Widget responsible for containing question-manipulating operations
@@ -20,13 +21,91 @@ class EditQuestionWidget extends StatefulWidget {
 }
 
 class _EditQuestionWidgetState extends State<EditQuestionWidget> {
+  // _questionTextController.text = question?.content ?? '';
+  late TextEditingController _textController;
+  late ResponseType _selectedFormat;
+  late bool _resRequired;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController(text: widget.question.content);
+    _selectedFormat = widget.question.resFormat;
+    _resRequired = widget.question.resRequired;
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+
+ void _save() {
+    // Update the question with new values
+    Question updatedQuestion = Question(
+      formId: widget.question.formId,
+      questionId: widget.question.questionId,
+      ordinal: widget.question.ordinal,
+      header: widget.question.header,
+      content: _textController.text,
+      resFormat: _selectedFormat,
+      resRequired: _resRequired,
+      linkedFileKey: widget.question.linkedFileKey,
+    );
+
+    widget.onSave(updatedQuestion);
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(''),
-      ),
-      body: Container(),
-    );
+    _textController.text = widget.question?.content ?? 'enter';
+    ResponseType selectedFormat = widget.question?.resFormat ??
+                                  ResponseType.getDefaultWidgetType();
+      return AlertDialog(
+        title: const Text('Edit Question'),
+        content: Column(
+        children: [
+          TextField(
+            controller: _textController,
+            decoration: const InputDecoration(
+              labelText: 'Question Content',
+            ),
+          ),
+          
+          /// load the ResponseTypes into their own DropDown
+          DropdownButton<ResponseType>(
+            value: selectedFormat,
+            onChanged: (ResponseType? newValue) {
+              setState(() {
+                if (newValue != null) {
+                  print("Dropdown items: ${ResponseWidgetType.values.map(
+                    (type) => ResponseType(widgetType: type)).toList()}");
+                  // selectedResponseType = newValue ?? ResponseType.getDefaultWidgetType();
+                  selectedFormat = newValue;
+                  print("Selected value: ${selectedFormat.widgetType.name}");
+                }
+              });
+            },
+            items: ResponseWidgetType.values.map((type) {
+              return DropdownMenuItem<ResponseType>(
+                value: ResponseType(widgetType: type),
+                child: Text(type.name),
+              );
+            }).toList(),
+          ),
+          CheckboxListTile(
+            title: const Text('Response Required'),
+            value: widget.question?.resRequired ?? false,
+            onChanged: (bool? newValue) {
+              setState(() {
+                widget.question?.resRequired = newValue!;
+              });
+            },
+          ),
+        ],
+            ),
+      );
   }
 }
