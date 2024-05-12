@@ -4,7 +4,6 @@ import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
 import 'package:athlete_surveyor/pages/common/my_forms_page.dart';
 import 'package:athlete_surveyor/pages/home_page.dart';
 import 'package:athlete_surveyor/pages/common/inbox_page.dart';
-import 'package:athlete_surveyor/pages/previous_forms_page.dart';
 import 'package:athlete_surveyor/resources/colors.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:flutter/material.dart';
