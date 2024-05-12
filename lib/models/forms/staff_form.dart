@@ -27,9 +27,9 @@ class StaffForm extends GenericForm {
   /// Constructs a new StaffForm, loaded with [questions]
   // ignore: use_super_parameters
   StaffForm(List<Question> staffQuestions, {
-    required formId,
-    required formName,
-    required sport,
+    required String formId,
+    required String formName,
+    required String sport,
     super.attachments,
     super.formDateCreated
   }) : super(
@@ -41,16 +41,16 @@ class StaffForm extends GenericForm {
 
   /// Constructs a new StaffForm from an existing [IGenericForm].
   /// Intended to be used when creating new forms, NOT on existing
-  StaffForm.fromGenericForm(IGenericForm genericForm, {required super.questions}):
-  super( 
-      formId : genericForm.formId,
-      formName : genericForm.formName,
-      sport: genericForm.sport,
-      attachments: genericForm.attachments,
-      formDateCreated: genericForm is GenericForm ? genericForm.formDateCreated : 
-        DateTime.parse(DateTime.now().toIso8601String())
-      );
-
+  StaffForm.fromGenericForm(IGenericForm genericForm) : super(
+    formId: genericForm.formId,
+    formName: genericForm.formName,
+    sport: genericForm.sport,
+    attachments: genericForm.attachments,
+    formDateCreated: (genericForm is GenericForm) ? genericForm.formDateCreated : DateTime.now(),
+    questions: genericForm is GenericForm ? genericForm.questions : [],
+  ) { 
+    print("Creating StaffForm from GenericForm with formId: ${genericForm.formId}"); 
+    }
     /// Called when updates to the form's responses have been made 
   @override 
   void saveForm() {
