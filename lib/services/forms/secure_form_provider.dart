@@ -12,13 +12,16 @@ import 'package:provider/provider.dart';
 /// and use that to determine what page we take the user to.
 class SecureFormProvider extends StatelessWidget {
   final String formId;
-  final bool hasAdminPrivileges;
-  const SecureFormProvider({ super.key, required this.formId, required this.hasAdminPrivileges});
+  late FormService formService;
+  SecureFormProvider({ super.key, required this.formId });
   
   @override
   Widget build(BuildContext context) {
+    /// finish instantiating [formService] so we can use it
+    formService = Provider.of<FormService>(context);
+
     return FutureBuilder<GenericForm>(
-      future: _loadFormByUserRole(context, formId), /// TODO: may be a call to userservice
+      future: _loadFormByUserRole(context, formId: formId), /// TODO: may be a call to userservice
       builder: (context, snapshot) {
         /// TODO: check if user is logged in here
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -33,57 +36,40 @@ class SecureFormProvider extends StatelessWidget {
           return ChangeNotifierProvider<GenericForm>.value(
             value: snapshot.data!,
             child: Consumer<GenericForm>(builder: (context, form, child) {
-              /// TODO: implement student survey page   
-              if (form is StaffForm) {
-                // Ensure formId is passed correctly
-                return FormBuilderPage(formId: form.formId); 
-              } else {
-                return const Text('Unsupported form type encountered.');
-              }
-            
-              // TODO: uncomment when resolved null string error
-              // return (form is StaffForm) ? 
-              // FormBuilderPage(formId: formId) : 
-              // throw UnimplementedError("The form type is not supported yet.");
+            /// TODO: implement student survey page
+            return (form is StaffForm) ? 
+                FormBuilderPage(formId: formId) : 
+                throw UnimplementedError();
           })
         );
-        } 
-        /// edge case:  no error, no data, and not waiting (shouldn't be possible, but safe to cover)
-          return const Text('No data available for this form.');
+        /// handle errors in a visuale manner before rendering loading progress
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          // TODO: resize, spans entire screen
+          return const CircularProgressIndicator();
+        }
       }, 
     );
   }
   
   /// returns the appropriate form based on the 
-  Future<GenericForm> _loadFormByUserRole(BuildContext context, String formId) async {
+  Future<GenericForm> _loadFormByUserRole(BuildContext context, {required String formId}) async {
     // TEMPORARY HARD-CODED
     /// reach up the widget tree to get [FormService]
-    FormService formService = Provider.of<FormService>(context, listen: false);
 
     /// TODO: check loggedInUser 
 
-     // This should be determined based on the user's logged-in status
-    if (hasAdminPrivileges) {
-      // var form = await formService.fetchOrCreateForm(formId: formId);
-      try {  
-        GenericForm? form = await formService.getFormById(formId);
-
-        /// ensure the form is valid before trying to load it as a [StaffForm]
-        if (form != null && form.formId.isNotEmpty) { 
-          print("Form loaded successfully: ${form.formId}");
-          return StaffForm.fromGenericForm(form);
-        }
-        print("Failed to load form: form is null or formId is empty.");
-        throw Exception('The form failed to load or was not found (Id: $formId)');
-        // return Future<GenericForm>.error('The form failed to load (Id: $formId)');    
-      } catch (e) { 
-        print("Exception caught in _loadFormByUserRole: $e");
-        rethrow; // This will allow you to see where exactly the null is occurring.
+    if (isAdmin) {
+      /// Sanity check this: why would formId everr be null;?
+      var form = await formService.fetchOrCreateForm(formId: formId);
+      if (formId.isEmpty) {
+        print("CRITICAL OCCURENCE: formService returned an empty formId on fetchOrCreateForm!");
+        
+        /// targeted for removal
+        return StaffForm.fromGenericForm(form, questions: questions);
       }
-    } else { 
-      /// TODO: implement StudentForm.fromGenericForm
-      throw UnimplementedError('StudentForm not yet implemented (SFP)');
-    }
+    } 
     /*
     else {
       // Fetch details required to instantiate StudentForm
