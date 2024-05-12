@@ -23,14 +23,14 @@ class EditQuestionWidget extends StatefulWidget {
 class _EditQuestionWidgetState extends State<EditQuestionWidget> {
   // _questionTextController.text = question?.content ?? '';
   late TextEditingController _textController;
-  late ResponseType _selectedFormat;
+  late ResponseType _responseFormat;
   late bool _resRequired;
 
   @override
   void initState() {
     super.initState();
     _textController = TextEditingController(text: widget.question.content);
-    _selectedFormat = widget.question.resFormat;
+    _responseFormat = widget.question.resFormat;
     _resRequired = widget.question.resRequired;
   }
 
@@ -49,7 +49,7 @@ class _EditQuestionWidgetState extends State<EditQuestionWidget> {
       ordinal: widget.question.ordinal,
       header: widget.question.header,
       content: _textController.text,
-      resFormat: _selectedFormat,
+      resFormat: _responseFormat,
       resRequired: _resRequired,
       linkedFileKey: widget.question.linkedFileKey,
     );
@@ -61,8 +61,7 @@ class _EditQuestionWidgetState extends State<EditQuestionWidget> {
   @override
   Widget build(BuildContext context) {
     _textController.text = widget.question?.content ?? 'enter';
-    ResponseType selectedFormat = widget.question?.resFormat ??
-                                  ResponseType.getDefaultWidgetType();
+    ResponseType selectedFormat = _responseFormat;
       return AlertDialog(
         title: const Text('Edit Question'),
         content: Column(
