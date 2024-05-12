@@ -17,8 +17,7 @@ class Database
   static const String _getSpecificUser = "SELECT * FROM tbl_users WHERE username = @username";
   // SQL insert query strings. ***Note on inserts; add "RETURNING <column_name>" to end of insert queries to get a Result from them, with <column name> usually being the ID that gets assigned to it.
   static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport, student_id) VALUES (@studentName, @grade, @sport, @id)";
-  //static const String _getUserPassword = "SELECT * FROM tbl_users WHERE username = @username";
-  static const String _insertNewUser = "INSERT INTO tbl_users (username,password,is_admin) VALUES (@username,@password,@is_admin)";
+  static const String _insertNewUser = "INSERT INTO tbl_users (username,password,first_name,last_name,is_admin) VALUES (@username,@password,@first_name,@last_name,@is_admin) RETURNING uuid_user";
   //static const String _deleteAthlete = " DElETE FROM tbl_studentlist WHERE student_name =  @name AND grade = @grade AND sport = @sport";
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
@@ -77,8 +76,6 @@ class Database
   /// Get a user's profile based on their provided username.
   static Future<Result> fetchUser(String username) async
   {
-    // return executeSQLCommand(_getSpecificUser, 
-    //                         {'username':username});
     return executeSQLCommand(_getSpecificUser, 
                             {'username':username});
   }
@@ -96,5 +93,4 @@ class Database
     return executeSQLCommand(_insertNewUser, 
                             {'username':username, 'password':password, 'first_name':firstName, 'last_name':lastName, 'is_admin':isAdmin});
   }
-
 }
