@@ -18,7 +18,9 @@ class InboxModel extends ChangeNotifier
         emailList.add(Email(results[i][0] as DateTime,  //receivedDate
                             results[i][1].toString(),   //from
                             results[i][2].toString(),   //subject
-                            results[i][3].toString())); //body
+                            results[i][3].toString(),   //body
+                            results[i][4].toString(),   //firstName
+                            results[i][5].toString())); //lastName
       }
 
       notifyListeners();

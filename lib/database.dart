@@ -11,8 +11,8 @@ class Database
   static const String _dbName = "uwo_forms_docs_test";
   static const String _dbUser = "joshhill";
   static const String _dbPass = "0LMiuWwPzCfrlub7YlKxpw";
-
-  static const String _getEmailsQuery = "SELECT date_received, address_from, subject_line, body FROM tbl_inbox;";
+  // SQL fetch query strings.
+  static const String _getEmailsQuery = "SELECT date_received, from_uuid, subject_line, body, first_name, last_name FROM tbl_inbox ti LEFT JOIN tbl_users tu ON ti.from_uuid = tu.uuid_user;";
   static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList"; 
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport) VALUES (@studentName, @grade, @sport)";
