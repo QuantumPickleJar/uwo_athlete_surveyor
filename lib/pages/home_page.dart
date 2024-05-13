@@ -1,3 +1,4 @@
+import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
 import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/pages/staff/form_builder_page.dart';
 import 'package:athlete_surveyor/pages/staff/students_page.dart';
@@ -23,32 +24,43 @@ class HomePage extends StatelessWidget {
                   Text('Welcome, $displayName', style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   Column(mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      hasAdminPrivileges  ? ElevatedButton( // faculty
-                                              onPressed:(){ navigateToPage(context, Consumer<StudentsModel> (builder: (context, studentsModel, child) => StudentsWidget(studentsModel))); }, 
-                                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
-                                              child: const SizedBox(child: Center(child: Text('View Forms', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center))))
-                                          : ElevatedButton( //student
-                                              onPressed: null, //TODO
-                                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
-                                              child: const SizedBox(child: Center(child: Text('Complete a Self-Inventory Survey', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center)))),
+                      hasAdminPrivileges  ? 
+                      ElevatedButton( // faculty
+                          onPressed:(){ navigateToPage(context, Consumer<StudentsModel> (builder: (context, studentsModel, child) => StudentsWidget(studentsModel))); }, 
+                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
+                          child: const SizedBox(child: Center(child: Text('View Forms', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center))))
+                      : ElevatedButton( //student
+                          onPressed: null, //TODO
+                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
+                          child: const SizedBox(child: Center(child: Text('Complete a Self-Inventory Survey', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center)))),
 
                       Visibility(
                         visible: hasAdminPrivileges,
                         child: ElevatedButton(
                   onPressed: () async { 
-                    var formService = Provider.of<FormService>(context, listen: false);
-                    var newForm = await formService.createNewForm('Untitled Form', '[None]');
-                    print(newForm.formId);
+                    // var formService = Provider.of<FormService>(context, listen: false);
+                    var authoredFormsModel = Provider.of<AuthoredFormsModel>(context, listen: false);
+                    
+                    /// TODO: adjust to use `tbl_sports`
+                    var newForm = await authoredFormsModel.createNewForm('Untitled Form', '[None]');
+
                     /// push the existing form (if, for example, a previous form's thumnbnail was tapped)
                     /// otherwise send them there with a new one to be provided an ID on dbsubmittal 
-                    Navigator.of(context).push(MaterialPageRoute(builder: 
-                      /// Depending on the user, send to a Survey form or FormBuilderPage
-                        (context) => SecureFormProvider(formId: newForm.formId, hasAdminPrivileges: hasAdminPrivileges)
+                    if (context.mounted) {    /// using mounted avoids the build-gap context issue
+                      Navigator.of(context).push(MaterialPageRoute(
+                        /// Depending on the user, send to a Survey form or FormBuilderPage
+                        builder: (context) {
+                          print("Securely providing ${newForm.formId}...");      
+                          return SecureFormProvider(
+                            formId: newForm.formId, 
+                            hasAdminPrivileges: hasAdminPrivileges);
+                        }
                       ));
-                    },
+                    }
+                    print('ERROR!  Context was not mounted!');
+                  },
                   style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.yellow)),
+                            backgroundColor: MaterialStateProperty.all(Colors.yellow)),
                   child: const SizedBox(
                       width: 200,
                       height: 50,

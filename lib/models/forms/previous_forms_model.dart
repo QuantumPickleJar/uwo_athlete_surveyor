@@ -31,14 +31,18 @@ class AuthoredFormsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// updates the service instance whenever we need to
   void updateFormService(FormService newContext) {
     _formService = newContext;
   }
 
-  /// Creates a new form with the given [description] and [title].
+  /// Creates a new form with the given [title] and [sport].
   /// Returns a [Future] that completes with a [GenericForm] object.
-  Future<GenericForm> createNewForm(String description, String title) async {
-    var newForm = await _formService.createNewForm(title, description);
+  Future<GenericForm> createNewForm(String title, String sport) async {
+    print("[authored-forms-model]: asking formService to create a new form with:");
+    print("[authored-forms-model]: Title: $title\nSport : $sport");
+    
+    var newForm = await _formService.createNewForm(formName: title, sport: sport);
     return newForm;
   }
 }
