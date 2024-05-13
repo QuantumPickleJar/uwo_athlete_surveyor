@@ -143,7 +143,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                               IconButton(
                                 icon: const Icon(Icons.delete),
                                 onPressed: () {
-                                  widget.studentModel.deleteStudent(studentModel.students[index].name ,studentModel.students[index].grade, studentModel.students[index].sport);
+                                  widget.studentModel.deleteStudent(studentModel.students[index].name ,studentModel.students[index].grade, studentModel.students[index].sport, studentModel.students[index].id);
                                 },
                               ),
                             ],
@@ -169,10 +169,18 @@ class _StudentsWidgetState extends State<StudentsWidget> {
   );
 }
 
-  void _addAthlete(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddStudent(widget.studentModel)),
-    );
+ void _addAthlete(BuildContext context) {
+  int currentSize = widget.studentModel.students.length;
+  
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) {
+      return AddStudent(widget.studentModel);
+    }),
+  );
+
+  if (currentSize > currentSize + 1) {
+    print("Received Student");
   }
+}
 }

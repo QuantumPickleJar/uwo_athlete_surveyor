@@ -12,7 +12,7 @@ class Database
   static const String _dbPass = "0LMiuWwPzCfrlub7YlKxpw";
   // SQL fetch query strings.
   static const String _getEmailsQuery = "SELECT date_received, from_uuid, subject_line, body, first_name, last_name FROM tbl_inbox ti LEFT JOIN tbl_users tu ON ti.from_uuid = tu.uuid_user;";
-  static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList"; 
+  static const String _getStudentList = "SELECT student_name, grade, sport, student_id FROM tbl_studentList"; 
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _getSpecificUser = "SELECT * FROM tbl_users WHERE username = @username";
   // SQL insert query strings. ***Note on inserts; add "RETURNING <column_name>" to end of insert queries to get a Result from them, with <column name> usually being the ID that gets assigned to it.

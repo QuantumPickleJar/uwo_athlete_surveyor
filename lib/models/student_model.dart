@@ -18,11 +18,11 @@ void sortBySport(){
   notifyListeners();
 }
 //inserts students into the database 
-Future<void> addStudentToDatabase(String name, String grade, String sport) async {
+Future<void> addStudentToDatabase(String name, String grade, String sport, String id) async {
   try {
     Connection conn = await Database.getOpenConnection();
-    await conn.execute("INSERT INTO tbl_studentlist (student_name, grade, sport) VALUES (\$1, \$2, \$3)",
-        parameters: [name, grade, sport]);
+    await conn.execute("INSERT INTO tbl_studentlist (student_name, grade, sport, student_id) VALUES (\$1, \$2, \$3, \$4)",
+        parameters: [name, grade, sport, id]);
         students.clear();
         fetchStudentsFromDatabase();//will repopulate the List with the new added student
         notifyListeners();
@@ -32,11 +32,11 @@ Future<void> addStudentToDatabase(String name, String grade, String sport) async
   }
 }
 
-Future<void> deleteStudent(String name, String grade, String sport) async {
+Future<void> deleteStudent(String name, String grade, String sport, String id) async {
   try {
     Connection conn = await Database.getOpenConnection();
     await conn.execute(
-      "DELETE FROM tbl_studentlist WHERE student_name = '$name' AND grade = '$grade' AND sport = '$sport'",
+      "DELETE FROM tbl_studentlist WHERE student_name = '$name' AND grade = '$grade' AND sport = '$sport', AND student_id = '$id'",
     );
     students.clear();
     await fetchStudentsFromDatabase(); // Repopulate the List with the new added student
@@ -97,8 +97,8 @@ Future<void> updateStudentInDatabase(String name, String ?newName, String grade,
         final String name = row[0] as String;
         final String grade = row[1] as String;
         final String sport = row[2] as String;
-       
-        final Student student = Student(name: name, grade: grade, sport: sport);
+        final String id = row[3] as String;
+        final Student student = Student(name: name, grade: grade, sport: sport, id: id);
         students.add(student);
       }
       // Notify listeners that the data has been fetched
@@ -118,17 +118,17 @@ Future<void> updateStudentInDatabase(String name, String ?newName, String grade,
 
 
 class Student {
-   String name;
-   String grade;
+  String name;
+  String grade;
   String sport;
-  
+  String id;
   
 
   Student({
     required this.name,
     required this.grade,
     required this.sport,
-   
+    required this.id,
     
   });
 
