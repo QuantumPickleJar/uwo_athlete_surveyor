@@ -20,8 +20,11 @@ class MyFormsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Why is this having 0 GenericForms in the `formsList`? 
     var authoredFormsModel = Provider.of<AuthoredFormsModel>(context);
     return Scaffold(
+
+      /// TODO: fix the back button here
       appBar: defaultAppBar(buildContext: context, hasBackButton: true, title: 'My Forms (${authoredFormsModel.formsList.length})'),
       body: ListView.builder(
         itemCount: authoredFormsModel.formsList.length,
