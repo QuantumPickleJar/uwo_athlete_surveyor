@@ -52,18 +52,12 @@ class SecureFormProvider extends StatelessWidget {
   
   /// returns the appropriate form based on the 
   Future<GenericForm> _loadFormByUserRole(BuildContext context, String formId) async {
-    // TEMPORARY HARD-CODED
     /// reach up the widget tree to get [FormService]
     FormService formService = Provider.of<FormService>(context, listen: false);
-
-    /// TODO: check loggedInUser 
-
-     // This should be determined based on the user's logged-in status
     if (hasAdminPrivileges) {
       // var form = await formService.fetchOrCreateForm(formId: formId);
       try {  
         GenericForm? form = await formService.getFormById(formId);
-
         /// ensure the form is valid before trying to load it as a [StaffForm]
         if (form != null && form.formId.isNotEmpty) { 
           print("Form loaded successfully: ${form.formId}");
