@@ -40,9 +40,10 @@ class StaffForm extends GenericForm {
       );
 
   /// Constructs a new StaffForm from an existing [IGenericForm].
-  /// Intended to be used when creating new forms, NOT on existing
-  StaffForm.fromGenericForm(IGenericForm genericForm, [List<Question>? questions]) : super(
-    formId: genericForm.formId,
+  /// When used with a concrete [GenericForm], the [questions] field will try to 
+  /// bind if it's not null, as will the [formId] field.
+  StaffForm.fromGenericForm(IGenericForm genericForm, [List<Question>? questions, String formId = '']) : super(
+    formId: formId.isNotEmpty ? formId : genericForm.formId,
     formName: genericForm.formName,
     sport: genericForm.sport,
     attachments: genericForm.attachments,

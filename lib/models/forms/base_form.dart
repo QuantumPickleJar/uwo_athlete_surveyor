@@ -19,7 +19,7 @@ class GenericForm extends ChangeNotifier implements IGenericForm {
   late List<Question> questions;
   
   GenericForm({
-    required this.formId,
+    this.formId = '',       /// default to having no id for easier traces
     required this.formName,
     required this.sport,
     this.attachments,
