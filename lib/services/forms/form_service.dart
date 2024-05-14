@@ -57,12 +57,13 @@ class FormService {
 
   /// Creates a new form in the database, returning an instance containing
   /// the id assigned from the SQL server.
-  Future<GenericForm> createNewForm(String formName, String sport) async {
+  Future<GenericForm> createNewForm({required String formName, required String sport}) async {
     /// TODO: ensure another form with this name doesn't exist
     IGenericForm newForm = _formFactory.createStaffForm(formName: formName, sport: sport);
 
     /// [IGenericForm] can't store a formId, so we must inject the newly spawned one:
     GenericForm persistedForm = await _formRepository.createForm(newForm as GenericForm);
+    print('[FormService]: finsihed persisting new form ($formName) with an Id of ${persistedForm.formId}');
     return persistedForm;
   }
 
