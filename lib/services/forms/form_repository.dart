@@ -2,10 +2,10 @@
 /// across Google Sheets.
 import 'package:athlete_surveyor/models/interfaces/i_form_respository.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
+import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 import 'package:athlete_surveyor/services/db.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/v4.dart';
 
 // Concrete implementation of the FormRepository
 class FormRepository implements IFormRepository {
@@ -14,58 +14,66 @@ class FormRepository implements IFormRepository {
   // static FormRepository? _db_instance;
 
   FormRepository();
-  
-  /// Private constructor
-  FormRepository._internal();
 
   /// used temporarily to streamline the demo
   /// TODO: replace with Adam In's id
   final String DEVELOPER_UUID = "a23e1679-d5e9-4d97-9902-bb338b38e468";
-  
-  @override
-  Future<GenericForm> createForm(GenericForm form) async {
+ 
+ @override
+ Future<GenericForm> createForm(GenericForm form) async {
     var db = await _connection;
     try {
-        return await db.runTx((tx) async {
-        /// inserting the form into the database
-        String sqlStatement = """INSERT INTO tbl_forms 
-                              (user_id, form_title, last_modified, create_date)
-                              VALUES (@userId, @formTitle, @lastModified, @createDate) 
-                              RETURNING *;""";
+      print('[FormRepository] Starting transaction to insert new form.');
+      return await db.runTx((tx) async {
+        String sqlStatement = """
+          INSERT INTO tbl_forms (user_id, form_title, last_modified, create_date)
+          VALUES (@userId, @formTitle, @lastModified, @createDate) 
+          RETURNING *;
+        """;
 
-      var db = await _connection;
-      var result = await db.execute(
-          // Sql.named(sqlStatement), parameters: {
-          /// TODO: remove the LOGICAL reliance on a hard-coded UUID
-          Sql.named(sqlStatement), parameters: {
-            'userId': DEVELOPER_UUID, // For now, since you don't have auth
-            'formTitle': form.formName,
-            'lastModified': DateTime.now().toIso8601String(),
-            'createDate': DateTime.now().toIso8601String(),
-          }
-        );
-        print("Database returned: ${result.first.toColumnMap()}");
+        var result = await tx.execute(Sql.named(sqlStatement), parameters: {
+          'userId': DEVELOPER_UUID,  // Replace with dynamic value as needed
+          'formTitle': form.formName,
+          'lastModified': DateTime.now().toIso8601String(),
+          'createDate': DateTime.now().toIso8601String(),
+        });
 
         if (result.isEmpty || result.first.isEmpty) {
-          throw Exception('Failed creating form.');
+          print('[FormRepository] No rows returned after attempting to insert form.');
+          throw Exception('Failed creating form. No data returned.');
         }
 
+        print('[FormRepository] Form created with ID: ${result.first.toColumnMap()['form_id']}');
         return _mapRowToForm(result.first.toColumnMap());
       });
+    } catch (e) {
+      print('[FormRepository] Exception caught during form creation: $e');
+      rethrow;
     } finally {
-      PostgresDB.closeConnection();
+      await db.close();
+      print('[FormRepository] Database connection closed.');
     }
   }
+
 
   /// Hhelper function to convert a database row to a Form object.
   /// 
   /// Does NOT handle the resolution of questions
   GenericForm _mapRowToForm(Map<String, dynamic> row) {
+
+    debugPrint('[FormRepository] Mapping row to GenericForm object...'); // #debug
+    
+    debugPrint('[FormRepository] row_id: ${row['form_id']}');
+    debugPrint('[FormRepository] form_title: ${row['form_title']}');
+    debugPrint('[FormRepository] sport: ${row['sport']}');
+    debugPrint('[FormRepository] create_date: ${row['create_date']}');
+    
     return GenericForm(
       formId: row['form_id'],
       formName: row['form_title'] ?? 'SQLERR_title_parse_fail',
       sport: row['sport'] ?? 'Unfetched', // Replace with actual value if it's available
-      formDateCreated: row['create_date'] ?? DateTime.now(),
+      formDateCreated: row['create_date'],
+      // formDateCreated: row['create_date'],
       questions: [], // This needs to be filled with actual questions from a related query
     );
   }
@@ -116,7 +124,7 @@ class FormRepository implements IFormRepository {
       var result = await db.execute(Sql.named(sqlStatement), parameters: {'userId' : userId });
       
       /// invoke [_mapRowToForm] on each row of result
-      return result.map((row) => _mapRowToForm(result.first.toColumnMap())).toList();
+      return result.map((row) => _mapRowToForm(row.toColumnMap())).toList();
      } finally {
       PostgresDB.closeConnection();
     }
@@ -135,8 +143,8 @@ class FormRepository implements IFormRepository {
       // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
       String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;";
       var db = await _connection;
-      
       var result = await db.execute(Sql.named(sqlStatement), parameters: { 'formId': formId });
+      
       if(result.isEmpty) {
         return null;
       }
@@ -147,6 +155,7 @@ class FormRepository implements IFormRepository {
   }
   
   /// similar to the insert method, but avoids an additional query by returning args over existing
+  /// TODO: revisit after implementing SQL-ized [Sport] selection
   @override
   Future<GenericForm> updateForm(GenericForm form) async {
     try {
@@ -156,18 +165,18 @@ class FormRepository implements IFormRepository {
                           last_modified = current_date() 
                       WHERE form_id = @formId""";
       var db = await _connection;
-      var result = await db.execute(
-        Sql.named(sqlStatement), parameters: {
+      var result = await db.execute(Sql.named(sqlStatement), parameters: {
           'formId': form.formId, /// TODO: adjust query and remove
-          'userId': 'user-id', // For now, since you don't have auth
+          'userId': DEVELOPER_UUID, 
           'formTitle': form.formName,
-          'lastModified': DateTime.now(),
-          'createDate': DateTime.now()
+          'lastModified': DateTime.now().toIso8601String(),
+          'createDate': DateTime.now().toIso8601String()
       });
-      if (result.isEmpty) {
-        print(form);
-        throw Exception('Failed to update the form!');
+      if (result.isEmpty || result.first.isEmpty) {
+        print('[FormRepository] No rows returned after attempting to insert form with id ${form.formId}.');
+          throw Exception('Failed creating form. No data returned.');
       } else {
+        print('[FormRepository] Form created with ID: ${result.first.toColumnMap()['form_id']}');
         return _mapRowToForm(result.first.toColumnMap());
       } 
     } finally {
