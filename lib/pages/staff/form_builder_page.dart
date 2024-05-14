@@ -71,14 +71,10 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       try {
         print("Loading form data for formId: ${widget.formId}");
        GenericForm? loadedForm = await _formService.fetchOrCreateForm(formId: widget.formId);
-        if (loadedForm != null) {
-          // setState(() {
-          //   _currentForm = loadedForm; // Update the state with loaded form
-          // // Convert GenericForm to StaffForm using the dedicated constructor
-          // });
-          _currentForm = loadedForm;
-          return loadedForm;
-        } 
+        setState(() {
+          _currentForm = loadedForm; // Update the state with loaded form
+        });
+        return loadedForm;
       } catch (e) { 
         /// an exception will occur if not found
         print('Error loading form: $e');
@@ -88,8 +84,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
         }
       }
     }
-  
-  
+    
   /// Builds the scaffold for displaying a StaffForm's [questions] .
   ///
   /// Takes a [StaffForm] object and returns a [Scaffold]  widget that
@@ -122,53 +117,6 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
         // subtitle: Text(question?.content ?? 'no content provided'),
     );
    });
-  }
-
-  /// Opens a dialog that contains controls for manipulating a question.
-  Column launchQuestionDialog(Question? question) { 
-    _questionTextController.text = question?.content ?? '';
-    ResponseType selectedResponseType = question?.resFormat ?? ResponseType.getDefaultWidgetType();
-
-    return Column(
-      children: [
-        TextField(
-          controller: _questionTextController,
-          decoration: const InputDecoration(
-            labelText: 'Question Content',
-          ),
-        ),
-        
-        DropdownButton<ResponseType>(
-          value: selectedResponseType,
-          onChanged: (ResponseType? newValue) {
-            setState(() {
-              if (newValue != null) {
-                print("Dropdown items: ${ResponseWidgetType.values.map(
-                  (type) => ResponseType(widgetType: type)).toList()}");
-                // selectedResponseType = newValue ?? ResponseType.getDefaultWidgetType();
-                selectedResponseType = newValue;
-                print("Selected value: ${selectedResponseType.widgetType.name}");
-              }
-            });
-          },
-          items: ResponseWidgetType.values.map((type) {
-            return DropdownMenuItem<ResponseType>(
-              value: ResponseType(widgetType: type),
-              child: Text(type.name),
-            );
-          }).toList(),
-        ),
-        CheckboxListTile(
-          title: const Text('Response Required'),
-          value: question?.resRequired ?? false,
-          onChanged: (bool? newValue) {
-            setState(() {
-              question?.resRequired = newValue!;
-            });
-          },
-        ),
-      ],
-    );
   }
 
   /// used to add a new EMPTY question at the tail end of [_currentForm]'s questions
