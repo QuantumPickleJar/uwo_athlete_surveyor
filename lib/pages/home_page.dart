@@ -37,27 +37,47 @@ class HomePage extends StatelessWidget {
                       Visibility(
                         visible: hasAdminPrivileges,
                         child: ElevatedButton(
-                  onPressed: () async { 
-                    // var formService = Provider.of<FormService>(context, listen: false);
+                  onPressed: () async {
                     var authoredFormsModel = Provider.of<AuthoredFormsModel>(context, listen: false);
-                    
-                    /// TODO: adjust to use `tbl_sports`
-                    var newForm = await authoredFormsModel.createNewForm('Untitled Form', '[None]');
-
-                    /// push the existing form (if, for example, a previous form's thumnbnail was tapped)
-                    /// otherwise send them there with a new one to be provided an ID on dbsubmittal 
-                    if (context.mounted) {    /// using mounted avoids the build-gap context issue
+                    try {
+                      /// TODO: adjust to use `tbl_sports`
+                      var newForm = await authoredFormsModel.createNewForm('Untitled Form', '[None]');
+                      
+                      /// push the existing form (if, for example, a previous form's thumnbnail was tapped)
+                      /// otherwise send them there with a new one to be provided an ID on dbsubmittal 
                       Navigator.of(context).push(MaterialPageRoute(
-                        /// Depending on the user, send to a Survey form or FormBuilderPage
                         builder: (context) {
-                          print("Securely providing ${newForm.formId}...");      
+                          print('[HomePage]: Securely providing ${newForm.formId}');
                           return SecureFormProvider(
                             formId: newForm.formId, 
                             hasAdminPrivileges: hasAdminPrivileges);
-                        }
+                        } 
                       ));
+                    } catch (e) {
+                      print("Failed to create or navigate to new form: $e");
                     }
-                    print('ERROR!  Context was not mounted!');
+                  
+
+
+                  //  try {
+                  //     if (context.mounted) {    /// using mounted avoids the build-gap context issue
+                  //       var newForm = await Provider.of<AuthoredFormsModel>(context, listen: false).createNewForm('Untitled Form', '[None]');
+
+                      /// push the existing form (if, for example, a previous form's thumnbnail was tapped)
+                      /// otherwise send them there with a new one to be provided an ID on dbsubmittal 
+                  //       Navigator.of(context).push(MaterialPageRoute(
+                  //         /// Depending on the user, send to a Survey form or FormBuilderPage
+                  //         builder: (context) {
+                  //           print("Securely providing ${newForm.formId}...");      
+                  //           return SecureFormProvider(
+                  //             formId: newForm.formId, 
+                  //             hasAdminPrivileges: hasAdminPrivileges);
+                  //         }
+                  //       ));
+                  //     }
+                  //   } catch (e) {
+                  //   print('ERROR!  Context was not mounted!');
+                  //  }
                   },
                   style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Colors.yellow)),
