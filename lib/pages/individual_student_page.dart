@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/models/student_model.dart';
-//import '/models/student_model.dart'; 
+
 class IndividualStudentScreen extends StatefulWidget {
   final Student studentData;
-  final StudentsModel studentsModel; // Add this line
+  final StudentsModel studentsModel;
 
-   IndividualStudentScreen({Key? key, required this.studentData, required this.studentsModel}) : super(key: key); // Modify this line
+  IndividualStudentScreen({Key? key, required this.studentData, required this.studentsModel}) : super(key: key);
 
   @override
   _IndividualStudentScreenState createState() => _IndividualStudentScreenState();
@@ -16,6 +16,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
   late TextEditingController _nameController;
   late TextEditingController _gradeController;
   late TextEditingController _sportController;
+  late TextEditingController _idController;
 
   @override
   void initState() {
@@ -23,6 +24,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
     _nameController = TextEditingController(text: widget.studentData.name);
     _gradeController = TextEditingController(text: widget.studentData.grade);
     _sportController = TextEditingController(text: widget.studentData.sport);
+    _idController = TextEditingController(text: widget.studentData.id);
   }
 
   @override
@@ -30,6 +32,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
     _nameController.dispose();
     _gradeController.dispose();
     _sportController.dispose();
+    _idController.dispose();
     super.dispose();
   }
 
@@ -45,11 +48,12 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
               setState(() {
                 _isEditing = !_isEditing;
                 if (!_isEditing) {
-                widget.studentsModel.updateStudentInDatabase(
-                  widget.studentData.name, // Original name of the student
-                  _nameController.text,    // New name entered in the text field
-                  _gradeController.text,
-                  _sportController.text
+                  widget.studentsModel.updateStudentInDatabase(
+                    widget.studentData.name,
+                    _nameController.text,
+                    _gradeController.text,
+                    _sportController.text,
+                    _idController.text,
                   );
                 }
               });
@@ -72,7 +76,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'lib/resources/images/individual-icon-1.png', // Load image from images
+                          'lib/resources/images/individual-icon-1.png',
                           width: 200,
                           height: 200,
                         ),
@@ -89,7 +93,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                               widget.studentData.name,
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 2, // Set maximum number of lines to 2
+                              maxLines: 2,
                               style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
                             ),
                     ),
@@ -113,13 +117,19 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                                 )
                               : Text('Sport: ${widget.studentData.sport}'),
                           const SizedBox(height: 20),
+                          _isEditing
+                              ? TextFormField(
+                                  controller: _idController,
+                                  decoration: InputDecoration(labelText: 'ID'),
+                                )
+                              : Text('ID: ${widget.studentData.id}'),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-             
               const SizedBox(height: 20),
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +172,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                   children: [
                     Text('Analytics'),
                     Image.network(
-                      'https://via.placeholder.com/300', // Replace with the student's headshot
+                      'https://via.placeholder.com/300',
                       width: 300,
                       height: 300,
                     ),

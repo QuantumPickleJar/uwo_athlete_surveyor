@@ -21,6 +21,8 @@ class _StudentsWidgetState extends State<StudentsWidget> {
   @override
   void initState() {
     super.initState();
+    // Clear existing students before fetching from the database
+    widget.studentModel.students.clear();
     // Fetch students from the database when the widget is initialized
     widget.studentModel.fetchStudentsFromDatabase();
   }
@@ -170,7 +172,6 @@ class _StudentsWidgetState extends State<StudentsWidget> {
 }
 
  void _addAthlete(BuildContext context) {
-  int currentSize = widget.studentModel.students.length;
   
   Navigator.push(
     context,
@@ -179,8 +180,6 @@ class _StudentsWidgetState extends State<StudentsWidget> {
     }),
   );
 
-  if (currentSize > currentSize + 1) {
-    print("Received Student");
-  }
+  
 }
 }
