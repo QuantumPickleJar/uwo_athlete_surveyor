@@ -63,7 +63,7 @@ class _InboxPageState extends State<InboxPage>
                     value: true,          //temp
                     groupValue: null,     //temp
                     onChanged: (value){}, //temp
-                    title: Text("${widget.inboxModel.emailList[index].receivedDate}\nFrom: ${widget.inboxModel.emailList[index].from}\n${widget.inboxModel.emailList[index].subject}\n"),
+                    title: Text("${widget.inboxModel.emailList[index].receivedDate}\nFrom: ${widget.inboxModel.emailList[index].senderFirstName} ${widget.inboxModel.emailList[index].senderLastName}\n${widget.inboxModel.emailList[index].subject}\n"),
                     subtitle: Text(widget.inboxModel.emailList[index].body)));}))]));
   }
 }
