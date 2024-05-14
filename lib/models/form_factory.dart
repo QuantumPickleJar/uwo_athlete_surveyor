@@ -46,7 +46,7 @@ class ConcreteFormFactory extends FormFactory {
   IGenericForm createStaffForm({required String formName, String? sport, DateTime? formDateCreated, String formId = ''}) {
     return StaffForm(
       List.empty(), /// questions
-      formId: formId.isEmpty ? '' : formId,
+      formId: formId.isEmpty ? formId : '',
       formName: formName,
       formDateCreated: formDateCreated ?? DateTime.now(),
       sport: sport ?? "test sport",

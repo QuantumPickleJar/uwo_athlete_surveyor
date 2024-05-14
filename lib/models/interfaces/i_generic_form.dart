@@ -11,6 +11,7 @@ abstract class IGenericForm {
   String get formId;  // should be performed with UUID functions
   List<File>? attachments; 
   List<Question> get questions; 
+  // DateTime formDateCreated
   /// Save changes/answers to the current form 
   /// TODO: Evaluate removal. could be that this is equivalent to FormService.updateForm)
   void saveForm(); 
