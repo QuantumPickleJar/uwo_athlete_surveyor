@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:athlete_surveyor/models/question.dart';
 import 'package:uuid/uuid.dart';
 
 /// The base Form object that is loaded full of content via one of 
@@ -9,7 +10,7 @@ abstract class IGenericForm {
   String get sport;
   String get formId;  // should be performed with UUID functions
   List<File>? attachments; 
-
+  List<Question> get questions; 
   /// Save changes/answers to the current form 
   /// TODO: Evaluate removal. could be that this is equivalent to FormService.updateForm)
   void saveForm(); 

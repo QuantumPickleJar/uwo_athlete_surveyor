@@ -16,7 +16,7 @@ class GenericForm extends ChangeNotifier implements IGenericForm {
   @override final List<File>? attachments;
   /// assert that forms will have a date
   @override DateTime formDateCreated;
-  late List<Question> questions;
+  @override final List<Question> questions;
   
   GenericForm({
     this.formId = '',       /// default to having no id for easier traces
@@ -25,8 +25,10 @@ class GenericForm extends ChangeNotifier implements IGenericForm {
     this.attachments,
     DateTime? formDateCreated,
     required this.questions,
-  }) : formDateCreated = /// set the date if it came in null for some reason
-  formDateCreated ?? DateTime.parse(DateTime.now().toIso8601String());
+  }) : /// set the date if it came in null for some reason
+  formDateCreated = formDateCreated ?? DateTime.now();
+
+
 
 
   /// To be used in saving drafts, if at all.  May need to be 
