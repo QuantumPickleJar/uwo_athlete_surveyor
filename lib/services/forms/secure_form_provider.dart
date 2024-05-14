@@ -27,10 +27,9 @@ class SecureFormProvider extends StatelessWidget {
             );
         } else if (snapshot.hasError) {
           /// handle errors in a visuale manner before rendering loading progress
-          return Center(child: Text('SecFormProv Error: ${snapshot.error}'));
+          return Center(child: Text('SFP Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           /// only render to Consumer if data is present
-          // return ChangeNotifierProvider<GenericForm>.value(
           return Provider<GenericForm>.value(
             value: snapshot.data!,
             child: Consumer<GenericForm>(builder: (context, form, child) {
@@ -42,8 +41,7 @@ class SecureFormProvider extends StatelessWidget {
         /// handle errors in a visuale manner before rendering loading progress
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
-        } else {
-          // TODO: resize, spans entire screen
+        } else { // TODO: resize, spans entire screen
           return CircularProgressIndicator();
         }
       }, 
