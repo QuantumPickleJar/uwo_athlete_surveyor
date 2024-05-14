@@ -39,10 +39,12 @@ class AuthoredFormsModel extends ChangeNotifier {
   /// Creates a new form with the given [title] and [sport].
   /// Returns a [Future] that completes with a [GenericForm] object.
   Future<GenericForm> createNewForm(String title, String sport) async {
-    print("[authored-forms-model]: asking formService to create a new form with:");
-    print("[authored-forms-model]: Title: $title\nSport : $sport");
+    print("[AuthoredFormsModel]: asking [_formService] to create a new form with:");
+    print("[AuthoredFormsModel]: Title: $title\nSport : $sport");
     
-    var newForm = await _formService.createNewForm(formName: title, sport: sport);
-    return newForm;
-  }
+  var newForm = await _formService.createNewForm(formName: title, sport: sport);
+  print('form: ${newForm.formName} was created at ${newForm.formDateCreated.toIso8601String()}');
+
+  return newForm;
+    }
 }
