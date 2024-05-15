@@ -17,6 +17,9 @@ class SportPickerCard extends StatelessWidget {
     // Consumer is used to listen to SportSelectionModel changes    
     return Consumer<SportSelectionModel>(
       builder: (context, sportSelectionModel, child) {
+        debugPrint("Selected Sport: ${sportSelectionModel.selectedSport}");
+        debugPrint("Available Sports: ${sportSelectionModel.sports.map((s) => s.activity).join(', ')}");
+
 
       return Card(
         margin: const EdgeInsets.all(16.0),

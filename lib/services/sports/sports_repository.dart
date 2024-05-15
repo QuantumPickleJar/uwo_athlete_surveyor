@@ -12,11 +12,11 @@ class SportsRepository {
   Future<List<Sport>> getAllSports() async {
     var db = await _connection;
     try {
-      String sqlStatement = "SELECT sport_id, sport_name FROM public.tbl_sports;";
+      String sqlStatement = "SELECT sport_id, activity FROM public.tbl_sports;";
       var result = await db.execute(Sql.named(sqlStatement));
       return result.map((row) => Sport(
         sportId: row.toColumnMap()['sport_id'],
-        activity: row.toColumnMap()['sport_name'],
+        activity: row.toColumnMap()['activity'],
       )).toList();
     } finally {
       PostgresDB.closeConnection();
@@ -26,7 +26,7 @@ class SportsRepository {
   Future<String?> getSportById(String sportId) async {
     var db = await _connection;
     try {
-      String sql = 'SELECT sport_name FROM tbl_sports WHERE sport_id = @sportId;';
+      String sql = 'SELECT activity FROM tbl_sports WHERE sport_id = @sportId;';
       var results = await db.execute(sql, parameters: {'sportId': sportId});
       if (results.isNotEmpty) {
         return results.first[0] as String;
@@ -41,7 +41,7 @@ class SportsRepository {
   Future<String?> getSportIdByName(String sportName) async {
     var db = await _connection;
     try {
-      String sql = 'SELECT sport_id FROM tbl_sports WHERE sport_name = @sportName;';
+      String sql = 'SELECT sport_id FROM tbl_sports WHERE activity = @sportName;';
       var results = await db.execute(sql, parameters: {'sportName': sportName});
       if (results.isNotEmpty) {
         return results.first[0].toString();
