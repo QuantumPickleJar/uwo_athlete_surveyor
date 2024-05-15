@@ -19,6 +19,9 @@ class FormRepository implements IFormRepository {
   /// TODO: replace with Adam In's id
   final String DEVELOPER_UUID = "a23e1679-d5e9-4d97-9902-bb338b38e468";
  
+
+
+ /// TODO: make a dialog ask what sport the form should be for RIGHT away when clicking Create a form.
  @override
  Future<GenericForm> createForm(GenericForm form) async {
     var db = await _connection;
@@ -26,8 +29,8 @@ class FormRepository implements IFormRepository {
       print('[FormRepository] Starting transaction to insert new form.');
       return await db.runTx((tx) async {
         String sqlStatement = """
-          INSERT INTO tbl_forms (user_id, form_title, last_modified, create_date)
-          VALUES (@userId, @formTitle, @lastModified, @createDate) 
+          INSERT INTO tbl_forms (user_id, form_title, last_modified, create_date, sport)
+          VALUES (@userId, @formTitle, @lastModified, @createDate, @sport) 
           RETURNING *;
         """;
 
@@ -36,22 +39,24 @@ class FormRepository implements IFormRepository {
           'formTitle': form.formName,
           'lastModified': DateTime.now().toIso8601String(),
           'createDate': DateTime.now().toIso8601String(),
+          'sport': form.sport
+          /// TODO: implement
         });
 
         if (result.isEmpty || result.first.isEmpty) {
-          print('[FormRepository] No rows returned after attempting to insert form.');
+          debugPrint('[FormRepository] No rows returned after attempting to insert form.');
           throw Exception('Failed creating form. No data returned.');
         }
 
-        print('[FormRepository] Form created with ID: ${result.first.toColumnMap()['form_id']}');
+        debugPrint('[FormRepository] Form created with ID: ${result.first.toColumnMap()['form_id']}');
         return _mapRowToForm(result.first.toColumnMap());
       });
     } catch (e) {
-      print('[FormRepository] Exception caught during form creation: $e');
+      debugPrint('[FormRepository] Exception caught during form creation: $e');
       rethrow;
     } finally {
       await db.close();
-      print('[FormRepository] Database connection closed.');
+      debugPrint('[FormRepository] Database connection closed.');
     }
   }
 
@@ -62,18 +67,17 @@ class FormRepository implements IFormRepository {
   GenericForm _mapRowToForm(Map<String, dynamic> row) {
 
     debugPrint('[FormRepository] Mapping row to GenericForm object...'); // #debug
-    
-    debugPrint('[FormRepository] row_id: ${row['form_id']}');
+    debugPrint('[FormRepository] user_id: ${row['user_id']}');
+    debugPrint('[FormRepository] form_id: ${row['form_id']}');
     debugPrint('[FormRepository] form_title: ${row['form_title']}');
-    debugPrint('[FormRepository] sport: ${row['sport']}');
     debugPrint('[FormRepository] create_date: ${row['create_date']}');
+    debugPrint('[FormRepository] sport: ${row['sport']}');
     
     return GenericForm(
       formId: row['form_id'],
       formName: row['form_title'] ?? 'SQLERR_title_parse_fail',
       sport: row['sport'] ?? 'Unfetched', // Replace with actual value if it's available
       formDateCreated: row['create_date'],
-      // formDateCreated: row['create_date'],
       questions: [], // This needs to be filled with actual questions from a related query
     );
   }
@@ -103,7 +107,8 @@ class FormRepository implements IFormRepository {
   Future<List<GenericForm>> getAllForms() async {
     try {
 
-    String sqlStatement = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
+    String sqlStatement = """SELECT form_id, user_id, form_title, 
+                                    last_modified, create_date, sport FROM public.tbl_forms;""";
     var db = await _connection;
     final result = await db.execute(Sql.named(sqlStatement));
 
@@ -119,7 +124,7 @@ class FormRepository implements IFormRepository {
     try {
       // TODO: implement getFormById
       // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
-      String sqlStatement = """SELECT form_id, form_title, last_modified, create_date FROM public.tbl_forms WHERE user_id = @userId;""";
+      String sqlStatement = """SELECT form_id, form_title, last_modified, create_date, sport FROM public.tbl_forms WHERE user_id = @userId;""";
       var db = await _connection;
       var result = await db.execute(Sql.named(sqlStatement), parameters: {'userId' : userId });
       
@@ -135,13 +140,13 @@ class FormRepository implements IFormRepository {
   @override
   Future<GenericForm?> getFormById(String formId) async {
         if (!Uuid.isValidUUID(fromString: formId)) {
-        print("[FORM_REPO] Invalid UUID: $formId");
+        debugPrint("[FormRepository]: Invalid UUID: $formId");
         return null;
     }
     try {
       // TODO: implement getFormById
       // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
-      String sqlStatement = "SELECT form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;";
+      String sqlStatement = "SELECT form_title, last_modified, create_date, sport FROM public.tbl_forms WHERE form_id = @formId;";
       var db = await _connection;
       var result = await db.execute(Sql.named(sqlStatement), parameters: { 'formId': formId });
       
@@ -170,13 +175,14 @@ class FormRepository implements IFormRepository {
           'userId': DEVELOPER_UUID, 
           'formTitle': form.formName,
           'lastModified': DateTime.now().toIso8601String(),
-          'createDate': DateTime.now().toIso8601String()
+          'createDate': DateTime.now().toIso8601String(),
+          'sport': form.sport
       });
       if (result.isEmpty || result.first.isEmpty) {
-        print('[FormRepository] No rows returned after attempting to insert form with id ${form.formId}.');
+        debugPrint('[FormRepository] No rows returned after attempting to update form (formId = ${form.formId}).');
           throw Exception('Failed creating form. No data returned.');
       } else {
-        print('[FormRepository] Form created with ID: ${result.first.toColumnMap()['form_id']}');
+        debugPrint('[FormRepository] Form created with ID: ${result.first.toColumnMap()['form_id']}');
         return _mapRowToForm(result.first.toColumnMap());
       } 
     } finally {
