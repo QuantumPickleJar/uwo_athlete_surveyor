@@ -2,6 +2,7 @@
 /// across Google Sheets.
 import 'package:athlete_surveyor/models/interfaces/i_form_respository.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
+import 'package:athlete_surveyor/services/sports/sports_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 import 'package:athlete_surveyor/services/db.dart';
@@ -11,45 +12,60 @@ import 'package:uuid/uuid.dart';
 class FormRepository implements IFormRepository {
   // final Connection _connection;
   Future<Connection> get _connection async => await PostgresDB.getConnection();
+  FormRepository(this._sportRepository);
+
+  final SportRepository _sportRepository;
   // static FormRepository? _db_instance;
 
-  FormRepository();
 
   /// used temporarily to streamline the demo
   /// TODO: replace with Adam In's id
   final String DEVELOPER_UUID = "a23e1679-d5e9-4d97-9902-bb338b38e468";
  
-
-
  /// TODO: make a dialog ask what sport the form should be for RIGHT away when clicking Create a form.
  @override
  Future<GenericForm> createForm(GenericForm form) async {
     var db = await _connection;
     try {
-      print('[FormRepository] Starting transaction to insert new form.');
+      debugPrint('[FormRepository] Starting transaction to insert new form.');
+
       return await db.runTx((tx) async {
-        String sqlStatement = """
-          INSERT INTO tbl_forms (user_id, form_title, last_modified, create_date, sport)
-          VALUES (@userId, @formTitle, @lastModified, @createDate, @sport) 
+        String formSql = """
+          INSERT INTO tbl_forms (user_id, form_title, last_modified, create_date)
+          VALUES (@userId, @formTitle, @lastModified, @createDate,) 
           RETURNING *;
         """;
 
-        var result = await tx.execute(Sql.named(sqlStatement), parameters: {
+        var formResult = await tx.execute(Sql.named(formSql), parameters: {
           'userId': DEVELOPER_UUID,  // Replace with dynamic value as needed
           'formTitle': form.formName,
           'lastModified': DateTime.now().toIso8601String(),
           'createDate': DateTime.now().toIso8601String(),
-          'sport': form.sport
-          /// TODO: implement
+          // 'sport': form.sport ?? 'Unspecified'
         });
 
-        if (result.isEmpty || result.first.isEmpty) {
+        /// check if a valid form was returned
+        if (formResult.isEmpty || formResult.first.isEmpty) {
           debugPrint('[FormRepository] No rows returned after attempting to insert form.');
           throw Exception('Failed creating form. No data returned.');
         }
+        var formId = formResult.first.toColumnMap()['form_id'] as String;
+        var sportId = await _sportRepository.getSportById(form.sport); 
 
-        debugPrint('[FormRepository] Form created with ID: ${result.first.toColumnMap()['form_id']}');
-        return _mapRowToForm(result.first.toColumnMap());
+        /// insert the new junction row into the respective table
+        if (sportId != null) {
+          String junctionSql = """
+            INSERT INTO tbl_form_sports (form_id, sport_id)
+            VALUES (@formId, @sportId);
+          """;
+          await tx.execute(Sql.named(junctionSql), parameters: {
+            'formId': formId,
+            'sportId': sportId,
+          });
+        }
+
+        debugPrint('[FormRepository] Form created with ID: $formId');
+        return _mapRowToForm(formResult.first.toColumnMap(), activity: form.sport);
       });
     } catch (e) {
       debugPrint('[FormRepository] Exception caught during form creation: $e');
@@ -61,22 +77,22 @@ class FormRepository implements IFormRepository {
   }
 
 
-  /// Hhelper function to convert a database row to a Form object.
-  /// 
+  /// Helper function to convert a database row to a Form object.
   /// Does NOT handle the resolution of questions
-  GenericForm _mapRowToForm(Map<String, dynamic> row) {
+  GenericForm _mapRowToForm(Map<String, dynamic> row, {String? activity}) {
+  // GenericForm _mapRowToForm(Map<String, dynamic> row) {
 
     debugPrint('[FormRepository] Mapping row to GenericForm object...'); // #debug
     debugPrint('[FormRepository] user_id: ${row['user_id']}');
     debugPrint('[FormRepository] form_id: ${row['form_id']}');
     debugPrint('[FormRepository] form_title: ${row['form_title']}');
     debugPrint('[FormRepository] create_date: ${row['create_date']}');
-    debugPrint('[FormRepository] sport: ${row['sport']}');
+    // debugPrint('[FormRepository] sport: ${row['sport']}');
     
     return GenericForm(
       formId: row['form_id'],
       formName: row['form_title'] ?? 'SQLERR_title_parse_fail',
-      sport: row['sport'] ?? 'Unfetched', // Replace with actual value if it's available
+      sport: activity ?? 'unfetched',
       formDateCreated: row['create_date'],
       questions: [], // This needs to be filled with actual questions from a related query
     );
@@ -106,13 +122,19 @@ class FormRepository implements IFormRepository {
   @override
   Future<List<GenericForm>> getAllForms() async {
     try {
-
-    String sqlStatement = """SELECT form_id, user_id, form_title, 
-                                    last_modified, create_date, sport FROM public.tbl_forms;""";
     var db = await _connection;
+    String sqlStatement = """SELECT 
+    f.form_id, f.user_id, f.form_title, f.last_modified, f.create_date, s.sport_name AS sport
+        FROM tbl_forms f
+        LEFT JOIN tbl_form_sports fs ON f.form_id = fs.form_id
+        LEFT JOIN tbl_sports s ON fs.sport_id = s.sport_id;
+      """;
+      
     final result = await db.execute(Sql.named(sqlStatement));
 
-    return result.map((row) => _mapRowToForm(row.toColumnMap())).toList();
+    /// invoke [_mapRowToForm] on each row of result, and then again on ['sport']
+    return result.map((row) => _mapRowToForm(row.toColumnMap(),
+                                             activity: row.toColumnMap()['sport'])).toList();
     } finally {
       PostgresDB.closeConnection();
     }
@@ -124,13 +146,18 @@ class FormRepository implements IFormRepository {
     try {
       // TODO: implement getFormById
       // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
-      String sqlStatement = """SELECT form_id, form_title, last_modified, create_date, sport FROM public.tbl_forms WHERE user_id = @userId;""";
+      String sqlStatement = """SELECT  SELECT f.form_id, f.form_title, f.last_modified, f.create_date, s.sport_name AS sport
+        FROM tbl_forms f
+        LEFT JOIN tbl_form_sports fs ON f.form_id = fs.form_id
+        LEFT JOIN tbl_sports s ON fs.sport_id = s.sport_id
+        WHERE f.user_id = @userId;
+      """;
       var db = await _connection;
       var result = await db.execute(Sql.named(sqlStatement), parameters: {'userId' : userId });
       
-      /// invoke [_mapRowToForm] on each row of result
-      return result.map((row) => _mapRowToForm(row.toColumnMap())).toList();
-     } finally {
+      /// extracting the query result
+      return result.map((row) => _mapRowToForm(row.toColumnMap(),
+                                             activity: row.toColumnMap()['sport'])).toList();     } finally {
       PostgresDB.closeConnection();
     }
   }
@@ -144,16 +171,21 @@ class FormRepository implements IFormRepository {
         return null;
     }
     try {
-      // TODO: implement getFormById
-      // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
-      String sqlStatement = "SELECT form_title, last_modified, create_date, sport FROM public.tbl_forms WHERE form_id = @formId;";
+      String sqlStatement = """
+        SELECT f.form_id, f.form_title, f.last_modified, f.create_date, s.sport_name AS sport
+        FROM tbl_forms f
+        LEFT JOIN tbl_form_sports fs ON f.form_id = fs.form_id
+        LEFT JOIN tbl_sports s ON fs.sport_id = s.sport_id
+        WHERE f.form_id = @formId;
+      """;
       var db = await _connection;
       var result = await db.execute(Sql.named(sqlStatement), parameters: { 'formId': formId });
       
       if(result.isEmpty) {
         return null;
       }
-      return _mapRowToForm(result.first.toColumnMap());
+      /// we don't need to map out the sport this time, just the [GenericForm] itself
+      return _mapRowToForm(result.first.toColumnMap(), activity: result.firstOrNull!.first.toString());
      } finally {
       PostgresDB.closeConnection();
     }
@@ -189,4 +221,5 @@ class FormRepository implements IFormRepository {
       PostgresDB.closeConnection();
     }
   }
+ 
 }
