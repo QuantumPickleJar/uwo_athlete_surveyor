@@ -14,7 +14,7 @@ class FormRepository implements IFormRepository {
   Future<Connection> get _connection async => await PostgresDB.getConnection();
   FormRepository(this._sportRepository);
 
-  final SportRepository _sportRepository;
+  final SportsRepository _sportRepository;
   // static FormRepository? _db_instance;
 
 
@@ -32,7 +32,7 @@ class FormRepository implements IFormRepository {
       return await db.runTx((tx) async {
         String formSql = """
           INSERT INTO tbl_forms (user_id, form_title, last_modified, create_date)
-          VALUES (@userId, @formTitle, @lastModified, @createDate,) 
+          VALUES (@userId, @formTitle, @lastModified, @createDate) 
           RETURNING *;
         """;
 
