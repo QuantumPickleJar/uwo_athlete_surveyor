@@ -23,7 +23,7 @@ class SportRepository {
     }
   }
   /// Fetches a single sport by ID
-  Future<String?> getSportById(int sportId) async {
+  Future<String?> getSportById(String sportId) async {
     var db = await _connection;
     try {
       String sql = 'SELECT sport_name FROM tbl_sports WHERE sport_id = @sportId;';
@@ -37,14 +37,14 @@ class SportRepository {
     }
   }
 
-  /// Fetches a single sport by name
-  Future<int?> getSportIdByName(String sportName) async {
+  /// Utility function, doubt we'll need this
+  Future<String?> getSportIdByName(String sportName) async {
     var db = await _connection;
     try {
       String sql = 'SELECT sport_id FROM tbl_sports WHERE sport_name = @sportName;';
       var results = await db.execute(sql, parameters: {'sportName': sportName});
       if (results.isNotEmpty) {
-        return results.first[0] as int;
+        return results.first[0].toString();
       }
       return null;
     } finally {
