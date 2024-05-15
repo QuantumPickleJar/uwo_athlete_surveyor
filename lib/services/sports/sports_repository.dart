@@ -3,11 +3,11 @@ import 'package:postgres/postgres.dart';
 import 'package:athlete_surveyor/services/db.dart';
 
 /// Simple repository for interacting with stored values for the available sports to pick from
-class SportRepository {
+class SportsRepository {
   Future<Connection> get _connection async => await PostgresDB.getConnection();
   /// We could put a list here since sports probably wont get added too often after initial setup
   
-  SportRepository();
+  SportsRepository();
 
   Future<List<Sport>> getAllSports() async {
     var db = await _connection;
@@ -51,4 +51,6 @@ class SportRepository {
       db.close();
     }
   }
+
+  linkFormToSport(String formId, String sportId) {}
 }

@@ -2,7 +2,7 @@ import 'package:athlete_surveyor/models/sport.dart';
 import 'package:athlete_surveyor/services/sports/sports_repository.dart';
 
 class SportService {
-  final SportRepository _sportRepository;
+  final SportsRepository _sportRepository;
 
   SportService(this._sportRepository);
 
