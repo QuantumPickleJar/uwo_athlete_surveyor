@@ -1,6 +1,7 @@
 import 'package:athlete_surveyor/models/sport.dart';
 import 'package:athlete_surveyor/services/sports/sports_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SportPickerCard extends StatefulWidget {
   final void Function(Sport?) onSportChanged;
@@ -15,8 +16,12 @@ class SportPickerCard extends StatefulWidget {
 }
 
 class _SportPickerCardState extends State<SportPickerCard> {
-  final SportRepository sportsRepository = SportRepository();
+  late SportsRepository sportsRepository; 
   Sport? _selectedSport;
+
+  @override initState() {
+    sportsRepository = Provider.of<SportsRepository>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) async {
