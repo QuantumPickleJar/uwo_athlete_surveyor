@@ -13,8 +13,8 @@ class SportPickerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // SportSelectionModel model = Provider.of<SportSelectionModel>(context);
-    
+
+    // Consumer is used to listen to SportSelectionModel changes    
     return Consumer<SportSelectionModel>(
       builder: (context, sportSelectionModel, child) {
 
