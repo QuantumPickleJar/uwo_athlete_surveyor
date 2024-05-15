@@ -11,15 +11,17 @@ import 'package:flutter/material.dart';
 class SportSelectionModel extends ChangeNotifier {
   
   final SportsRepository _sportsRepository;
-  List<Sport>? sports;
+  List<Sport> _sports = [];
   Sport? _selectedSport; 
+
+  SportSelectionModel(this._sportsRepository);
+  /// setup our getters
+  List<Sport> get sports => _sports;
   Sport? get selectedSport => _selectedSport;
 
-    
-  SportSelectionModel(this._sportsRepository);
 
   Future<void> loadSports() async {
-    sports = await _sportsRepository.getAllSports();
+    _sports = await _sportsRepository.getAllSports();
     notifyListeners();
   }
 
