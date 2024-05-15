@@ -1,5 +1,12 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name: Joshua T. Hill
+/// Date: 5/15/2024
+/// Description: Temporary data-object from prototyping used to represent a previously completed form's summarized information.
+/// Bugs: n/a
+/// Reflection: Still a temporary model. If this line is still present in submission then we likely didn't have time to finish some feature or other.
+
 // A data object for storing the information related to a single form.
-/// TODO: Implement the Form model
 class PreviousForm 
 {
   final String _formName;

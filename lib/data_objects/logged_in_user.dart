@@ -1,4 +1,12 @@
-// Data Object to represent the currently logged-in user and any information about them that may be needed during use of application.
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name: Joshua T. Hill
+/// Date: 5/15/2024
+/// Description: A data-object to represent the persistent information of the current user for use throughout the application.
+/// Bugs: n/a
+/// Reflection: n/a
+
+/// Data Object to represent the currently logged-in user and any information about them that may be needed during use of application.
 class LoggedInUser
 {
   final String _uuid;

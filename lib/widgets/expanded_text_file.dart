@@ -1,3 +1,11 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name:
+/// Date:
+/// Description:
+/// Bugs:
+/// Reflection:
+
 import 'package:flutter/material.dart';
 
 /// Written before [expanded] was discovered on TextField...

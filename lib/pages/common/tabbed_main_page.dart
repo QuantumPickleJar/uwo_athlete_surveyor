@@ -1,3 +1,11 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name: Joshua T. Hill
+/// Date: 5/15/2024
+/// Description: Page for the DefaultTabController implementation for the app.
+/// Bugs: n/a
+/// Reflection: Saw a couple minor changes through the dev process, but I have to admit that the DefaultTabController works really well with little additional effort.
+
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
@@ -8,6 +16,7 @@ import 'package:athlete_surveyor/resources/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// The widget controlling tab navigation of the app.
 class TabbedMainPage extends StatefulWidget
 {
   const TabbedMainPage({super.key, required this.currentUser});
@@ -17,6 +26,7 @@ class TabbedMainPage extends StatefulWidget
   State<TabbedMainPage> createState() => _TabbedMainPageState();
 }
 
+/// State of the tab controller.
 class _TabbedMainPageState extends State<TabbedMainPage>
 {
   int selectedIndex = 0;
@@ -28,8 +38,7 @@ class _TabbedMainPageState extends State<TabbedMainPage>
   ];
   List<Widget> tabViews = [];
 
-
-  // Handler for tapping tab items to change tabs.
+  /// Handler for tapping tab items to change tabs.
   void _handleTap(int index)
   {
     setState(() {
@@ -37,7 +46,7 @@ class _TabbedMainPageState extends State<TabbedMainPage>
     });
   }
 
-  // Setup of main tabbed page is different depending on whether or not Admin access is required, so iniState() is overridden to provide for this distinction.
+  /// Setup of main tabbed page is different depending on whether or not Admin access is required, so initState() is overridden to provide for this distinction.
   @override
   void initState()
   {

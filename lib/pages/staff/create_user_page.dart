@@ -1,13 +1,17 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, dangling_library_doc_comments
+
+/// Name: Joshua T. Hill
+/// Date: 5/15/2024
+/// Description: A page for creating new users in the app database.
+/// Bugs: n/a
+/// Reflection: Good chance to leverage Form validation.
 
 import 'package:athlete_surveyor/models/create_user_model.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/resources/constant_values.dart' as constants;
 import 'package:postgres/postgres.dart';
-
-//TODO: send email to new users giving them their temp password
-//TODO: check for temp passwords on login; make user change temp pass on first login
+import 'package:email_validator/email_validator.dart';
 
 /// A Form-based page for entering information to create a new application user.
 class CreateUserPage extends StatefulWidget
@@ -34,12 +38,12 @@ class _CreateUserState extends State<CreateUserPage>
     ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 action: SnackBarAction(
-                  label: 'OK',
+                  label: constants.ok,
                   onPressed: () {
-                    // Code to execute.
+                    // Code to execute; no need to add anything as tapping the button already closes the snackbar.
                   }),
                 content: Text(message),
-                padding: const EdgeInsets.symmetric(horizontal: constants.defaultEdgeInsetsPadding), //inner padding for snackbar
+                padding: const EdgeInsets.symmetric(horizontal: constants.defaultEdgeInsetsPadding), // Inner padding for snackbar
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))));
   }
@@ -52,17 +56,16 @@ class _CreateUserState extends State<CreateUserPage>
     lastNameController.clear();
   }
 
-  /// Form validation; check entered username isn't blank.
-  String? _validateUsername(String username) { return username.isNotEmpty ? null : constants.invalidUsernameString; }
-  
+  /// Form validation; check entered username is an email address.
+  String? _validateUsername(String username) { return EmailValidator.validate(username) ? null : constants.invalidEmailString; }
+
   /// Form validation; check entered first name isn't blank.
   String? _validateFirstName(String firstName) { return firstName.isNotEmpty ? null : constants.invalidFirstNameString; }
   
   /// Form validation; check entered lastName isn't blank.
   String? _validateLastName(String lastName) { return lastName.isNotEmpty ? null : constants.invalidLastNameString; }
 
-  /// Validate supplied new user credentials against database, only adding the user if it comes back that the user
-  /// isn't already present.
+  /// Validate supplied new user credentials against database, only adding the user if it comes back that the user isn't already present.
   void _validateNewUserCredentials() async
   {
     FocusManager.instance.primaryFocus?.unfocus(); //close virtual keyboard
@@ -73,21 +76,20 @@ class _CreateUserState extends State<CreateUserPage>
       {
         Result result = await widget.createUserModel.registerNewUser(usernameController.text.trim(), firstNameController.text.trim(), lastNameController.text.trim(), isChecked);
         String? newUserUuid = result[0][0] as String?;
-        print('New user id: $newUserUuid'); // the act of registering a new user will return the UUID assigned by the database; keeping functionality present in case useful later
+        //print('New user id: $newUserUuid'); // The act of registering a new user will return the UUID assigned by the database; keeping functionality present in case useful later
 
-        if(newUserUuid != null && newUserUuid.isNotEmpty) // successful user creation
+        if(newUserUuid != null && newUserUuid.isNotEmpty) // Successful user creation
         {
           _clearText();
           _showSnackbarMessage(constants.userSuccessfullyAdded);
         }
-        else // error occurred attempting to add user
+        else                                              // Error occurred attempting to add user
         {
           _showSnackbarMessage(constants.userAdditionError);
         }
       }
-      else //username already in DB
+      else                                                // Username already in DB
       {
-        print('Username exists already');
         _showSnackbarMessage(constants.usernameAlreadyExists);
       }
     }

@@ -1,3 +1,11 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name:
+/// Date:
+/// Description:
+/// Bugs:
+/// Reflection:
+
 import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/models/student_model.dart';
 

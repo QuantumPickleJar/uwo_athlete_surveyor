@@ -1,3 +1,11 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name:
+/// Date:
+/// Description:
+/// Bugs:
+/// Reflection:
+
 import 'package:athlete_surveyor/database.dart';
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';

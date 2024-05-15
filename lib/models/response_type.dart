@@ -1,3 +1,11 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name:
+/// Date:
+/// Description:
+/// Bugs:
+/// Reflection:
+
 /// Describes the response type for a question.  To allow enhanced flexibility, 
 /// custom parameters can be passed via [config] to:
 /// - pass validation rules, perhaps for a TextField

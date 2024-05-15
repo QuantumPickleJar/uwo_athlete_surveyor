@@ -1,3 +1,11 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name: Joshua T. Hill
+/// Date: 5/15/2024
+/// Description: The model for the LoginPage.
+/// Bugs: n/a
+/// Reflection: Not a whole lot happening here, just passes the responsibility for validating login from UI --> business logic --> database. Pretty standard.
+
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/database.dart';
 import 'package:flutter/material.dart';

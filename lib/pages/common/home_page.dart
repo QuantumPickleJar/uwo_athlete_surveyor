@@ -1,3 +1,11 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name: Joshua T. Hill
+/// Date: 5/15/2024
+/// Description: The "home page" of the application that welcomes the user once logged in. Layout varies based on user's admin status; used to be two separate pages before that change.
+/// Bugs: n/a
+/// Reflection: n/a
+
 import 'package:athlete_surveyor/models/create_user_model.dart';
 import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/pages/staff/create_user_page.dart';
@@ -10,6 +18,7 @@ import 'package:athlete_surveyor/services/forms/secure_form_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// The tab that the app opens on after a successful login.
 class HomePage extends StatelessWidget 
 {
   const HomePage({super.key, required this.displayName, required this.hasAdminPrivileges});

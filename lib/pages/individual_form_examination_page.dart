@@ -1,8 +1,16 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name: Joshua T. Hill
+/// Date: 5/15/2024
+/// Description: A page to display the questions and answers for a particular previously completed form.
+/// Bugs: n/a
+/// Reflection: n/a
+
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/models/forms/individual_form_examination_model.dart';
 import 'package:flutter/material.dart';
 
-//
+/// 
 class IndividualFormWidget extends StatefulWidget
 {
   final String appBarTitle;
@@ -14,7 +22,7 @@ class IndividualFormWidget extends StatefulWidget
   State<StatefulWidget> createState() => _IndividualFormWidgetState();
 }
 
-//
+///
 class _IndividualFormWidgetState extends State<IndividualFormWidget>
 {
   @override

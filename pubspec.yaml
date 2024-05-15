@@ -7,13 +7,16 @@ environment:
   sdk: '>=3.3.1 <4.0.0'
 
 dependencies:
+  sendgrid_mailer: ^0.1.3
   bcrypt: ^1.1.3
   flutter:
     sdk: flutter
-  gsheets: ^0.5.0
+  # gsheets: ^0.5.0  A build conflict occurred between gsheets and sendgrid_mailer, the recommended solution was to knock gsheets version down from ^0.5.0 to ^0.4.2. Left in for reference in case of new bugs.
+  gsheets: ^0.4.2
   postgres: ^3.2.0
   provider: ^6.1.2
   uuid: ^4.3.0
+  email_validator: '^2.1.16'
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,11 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name:
+/// Date:
+/// Description:
+/// Bugs:
+/// Reflection:
+
 import 'dart:io';
 import 'package:athlete_surveyor/models/response_type.dart';
 import 'package:uuid/uuid.dart';

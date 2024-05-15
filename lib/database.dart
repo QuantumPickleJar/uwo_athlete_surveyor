@@ -1,4 +1,11 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, dangling_library_doc_comments
+
+/// Name: Joshua T. Hill
+/// Date: 5/15/2024
+/// Description: The file representing the Database layer of our application.
+/// Bugs: n/a
+/// Reflection: left the const Strings here instead of moving to constants file as it didn't feel appropriate.
+
 import 'package:postgres/postgres.dart';
 
 /// Static database class to handle all SQL transactions.
@@ -19,6 +26,7 @@ class Database
   static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport, student_id) VALUES (@studentName, @grade, @sport, @id)";
   static const String _insertNewUser = "INSERT INTO tbl_users (username,password,first_name,last_name,is_admin) VALUES (@username,@password,@first_name,@last_name,@is_admin) RETURNING uuid_user";
   //static const String _deleteAthlete = " DElETE FROM tbl_studentlist WHERE student_name =  @name AND grade = @grade AND sport = @sport";
+  
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
   { 
@@ -87,7 +95,7 @@ class Database
                             {'student_name':studentName, 'grade':grade, 'sport':sport, 'student_id': id});
   }
 
-  /// Insert a new user to the DB; bool response shows whether or not it was successful.
+  /// Insert a new user to the DB; returns the new user's DB UUID for reference.
   static Future<Result> insertNewUser(String username, String password, String firstName, String lastName, bool isAdmin) async
   {
     return executeSQLCommand(_insertNewUser, 

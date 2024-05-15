@@ -1,4 +1,11 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, dangling_library_doc_comments
+
+/// Name: Joshua T. Hill
+/// Date: 5/15/2024
+/// Description: A page to display a list of previously complete forms by the logged-in user, displayed as "form-shaped" rectangles.
+/// Bugs: n/a
+/// Reflection: n/a
+
 import 'package:athlete_surveyor/models/forms/individual_form_examination_model.dart';
 import 'package:athlete_surveyor/pages/individual_form_examination_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';

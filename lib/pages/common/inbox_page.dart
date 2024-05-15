@@ -1,10 +1,18 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name: Joshua T. Hill
+/// Date: 5/15/2024
+/// Description: A simple inbox for messages related to the app's functionality.
+/// Bugs: n/a
+/// Reflection: Was intended to be a full email-type inbox at conception of the project, which is certainly not what it is now.
+
 import 'package:athlete_surveyor/pages/compose_message_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:flutter/material.dart';
 
-/// Widget representing an Email inbox.
+/// Widget representing a message inbox.
 class InboxPage extends StatefulWidget
 {
   final InboxModel inboxModel;

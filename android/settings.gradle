@@ -20,7 +20,7 @@ pluginManagement {
 plugins {
     id "dev.flutter.flutter-plugin-loader" version "1.0.0"
     id "com.android.application" version "7.3.0" apply false
-    id "org.jetbrains.kotlin.android" version "1.7.10" apply false
+    id "org.jetbrains.kotlin.android" version "1.9.20" apply false // Had to change version from "1.7.10" to "1.9.20" to fix ":app:checkDebugDuplicateClasses" fatal build error upon adding "flutter_email_sender" to pubspec.yaml dependencies.
 }
 
 include ":app"

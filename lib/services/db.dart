@@ -1,3 +1,11 @@
+// ignore_for_file: dangling_library_doc_comments
+
+/// Name:
+/// Date:
+/// Description:
+/// Bugs:
+/// Reflection:
+
 import 'package:postgres/postgres.dart';
 /// Abstracts the single connection to the database from the several
 /// Repository classes

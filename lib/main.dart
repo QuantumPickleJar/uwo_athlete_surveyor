@@ -54,6 +54,7 @@ void main() async {
   );
 }
 
+/// Main
 class MainApp extends StatefulWidget
 {
   final LoginModel loginModel;
@@ -63,9 +64,10 @@ class MainApp extends StatefulWidget
   _MainAppState createState() => _MainAppState();
 }
 
+/// Main State
 class _MainAppState extends State<MainApp>
 {
-  final _formKey = GlobalKey<FormState>(); // so we can reference the Form where we need it
+  final _formKey = GlobalKey<FormState>(); // So we can reference the Form where we need it.
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   String? username;
@@ -139,11 +141,11 @@ class _MainAppState extends State<MainApp>
                 onPressed: (){ _validateLogin(context); },
                 style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
                 child: const SizedBox(child: Center(child: Text(constants.loginButtonText, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
-              toggleVisibleButton( //only visible in debug mode
+              toggleVisibleButton( // Only visible in debug mode
                 visibilityToggle: foundation_dart.kDebugMode, 
                 onPressed: (){ _buttonPressTestStudentLogin(context); }, 
                 buttonText: constants.testStudentLoginButtonText),
-              toggleVisibleButton( //only visible in debug mode
+              toggleVisibleButton( // Only visible in debug mode
                 visibilityToggle: foundation_dart.kDebugMode, 
                 onPressed: (){ _buttonPressTestAdminLogin(context); }, 
                 buttonText: constants.testAdminLoginButtonText)]))));
