@@ -19,7 +19,7 @@ class SportSelectionModel extends ChangeNotifier {
   List<Sport> get sports => _sports;
   Sport? get selectedSport => _selectedSport;
 
-
+  /// load all sports so the user can pick from them as needed
   Future<void> loadSports() async {
     _sports = await _sportsRepository.getAllSports();
     notifyListeners();
