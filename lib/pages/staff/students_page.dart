@@ -66,6 +66,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                     });
                   },
                   style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                     backgroundColor: MaterialStateProperty.all<Color>(titanYellow),
                   ),
                   child: const Text("Add Athlete"),
@@ -106,6 +107,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                                   );
                                 },
                                 style: ButtonStyle(
+                                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                                   backgroundColor: MaterialStateProperty.all<Color>(
                                     titanYellow
                                   ),

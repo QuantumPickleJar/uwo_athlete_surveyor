@@ -1,8 +1,8 @@
-// ignore_for_file: avoid_print
-
+import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
-import 'package:flutter/material.dart';
+
+const Color titanYellow1 = Color(0xFFFFCC00);
 
 class AddStudent extends StatefulWidget {
   final StudentsModel studentsModel;
@@ -13,22 +13,20 @@ class AddStudent extends StatefulWidget {
   State<AddStudent> createState() => _AddStudentState();
 }
 
-class _AddStudentState extends State<AddStudent> 
-{
+class _AddStudentState extends State<AddStudent> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _gradeController = TextEditingController();
   final TextEditingController _sportController = TextEditingController();
   final TextEditingController _idController = TextEditingController();
-  void _submitForm() 
-  {
+
+  void _submitForm() {
     // Validate form fields and retrieve data
     String name = _nameController.text;
     String grade = _gradeController.text;
     String sport = _sportController.text;
     String id = _idController.text;
 
-    widget.studentsModel.addStudentToDatabase(name, grade, sport, id)
-        .then((_) {
+    widget.studentsModel.addStudentToDatabase(name, grade, sport, id).then((_) {
       // Clear form fields
       _nameController.clear();
       _gradeController.clear();
@@ -49,7 +47,8 @@ class _AddStudentState extends State<AddStudent>
       appBar: defaultAppBar(
         buildContext: context, 
         title: "Add New Athlete", 
-        hasBackButton: true),
+        hasBackButton: true
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -61,103 +60,53 @@ class _AddStudentState extends State<AddStudent>
                 style: TextStyle(fontSize: 30),
               ),
             ),
-            const SizedBox(height: 20), 
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Text(
-                            'Name: ',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: _nameController,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                              ),
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10), 
-                      Row(
-                        children: [
-                          const Text(
-                            'Grade: ',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: _gradeController,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                              ),
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10), 
-                      Row(
-                        children: [
-                          const Text(
-                            'Sport: ',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: _sportController,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                              ),
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                       Row(
-                        children: [
-                          const Text(
-                            'ID: ',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: _idController,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                              ),
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ],
-                      ),
-              ]),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20), 
+            const SizedBox(height: 20),
+            _buildTextFieldRow('Name:', _nameController),
+            const SizedBox(height: 10),
+            _buildTextFieldRow('Grade:', _gradeController),
+            const SizedBox(height: 10),
+            _buildTextFieldRow('Sport:', _sportController),
+            const SizedBox(height: 10),
+            _buildTextFieldRow('ID:', _idController),
+            const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                onPressed: () => _submitForm(),
+                onPressed: _submitForm,
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  backgroundColor: MaterialStateProperty.all<Color>(titanYellow1),
+                ),
                 child: const Text('Add Student'),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTextFieldRow(String label, TextEditingController controller) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 50,
+          child: Text(
+            label,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        Expanded(
+          child: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+            ),
+            style: const TextStyle(fontSize: 14),
+          ),
+        ),
+      ],
     );
   }
 }
