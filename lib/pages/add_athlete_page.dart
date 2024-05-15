@@ -65,12 +65,6 @@ class _AddStudentState extends State<AddStudent>
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.network(
-                  'https://via.placeholder.com/150', 
-                  width: 150,
-                  height: 150,
-                ),
-                const SizedBox(width: 16.0), 
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,17 +154,6 @@ class _AddStudentState extends State<AddStudent>
                 onPressed: () => _submitForm(),
                 child: const Text('Add Student'),
               ),
-            ),
-            const SizedBox(height: 5), 
-            Column(
-              children: [
-                const Text("Analytics of 'Student's name'"),
-                Image.network(
-                  'https://via.placeholder.com/400', 
-                  width: 390,
-                  height: 390,
-                ),
-              ],
             ),
           ],
         ),

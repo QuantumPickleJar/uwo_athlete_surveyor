@@ -1,9 +1,11 @@
+import 'package:athlete_surveyor/resources/colors.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../individual_student_page.dart'; // Import the individual student screen
 import '../add_athlete_page.dart'; // Import the add athlete screen
 import '/models/student_model.dart';
+import 'dart:ui';
 
 class StudentsWidget extends StatefulWidget {
   final StudentsModel studentModel;
@@ -64,7 +66,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                     });
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.yellow),
+                    backgroundColor: MaterialStateProperty.all<Color>(titanYellow),
                   ),
                   child: const Text("Add Athlete"),
                 ),
@@ -105,7 +107,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                                 },
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all<Color>(
-                                    Colors.yellow,
+                                    titanYellow
                                   ),
                                 ),
                                 child: const Text('More Info'),
@@ -145,9 +147,9 @@ class _StudentsWidgetState extends State<StudentsWidget> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.white,
         onTap: _onItemTapped,
-        backgroundColor: Colors.yellow,
+        backgroundColor: titanYellow,
       ),
     );
   }
