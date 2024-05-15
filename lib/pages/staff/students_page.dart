@@ -5,10 +5,8 @@ import '../individual_student_page.dart'; // Import the individual student scree
 import '../add_athlete_page.dart'; // Import the add athlete screen
 import '/models/student_model.dart';
 
-
 class StudentsWidget extends StatefulWidget {
   final StudentsModel studentModel;
-
 
   const StudentsWidget(this.studentModel, {super.key});
 
@@ -17,6 +15,7 @@ class StudentsWidget extends StatefulWidget {
 }
 
 class _StudentsWidgetState extends State<StudentsWidget> {
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -25,6 +24,17 @@ class _StudentsWidgetState extends State<StudentsWidget> {
     widget.studentModel.students.clear();
     // Fetch students from the database when the widget is initialized
     widget.studentModel.fetchStudentsFromDatabase();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (_selectedIndex == 0) {
+        widget.studentModel.sortBySport();
+      } else if (_selectedIndex == 1) {
+        widget.studentModel.sortByGrade();
+      }
+    });
   }
 
   @override
@@ -38,47 +48,6 @@ class _StudentsWidgetState extends State<StudentsWidget> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(width: 60),
-              const Text(
-                "Filter",
-                style: TextStyle(fontSize: 30),
-              ),
-              Expanded(
-                child: SizedBox(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            widget.studentModel.sortBySport(); // Call sorting method
-                          });
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.yellow),
-                        ),
-                        child: const Text("Sport"),
-                      ),
-                      const SizedBox(width: 8), // Adds space between buttons
-                      ElevatedButton(
-                        onPressed: () {
-                          widget.studentModel.sortByGrade();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.yellow),
-                        ),
-                        child: const Text("Grade"),
-                      ),
-                      const SizedBox(width: 50), // Add space to the right of the "Grade" button
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -122,7 +91,6 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                             children: [
                               Text(studentModel.students[index].grade),
                               Text(studentModel.students[index].sport),
-                              
                             ],
                           ),
                           trailing: Row(
@@ -145,7 +113,12 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                               IconButton(
                                 icon: const Icon(Icons.delete),
                                 onPressed: () {
-                                  widget.studentModel.deleteStudent(studentModel.students[index].name ,studentModel.students[index].grade, studentModel.students[index].sport, studentModel.students[index].id);
+                                  widget.studentModel.deleteStudent(
+                                    studentModel.students[index].name,
+                                    studentModel.students[index].grade,
+                                    studentModel.students[index].sport,
+                                    studentModel.students[index].id,
+                                  );
                                 },
                               ),
                             ],
@@ -160,26 +133,39 @@ class _StudentsWidgetState extends State<StudentsWidget> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sports),
+            label: 'Sort by Sport',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.grade),
+            label: 'Sort by Grade',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+        backgroundColor: Colors.yellow,
+      ),
     );
   }
 
   void _moreInfo(BuildContext context, Student studentData) {
-  final studentsModel = Provider.of<StudentsModel>(context, listen: false); // Assuming StudentsModel is provided higher up the widget tree
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => IndividualStudentScreen(studentData: studentData, studentsModel: studentsModel)),
-  );
-}
+    final studentsModel = Provider.of<StudentsModel>(context, listen: false); // Assuming StudentsModel is provided higher up the widget tree
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => IndividualStudentScreen(studentData: studentData, studentsModel: studentsModel)),
+    );
+  }
 
- void _addAthlete(BuildContext context) {
-  
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) {
-      return AddStudent(widget.studentModel);
-    }),
-  );
-
-  
-}
+  void _addAthlete(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) {
+        return AddStudent(widget.studentModel);
+      }),
+    );
+  }
 }

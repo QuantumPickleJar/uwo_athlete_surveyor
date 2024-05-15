@@ -102,6 +102,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+
                           const SizedBox(height: 20),
                           _isEditing
                               ? TextFormField(
