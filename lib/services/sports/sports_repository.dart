@@ -16,6 +16,7 @@ class SportsRepository {
   Future<Connection> get _connection async => await PostgresDB.getConnection();
   /// We could put a list here since sports probably wont get added too often after initial setup
   final SportSelectionModel sportsModel;
+  
 
   /// workaround constructor to bypass the need for a transaction query
   /// (allows us to shift the second)
