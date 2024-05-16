@@ -1,10 +1,13 @@
 // ignore_for_file: dangling_library_doc_comments
 
-/// Name:
-/// Date:
-/// Description:
-/// Bugs:
-/// Reflection:
+/// Name: Amanda Dorsey
+/// Date:5/17/24
+/// Description: the student model to compare students by grade or sport. It also hold the modal 
+/// to add students to the database, delete them, fetch and edit the students as well. 
+/// Bugs: none
+/// Reflection: I first started off with just sport, name, and grade, but realized that id
+/// needed to be added for deletion purposes so no two students with the same credientials was deleted. 
+/// Getting ID set up after I added the columncs was difficult
 
 import 'package:athlete_surveyor/database.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +16,12 @@ import 'package:postgres/postgres.dart';
 class StudentsModel extends ChangeNotifier {
   final List<Student> students = [];
 
-  void sortByGrade() {
+  void sortByGrade() {//sorts by grade and displays the sort
     students.sort((a, b) => a.grade.compareTo(b.grade));
     notifyListeners();
   }
 
-  void sortBySport() {
+  void sortBySport() {//sorts by sport and displays the sort
     students.sort((a, b) => a.sport.compareTo(b.sport));
     notifyListeners();
   }
@@ -39,7 +42,7 @@ class StudentsModel extends ChangeNotifier {
       rethrow;
     }
   }
-
+  //deletes the student by looking at their id and then deleting the id correspoding name, grade and sport
   Future<void> deleteStudent(String name, String grade, String sport, String id) async {
     try {
       Connection conn = await Database.getOpenConnection();
@@ -55,6 +58,7 @@ class StudentsModel extends ChangeNotifier {
     }
   }
 
+  //edits the student of choice based on name
   Future<void> editStudent(String name, String grade, String sport, String id) async {
     try {
       Connection conn = await Database.getOpenConnection();
@@ -69,7 +73,7 @@ class StudentsModel extends ChangeNotifier {
       rethrow;
     }
   }
-
+  //this then updates the database based on ID of the student and then notifies the listens(displays it)
   Future<void> updateStudentInDatabase(String name, String? newName, String grade, String sport, String id) async {
     try {
       Connection conn = await Database.getOpenConnection();
@@ -87,7 +91,7 @@ class StudentsModel extends ChangeNotifier {
     }
   }
 
-  // Method to fetch students from the database
+  // Method to fetch students from the database and puts it into an array
   Future<void> fetchStudentsFromDatabase() async {
     try {
       final Result result = await Database.fetchStudents();
@@ -114,20 +118,21 @@ class StudentsModel extends ChangeNotifier {
     notifyListeners();
   }
 }
-
+//what makes up each student(athlete)
 class Student {
   String name;
   String grade;
   String sport;
   String id;
 
-  Student({
+  Student({//whats required to put in each student 
     required this.name,
     required this.grade,
     required this.sport,
     required this.id,
   });
 
+  //the new information is put into the variable of name, grade,sport and id
   void editStudent(String newName, String newGrade, String newSport, String newId) {
     name = newName;
     grade = newGrade;

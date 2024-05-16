@@ -1,10 +1,14 @@
 // ignore_for_file: dangling_library_doc_comments
 
-/// Name:
-/// Date:
-/// Description:
-/// Bugs:
-/// Reflection:
+/// Name: Amanda Dorsey
+/// Date:5/17/24
+/// Description: This is the screen that shows all the students in the database. It
+/// allows the admint o see grade and sport and also to press the 'more info' button to
+/// go to that students specific page/profile. The admin can also delete the student 
+/// from this page and also add athlete by pressing the "Add Athlete" button
+/// Bugs: none
+/// Reflection: Decorating was the most fun for me since I had a lot of freedom and this
+/// page was easier to design than others.
 
 import 'package:athlete_surveyor/resources/colors.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
@@ -36,6 +40,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
     widget.studentModel.fetchStudentsFromDatabase();
   }
 
+ //depending on what the selectedIdnex is set at it will display the students in sort by grade or sport. Default is by sport
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -99,7 +104,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                           title: Text(studentModel.students[index].name),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                            children: [ //displays the grade and sport associated with the student
                               Text(studentModel.students[index].grade),
                               Text(studentModel.students[index].sport),
                             ],
@@ -124,7 +129,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
                               ),
                               IconButton(
                                 icon: const Icon(Icons.delete),
-                                onPressed: () {
+                                onPressed: () {//passes in the students information so the computer knows what student to delete
                                   widget.studentModel.deleteStudent(
                                     studentModel.students[index].name,
                                     studentModel.students[index].grade,
@@ -145,6 +150,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
           ),
         ],
       ),
+      //start of the bottom naviagation that holds the filter by grade and sport
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -157,13 +163,13 @@ class _StudentsWidgetState extends State<StudentsWidget> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-        onTap: _onItemTapped,
+        selectedItemColor: Colors.white, //when the filter is selected it will turn white
+        onTap: _onItemTapped, 
         backgroundColor: titanYellow,
       ),
     );
   }
-
+  //pushes the user to the screen that will display the individual students information
   void _moreInfo(BuildContext context, Student studentData) {
     final studentsModel = Provider.of<StudentsModel>(context, listen: false); // Assuming StudentsModel is provided higher up the widget tree
     Navigator.push(
@@ -172,6 +178,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
     );
   }
 
+ //pushed to the add athlete page
   void _addAthlete(BuildContext context) {
     Navigator.push(
       context,

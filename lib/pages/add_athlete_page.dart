@@ -33,7 +33,7 @@ class _AddStudentState extends State<AddStudent> {
     String grade = _gradeController.text;
     String sport = _sportController.text;
     String id = _idController.text;
-
+    //sends the information added in the text feild to the addStudentToDatabase
     widget.studentsModel.addStudentToDatabase(name, grade, sport, id).then((_) {
       // Clear form fields
       _nameController.clear();
@@ -68,7 +68,7 @@ class _AddStudentState extends State<AddStudent> {
                 style: TextStyle(fontSize: 30),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 20), //the text feilds with the name of each text feild to the left
             _buildTextFieldRow('Name:', _nameController),
             const SizedBox(height: 10),
             _buildTextFieldRow('Grade:', _gradeController),
@@ -78,7 +78,7 @@ class _AddStudentState extends State<AddStudent> {
             _buildTextFieldRow('ID:', _idController),
             const SizedBox(height: 20),
             Center(
-              child: ElevatedButton(
+              child: ElevatedButton(//add student button that will call call sumbitform which then adds the student to the database
                 onPressed: _submitForm,
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
@@ -93,6 +93,7 @@ class _AddStudentState extends State<AddStudent> {
     );
   }
 
+ //the descoration and design of the text feild boxes.
   Widget _buildTextFieldRow(String label, TextEditingController controller) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

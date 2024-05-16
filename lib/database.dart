@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print, dangling_library_doc_comments
 
-/// Name: Joshua T. Hill
+/// Name: Joshua T. Hill, Amanda Dorsey
 /// Date: 5/15/2024
 /// Description: The file representing the Database layer of our application.
 /// Bugs: n/a

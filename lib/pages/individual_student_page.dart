@@ -1,10 +1,14 @@
 // ignore_for_file: dangling_library_doc_comments
 
-/// Name:
-/// Date:
-/// Description:
-/// Bugs:
-/// Reflection:
+/// Name:Amanda Dorsey
+/// Date: 5/17/24
+/// Description: this is the page that displayes the individuals students information
+/// such as name, grade, sport and ID. It also allows the admin to make changes to each one(
+/// grade, sport and ID)
+/// Bugs:none
+/// Reflection:getting the editing to work was tricky, but an interesting feature to put on 
+/// the app. Decorating the screen was also hard, as I never liked what I designed and wish 
+/// I had more time to do so.
 
 import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/models/student_model.dart';
@@ -21,6 +25,7 @@ class IndividualStudentScreen extends StatefulWidget {
 
 class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
   bool _isEditing = false;
+  //texts feild being crearted for use
   late TextEditingController _nameController;
   late TextEditingController _gradeController;
   late TextEditingController _sportController;
@@ -28,7 +33,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState();//the text feilds  being assigned the variable
     _nameController = TextEditingController(text: widget.studentData.name);
     _gradeController = TextEditingController(text: widget.studentData.grade);
     _sportController = TextEditingController(text: widget.studentData.sport);
@@ -36,7 +41,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
   }
 
   @override
-  void dispose() {
+  void dispose() {//texts feilds beings disposed on 
     _nameController.dispose();
     _gradeController.dispose();
     _sportController.dispose();
@@ -53,7 +58,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
           IconButton(
             icon: Icon(_isEditing ? Icons.save : Icons.edit),
             onPressed: () {
-              setState(() {
+              setState(() {//the text that is edited that will go and call update student-which will in turn update the database
                 _isEditing = !_isEditing;
                 if (!_isEditing) {
                   widget.studentsModel.updateStudentInDatabase(
@@ -91,17 +96,17 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Center(
-                      child: _isEditing
+                    Center(//start of what can be edited on the individual students page.
+                      child: _isEditing //if the _isEditing is true it will allow the admin to edit the text
                           ? TextFormField(
                               controller: _nameController,
                               decoration: InputDecoration(labelText: 'Name'),
                             )
                           : Text(
-                              widget.studentData.name,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
+                              widget.studentData.name, //displayes the name associated with that student
+                              textAlign: TextAlign.center, 
+                              overflow: TextOverflow.ellipsis, //if there is overflow it will truncate it with ()
+                              maxLines: 2,  //limits the answer to 2 lines
                               style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
                             ),
                     ),
@@ -112,21 +117,21 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                         children: [
 
                           const SizedBox(height: 20),
-                          _isEditing
+                          _isEditing//if the _isEditing is true it will allow the admin to edit the text
                               ? TextFormField(
                                   controller: _gradeController,
                                   decoration: InputDecoration(labelText: 'Grade'),
                                 )
                               : Text('Grade: ${widget.studentData.grade}'),
                           const SizedBox(height: 20),
-                          _isEditing
+                          _isEditing//if the _isEditing is true it will allow the admin to edit the text
                               ? TextFormField(
                                   controller: _sportController,
                                   decoration: InputDecoration(labelText: 'Sport'),
                                 )
                               : Text('Sport: ${widget.studentData.sport}'),
                           const SizedBox(height: 20),
-                          _isEditing
+                          _isEditing//if the _isEditing is true it will allow the admin to edit the text
                               ? TextFormField(
                                   controller: _idController,
                                   decoration: InputDecoration(labelText: 'ID'),
@@ -143,8 +148,8 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Forms Filled Out'),
-                  SizedBox(height: 20),
+                  Text('Forms Filled Out'), //shows what forms is associated witht he student
+                  SizedBox(height: 20), //seperates the form titles from the text "Forms filled out" with 20px of room
                   Row(
                     children: [
                       Expanded(
@@ -174,19 +179,12 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                 ],
               ),
               const SizedBox(height: 5),
-              SingleChildScrollView(
+              const SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text('Analytics'),
-                    Image.network(
-                      'https://via.placeholder.com/300',
-                      width: 300,
-                      height: 300,
-                    ),
-                    const SizedBox(width: 20),
-                    const ElevatedButton(
+                    ElevatedButton(
                       onPressed: _caution,
                       child: Text('Caution'),
                     ),
