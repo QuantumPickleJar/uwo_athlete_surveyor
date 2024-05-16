@@ -20,7 +20,7 @@ class CreateFormButton extends StatelessWidget {
         try { 
           /// Get the sports to choose from via [SportSelectionModel]
           SportSelectionModel model = Provider.of<SportSelectionModel>(context, listen: false);
-          await model.loadSports(); /// wait for them to finish loading before showing
+          await model.loadSportsFromDB(); /// wait for them to finish loading before showing
           debugPrint('Sports loaded: ${model.sports}');
 
           /// To choose the sport from the model, we go through a [SportPickerDialog]
