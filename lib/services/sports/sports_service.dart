@@ -5,11 +5,9 @@ import 'package:athlete_surveyor/services/sports/sports_repository.dart';
 /// used to fetch the sports "locally"
 import 'package:flutter/services.dart' as rootBundle;
 
-class SportService {
+class SportsService {
   final SportsRepository _sportRepository;
-
-
-  SportService(this._sportRepository);
+  SportsService(this._sportRepository);
 
   Future<List<Sport>> getAllSports() async {
     return await _sportRepository.getAllSports();
