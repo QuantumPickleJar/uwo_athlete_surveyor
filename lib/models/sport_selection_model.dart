@@ -21,8 +21,13 @@ class SportSelectionModel extends ChangeNotifier {
   Sport? get selectedSport => _selectedSport;
   bool get isLoaded => _isLoaded;
 
+  /// used to mark whether or not our lazy load for sports has completed
+  set isLoaded(bool loadStatus) {
+    _isLoaded = loadStatus;
+  }
+
   /// load all sports so the user can pick from them as needed
-  Future<void> loadSports() async {
+  Future<void> loadSportsFromDB() async {
       if (!_isLoaded) {
       try {
         _sports = await sportsRepository.getAllSports();
@@ -34,6 +39,13 @@ class SportSelectionModel extends ChangeNotifier {
     }
   }
 
+  /// lets us store the updated list of [Sport]s into the model for selection
+  set sports(List<Sport> sports) {
+    _sports = sports;
+    notifyListeners();
+  }
+
+  /// used to modify the currently selected sport to be used on a
   void selectSport(Sport sport) {
     _selectedSport = sport;
     notifyListeners();
