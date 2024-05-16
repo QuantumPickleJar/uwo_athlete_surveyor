@@ -1,5 +1,6 @@
 import 'package:athlete_surveyor/models/sport.dart';
 import 'package:athlete_surveyor/services/sports/sports_repository.dart';
+import 'package:athlete_surveyor/services/sports/sports_service.dart';
 import 'package:flutter/material.dart';
 /// model that sticks to the [SportPickerCard]. 
 /// 
@@ -9,13 +10,13 @@ import 'package:flutter/material.dart';
 /// Loosely follows the Facade pattern in that we're abstracting the DB
 /// interaction to the [SportSelectionModel]
 class SportSelectionModel extends ChangeNotifier {
-  
-  final SportsRepository sportsRepository;
+  final SportsService sportsService;
   List<Sport> _sports = [];
   Sport? _selectedSport; 
   bool _isLoaded = false;   // whether or not we've asked for sports yet
 
-  SportSelectionModel({required this.sportsRepository});
+  SportSelectionModel({required this.sportsService});
+
   /// setup our getters
   List<Sport> get sports => _sports;
   Sport? get selectedSport => _selectedSport;
@@ -26,11 +27,13 @@ class SportSelectionModel extends ChangeNotifier {
     _isLoaded = loadStatus;
   }
 
+  /// (This might need to be removed since the model won't invoke the DB directly)
   /// load all sports so the user can pick from them as needed
-  Future<void> loadSportsFromDB() async {
+  Future<void> loadSports() async {
       if (!_isLoaded) {
       try {
-        _sports = await sportsRepository.getAllSports();
+        // _sports = await sportsRepository.getAllSports();
+        _sports = await sportsService.loadSportsFromFile();
         _isLoaded = true;
         notifyListeners();
       } catch (e) {
