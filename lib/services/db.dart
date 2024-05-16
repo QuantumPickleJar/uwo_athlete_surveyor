@@ -1,10 +1,12 @@
 // ignore_for_file: dangling_library_doc_comments
 
-/// Name:
-/// Date:
-/// Description:
-/// Bugs:
-/// Reflection:
+/// Name: Vincent Morrill
+/// Date: 3/20/24
+/// Description: Abstractor for database connection handling
+/// Bugs: SportsRepository silently fails 
+/// Reflection: Making this might have been a bad idea, although it was hard to tell
+/// for certain.  We had some serious issues performing reads due to being unable to 
+/// perform any transactions that contained more than one query
 
 import 'package:postgres/postgres.dart';
 /// Abstracts the single connection to the database from the several
