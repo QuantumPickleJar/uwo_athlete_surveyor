@@ -10,19 +10,28 @@ import 'package:flutter/material.dart';
 /// interaction to the [SportSelectionModel]
 class SportSelectionModel extends ChangeNotifier {
   
-  final SportsRepository _sportsRepository;
+  final SportsRepository sportsRepository;
   List<Sport> _sports = [];
   Sport? _selectedSport; 
+  bool _isLoaded = false;   // whether or not we've asked for sports yet
 
-  SportSelectionModel(this._sportsRepository);
+  SportSelectionModel({required this.sportsRepository});
   /// setup our getters
   List<Sport> get sports => _sports;
   Sport? get selectedSport => _selectedSport;
+  bool get isLoaded => _isLoaded;
 
   /// load all sports so the user can pick from them as needed
   Future<void> loadSports() async {
-    _sports = await _sportsRepository.getAllSports();
-    notifyListeners();
+      if (!_isLoaded) {
+      try {
+        _sports = await sportsRepository.getAllSports();
+        _isLoaded = true;
+        notifyListeners();
+      } catch (e) {
+        debugPrint('Error loading sports: $e');
+      }
+    }
   }
 
   void selectSport(Sport sport) {

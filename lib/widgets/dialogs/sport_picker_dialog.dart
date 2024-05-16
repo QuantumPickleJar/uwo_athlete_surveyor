@@ -13,21 +13,28 @@ class SportPickerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// await sportSelectionModel.loadSports(); // Load sports from the database
+    SportSelectionModel sportSelectionModel = Provider.of<SportSelectionModel>(context);
+                                  
     return AlertDialog(
       title: const Text('Select Sport'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [SportPickerCard()],
+        // children: [SportPickerCard()],
+        children: sportSelectionModel.sports.map((sport) {
+          return ListTile(
+            title: Text(sport.activity), 
+            onTap: () { Navigator.of(context).pop(sport); }
+          );
+        }).toList(),
       ),
-      actions: [
-        TextButton(onPressed: () {
-          /// once pressed, ask the model for the chosen element of the list
-          Sport? selectedSport = 
-            Provider.of<SportSelectionModel>(context, listen: false).selectedSport;
-                                       
-          Navigator.of(context).pop(selectedSport);
-        },
-        child: const Text('OK'))
-      ],);
+      /// commented to test above children
+      // actions: [
+      //   TextButton(onPressed: () {
+      //     /// once pressed, ask the model for the chosen element of the list
+      //     Navigator.of(context).pop(selectedSport);
+      //   },
+      //   child: const Text('OK'))
+      // ],
+      );
   }
 }
