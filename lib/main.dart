@@ -7,16 +7,23 @@
 /// 
 /// Authors: Josh, Vince, Amanda.
 /// Version:          0.0.1
+/// Remarks: ProxyProvider was extremely powerful to be working with starting out
+
+import 'dart:convert';
 
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/login_model.dart';
 import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
+import 'package:athlete_surveyor/models/sport.dart';
+import 'package:athlete_surveyor/models/sport_selection_model.dart';
 import 'package:athlete_surveyor/pages/common/tabbed_main_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:athlete_surveyor/services/db.dart';
 import 'package:athlete_surveyor/services/forms/form_repository.dart';
 import 'package:athlete_surveyor/services/questions/question_repository.dart';
+import 'package:athlete_surveyor/services/sports/sports_repository.dart';
+import 'package:athlete_surveyor/services/sports/sports_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/student_model.dart';
@@ -26,36 +33,50 @@ import 'services/forms/form_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-/// Driver code.
-  // var conn = await PostgresDB.getConnString();
+  final sportsRepository = SportsRepository();
+  final sportsService = SportsService(sportsRepository);
+  final sports = await sportsService.loadSportsFromFile();
+  
+
+  /// Driver code.
   runApp(
+    /// Dependency injection time!
     MultiProvider(
       providers: [
-        Provider<FormRepository>(
-          create: (_) => FormRepository(),
+        /// Create SportSelectionModel first to load file contents from assets
+        ChangeNotifierProvider(
+          create: (context) => SportSelectionModel(sportsService: sportsService)..sports = sports,
         ),
-        Provider<QuestionRepository>(
-          create: (_) => QuestionRepository(),
+
+        /// [ Prelaunch - 1 of 3 ] low-level repositories
+        Provider<QuestionRepository>(create: (_) => QuestionRepository()),
+        
+        /// Create SportsRepository first
+        // Provider<SportsRepository>(create: (context) => SportsRepository(),
+        // ),
+        
+        /// [ Prelaunch - 2 of 3 ] 1-N service relationships
+        ProxyProvider<SportSelectionModel, FormRepository>(
+          update: (_, sportsModel, __) => FormRepository(SportsRepository()),
         ),
-        /// [FormService] relies on Question + Form repos, so [ProxyProvider2] is suitable
-        ProxyProvider2<FormRepository, QuestionRepository, FormService>(
-          update: (_, formRepo, questionRepo, previous) => FormService(formRepo, questionRepo),
+        
+        /// [ Prelaunch - 3 of 3 ] complex services (those with multiple/timely dependencies)
+        /// [FormService] relies on both the [SportsRepository], [QuestionRepository], & [FormRepository],
+        ProxyProvider3<SportsRepository, FormRepository, QuestionRepository, FormService>(
+          update: (_, sportsRepo, formRepo, questionRepo, __) => FormService(formRepo, questionRepo),
         ),
+        
         ChangeNotifierProvider(create: (context) => LoginModel()),
         ChangeNotifierProvider(create: (context) => InboxModel()),
         ChangeNotifierProvider(create: (context) => StudentsModel()),
-
-        /// Combines provision of [FormService] and [AuthoredFormsModel] to provide
-        /// an updated [AuthoredFormsModel] based on changes in the [FormService].
-        ///
-        /// The [ChangeNotifierProxyProvider] is used to create and update the [AuthoredFormsModel]
+        /// [ChangeNotifierProxyProvider] used to create and update the [AuthoredFormsModel]
         /// based on the changes in the [FormService]. It listens to changes in the [FormService]
         /// and updates the [AuthoredFormsModel] accordingly.
         ChangeNotifierProxyProvider<FormService, AuthoredFormsModel>(
           create: (_) => AuthoredFormsModel(Provider.of<FormService>(_, listen: false)),
-          update: (_, formService, previous) => previous!..updateFormService(formService)
-        )
-      ],
+          update: (_, formService, previous) => previous!..updateFormService(formService),
+        ),
+      ], 
       child: MaterialApp(home: MainApp(LoginModel()))
     )
   );
