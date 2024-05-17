@@ -1,4 +1,4 @@
-// ignore_for_file: dangling_library_doc_comments
+// ignore_for_file: dangling_library_doc_comments, avoid_print
 
 /// Name:
 /// Date:
@@ -10,8 +10,6 @@ import 'dart:io';
 import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
-import 'package:uuid/uuid.dart';
-
 
 /// A concrete implementation of [GenericForm], tailored for what students will see.
 /// This includes the loading of a form to *take* a survey, as well as the ability to 

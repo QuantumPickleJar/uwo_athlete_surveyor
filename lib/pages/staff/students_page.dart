@@ -17,7 +17,6 @@ import 'package:provider/provider.dart';
 import '../individual_student_page.dart'; // Import the individual student screen
 import '../add_athlete_page.dart'; // Import the add athlete screen
 import '/models/student_model.dart';
-import 'dart:ui';
 
 class StudentsWidget extends StatefulWidget {
   final StudentsModel studentModel;

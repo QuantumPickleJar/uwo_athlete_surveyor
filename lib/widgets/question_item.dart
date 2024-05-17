@@ -22,11 +22,11 @@ class QuestionItem extends StatelessWidget {
   final Function(Question) onUpdate;        
   final Function(Question) onDelete;
   const QuestionItem({
-    Key? key, 
+    super.key, 
     required this.question, 
     required this.onDelete, 
     required this.onUpdate
-    }) : super(key: key);
+    });
 
   @override
   Widget build(BuildContext context) {

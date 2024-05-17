@@ -6,10 +6,7 @@
 /// Bugs:
 /// Reflection:
 
-import 'dart:io';
 import 'package:athlete_surveyor/models/response_type.dart';
-import 'package:uuid/uuid.dart';
-
 import 'response.dart';
 
 /// Represents an individual question found on a survey-like form that's 

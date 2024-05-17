@@ -11,7 +11,6 @@ import "dart:io";
 import "package:athlete_surveyor/models/interfaces/i_generic_form.dart";
 import "package:athlete_surveyor/models/question.dart";
 import "package:flutter/material.dart";
-import "package:uuid/uuid.dart";
 
 /// Concrete (but soft) implementation of IGenericForm.  
 /// Abstract base class that we use for keeping in line with DRY + Liskov's Substitution
@@ -44,7 +43,7 @@ class GenericForm extends ChangeNotifier implements IGenericForm {
   }
   
   @override
-  set attachments(List<File>? _attachments) {
+  set attachments(List<File>? attachments) {
     /// TODO: implement attachments
   }
   

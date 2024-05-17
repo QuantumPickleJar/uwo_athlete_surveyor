@@ -1,4 +1,4 @@
-// ignore_for_file: dangling_library_doc_comments
+// ignore_for_file: dangling_library_doc_comments, avoid_print, library_private_types_in_public_api
 
 /// Name:
 /// Date:
@@ -13,7 +13,6 @@ import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:athlete_surveyor/widgets/question_item.dart';
 import  'package:athlete_surveyor/models/response_type.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -24,7 +23,7 @@ import 'package:uuid/uuid.dart';
 class FormBuilderPage extends StatefulWidget {
   final String? formId;  // id linking page to the form
  
-  const FormBuilderPage({Key? key, required this.formId}) : super(key: key);
+  const FormBuilderPage({super.key, required this.formId});
 
   @override
   _FormBuilderPageState createState() => _FormBuilderPageState();
@@ -126,7 +125,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       children: [
         TextField(
           controller: _questionTextController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Question Content',
           ),
         ),
@@ -229,7 +228,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       builder: (context, snapshot) {
         // _currentForm = _formService.;
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return SizedBox(height: 35, width: 35,child: CircularProgressIndicator());
+          return const SizedBox(height: 35, width: 35,child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error ?? "No data available for the form."}');
           // return Center(child: Text('Error: ${snapshot.error}'));
@@ -246,7 +245,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
               child: const Icon(Icons.add_circle)),
           );
         } else {
-          return Text('No data available for the form.');
+          return const Text('No data available for the form.');
         }
       } 
     );

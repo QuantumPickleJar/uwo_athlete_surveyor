@@ -1,4 +1,4 @@
-// ignore_for_file: dangling_library_doc_comments
+// ignore_for_file: dangling_library_doc_comments, library_private_types_in_public_api
 
 /// Name:Amanda Dorsey
 /// Date: 5/17/24
@@ -17,7 +17,8 @@ class IndividualStudentScreen extends StatefulWidget {
   final Student studentData;
   final StudentsModel studentsModel;
 
-  IndividualStudentScreen({Key? key, required this.studentData, required this.studentsModel}) : super(key: key);
+  // ignore: use_super_parameters
+  const IndividualStudentScreen({Key? key, required this.studentData, required this.studentsModel}) : super(key: key);
 
   @override
   _IndividualStudentScreenState createState() => _IndividualStudentScreenState();
@@ -100,7 +101,7 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                       child: _isEditing //if the _isEditing is true it will allow the admin to edit the text
                           ? TextFormField(
                               controller: _nameController,
-                              decoration: InputDecoration(labelText: 'Name'),
+                              decoration: const InputDecoration(labelText: 'Name'),
                             )
                           : Text(
                               widget.studentData.name, //displayes the name associated with that student
@@ -120,21 +121,21 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                           _isEditing//if the _isEditing is true it will allow the admin to edit the text
                               ? TextFormField(
                                   controller: _gradeController,
-                                  decoration: InputDecoration(labelText: 'Grade'),
+                                  decoration: const InputDecoration(labelText: 'Grade'),
                                 )
                               : Text('Grade: ${widget.studentData.grade}'),
                           const SizedBox(height: 20),
                           _isEditing//if the _isEditing is true it will allow the admin to edit the text
                               ? TextFormField(
                                   controller: _sportController,
-                                  decoration: InputDecoration(labelText: 'Sport'),
+                                  decoration: const InputDecoration(labelText: 'Sport'),
                                 )
                               : Text('Sport: ${widget.studentData.sport}'),
                           const SizedBox(height: 20),
                           _isEditing//if the _isEditing is true it will allow the admin to edit the text
                               ? TextFormField(
                                   controller: _idController,
-                                  decoration: InputDecoration(labelText: 'ID'),
+                                  decoration: const InputDecoration(labelText: 'ID'),
                                 )
                               : Text('ID: ${widget.studentData.id}'),
                           const SizedBox(height: 20),
