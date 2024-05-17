@@ -5,7 +5,6 @@ import 'package:athlete_surveyor/pages/staff/form_builder_page.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
 
 /// Acts as an in-between for Student and Staff alike, so that 
 /// whenever either of them needs to interact with a form, the
@@ -35,8 +34,9 @@ class SecureFormProvider extends StatelessWidget {
             value: snapshot.data!,
             child: Consumer<GenericForm>(builder: (context, form, child) {
             /// TODO: implement student survey page
-                 return form is StaffForm ? FormBuilderPage(formId: formId) : 
-                 const Text('Student form not implemented');
+                 return form is StaffForm ? 
+                 FormBuilderPage(formId: formId) : 
+                 FormTakerPage();
           })
         );
         /// handle errors in a visuale manner before rendering loading progress
@@ -54,36 +54,26 @@ class SecureFormProvider extends StatelessWidget {
     /// reach up the widget tree to get [FormService]
     FormService formService = Provider.of<FormService>(context, listen: false);
     if (hasAdminPrivileges) {
-      // var form = await formService.fetchOrCreateForm(formId: formId);
-      try {  
-        GenericForm? form = await formService.getFormById(formId).whenComplete(() {
-          debugPrint("[SFP]: Fetching formId from service...");
-          
-        });
+        GenericForm? form = await formService.getFormById(formId);
         /// ensure the form is valid before trying to load it as a [StaffForm]
+        
         if (form != null && form.formId.isNotEmpty) { 
           debugPrint("[SFP] Form loaded successfully: ${form.formId}");
           /// this seems weird
           return StaffForm.fromGenericForm(form);
+        } else {
+          debugPrint("[SFP] Failed to load form: form is null or formId is empty.");
         }
+      } else {
+      /// load the form by its id, and load it into the generic form
+      GenericForm? form = await formService.getFormById(formId);
+        if (form != null && form.formId.isNotEmpty) { 
+        return StudentForm.fromGenericForm(form);
+      } else {
         debugPrint("[SFP] Failed to load form: form is null or formId is empty.");
         throw Exception('The form failed to load or was not found (Id: $formId)');
-        // return Future<GenericForm>.error('The form failed to load (Id: $formId)');    
-      } catch (e) { 
-        debugPrint("[SFP] Exception caught in _loadFormByUserRole: $e");
-        rethrow; // This will allow you to see where exactly the null is occurring.
       }
-    } else { 
-      /// TODO: implement StudentForm.fromGenericForm
-      debugPrint('(SFP) Access denied!');
-      throw UnimplementedError('StudentForm not yet implemented (SFP)');
     }
-    /*
-    else {
-      // Fetch details required to instantiate StudentForm
-      // return StudentForm(...); // Provide necessary parameters
-    }
-    return isAdmin;
-    */
+    return Future<GenericForm>.error('[SFP]The form failed to load (Id: $formId)');    
   }
 }
