@@ -1,5 +1,5 @@
 class Sport {
-  final int sportId;
+  final String sportId;
   final String activity;
 
   /// basic class, with a slightly-less-than basic pair of json functions
@@ -11,7 +11,7 @@ class Sport {
  /// Factory constructor to create a Sport object from JSON
   factory Sport.fromJson(Map<String, dynamic> json) {
     return Sport(
-      sportId: int.parse(json['sport_id']),
+      sportId: json['sport_id'],
       activity: json['activity'],
     );
   }
