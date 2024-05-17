@@ -52,15 +52,7 @@ class _PreviousFormsPageState extends State<PreviousFormsPage> {
                 GenericForm form = widget.formModel.formsList[index];
                 return FormTileWidget(
                   form: form,
-                  currentUser: widget.currentUser,
-                  // onTap: () {
-                  //   navigateToPage(
-                  //     context,
-                  //     FormTakerPage(
-                  //       questions: form.questions.map((q) => q.header).toList(),
-                  //     ),
-                  //   );
-                  // },
+                  hasAdminPrivileges: widget.currentUser.hasAdminPrivileges,
                 );
               },
             ),
