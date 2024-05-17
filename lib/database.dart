@@ -32,6 +32,7 @@ class Database
   static const String _getAllQuestionsByFormId = """SELECT * from tbl_questions WHERE form_id = @formId""";
   static const String _getAllForms = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
   static const String _getFormById = """SELECT form_id, form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;""";
+  static const String _getEmailServiceApiKey = "SELECT key FROM tbl_api_keys WHERE name='sendgrid'";
   /// SQL insert query strings. ***Note on inserts; add "RETURNING <column_name>" to end of insert queries to get a Result from them, with <column name> usually being the ID that gets assigned to it.
   static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport, student_id) VALUES (@studentName, @grade, @sport, @id)";
   static const String _insertNewUser = "INSERT INTO tbl_users (username,password,first_name,last_name,is_admin) VALUES (@username,@password,@first_name,@last_name,@is_admin) RETURNING uuid_user";
@@ -45,6 +46,7 @@ class Database
   /// SQL update query strings.
   static const String _updateQuestion = """UPDATE public.tbl_questions SET content = @content, order_in_form = @order, form_id = @formId, response_enum = @responseEnum WHERE question_id = @questionId;""";
   static const String _updateFormById = """UPDATE public.tbl_forms SET user_id = @userId, form_title = @formTitle, last_modified = current_date() WHERE form_id = @formId""";
+  static const String _updateUserPasswordById = "UPDATE tbl_users SET password = @password, is_temp_password = @is_temp_password WHERE uuid_user = @uuid_user";
 
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
@@ -102,6 +104,9 @@ class Database
 
   /// 
   static Future<Result> fetchAllForms() async { return _executeSQLCommand(_getAllForms,null); }
+
+  /// 
+  static Future<Result> fetchEmailServiceApiKey() async { return _executeSQLCommand(_getEmailServiceApiKey,null); }
 
   /// Get a user's profile based on their provided username.
   static Future<Result> fetchUser(String username) async
@@ -206,6 +211,13 @@ class Database
   {
     return _executeSQLCommand(_updateFormById,
                              {'formId':formId, 'userId':userId, 'formTitle':formTitle, 'lastModified':lastModified, 'createDate':createDate});
+  }
+
+  /// 
+  static Future<Result> updateUserPasswordById(String userId, String newPassword, bool isTempPassword)
+  {
+    return _executeSQLCommand(_updateUserPasswordById,
+                             {'password':newPassword, 'is_temp_password': isTempPassword, 'uuid_user':userId});     
   }
 
 }

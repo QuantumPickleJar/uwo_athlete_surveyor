@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, dangling_library_doc_comments
+// ignore_for_file: library_private_types_in_public_api, dangling_library_doc_comments, avoid_print
 
 /// Name: Joshua T. Hill
 /// Date: 5/15/2024
@@ -76,7 +76,7 @@ class _CreateUserState extends State<CreateUserPage>
       {
         Result result = await widget.createUserModel.registerNewUser(usernameController.text.trim(), firstNameController.text.trim(), lastNameController.text.trim(), isChecked);
         String? newUserUuid = result[0][0] as String?;
-        //print('New user id: $newUserUuid'); // The act of registering a new user will return the UUID assigned by the database; keeping functionality present in case useful later
+        print('New user id: $newUserUuid'); // The act of registering a new user will return the UUID assigned by the database; keeping functionality present in case useful later
 
         if(newUserUuid != null && newUserUuid.isNotEmpty) // Successful user creation
         {

@@ -60,7 +60,9 @@ class CreateUserModel extends ChangeNotifier
   /// Send an email to the new user giving them their temporary login password.
   void _sendTempPassEmail(String emailAddress, String tempPassword) async
   {
-    final mailer = Mailer(constants.emailApiKey);
+    final result = await Database.fetchEmailServiceApiKey();
+
+    final mailer = Mailer(result[0][0] as String);
     final toAddress = Address(emailAddress);
     const fromAddress = Address(constants.sendingEmail);
     final content = Content(constants.contentType, 

@@ -9,10 +9,12 @@
 /// Version:          0.0.1
 
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
+import 'package:athlete_surveyor/models/change_password_model.dart';
 import 'package:athlete_surveyor/models/create_user_model.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/login_model.dart';
 import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
+import 'package:athlete_surveyor/pages/common/change_password_page.dart';
 import 'package:athlete_surveyor/pages/common/tabbed_main_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
@@ -46,7 +48,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => InboxModel()),
         ChangeNotifierProvider(create: (context) => StudentsModel()),
         ChangeNotifierProvider(create: (context) => PreviousFormsModel()),
-        ChangeNotifierProvider(create: (context) => CreateUserModel())
+        ChangeNotifierProvider(create: (context) => CreateUserModel()),
+        ChangeNotifierProvider(create: (context) => ChangePasswordModel())
       ],
       child: MaterialApp(home: MainApp(LoginModel()))
     )
@@ -85,7 +88,17 @@ class _MainAppState extends State<MainApp>
     {
       LoggedInUser? currentUser = await widget.loginModel.checkExistingPassword(usernameController.text, passwordController.text);
  
-      if(context.mounted && currentUser != null) { navigateToPage(context, TabbedMainPage(currentUser: currentUser)); }
+      if(context.mounted && currentUser != null) 
+      {
+        if(currentUser.hasTempPassword) // If password is still the temporary password assigned at user creation, make user change it on first login.
+        {
+          navigateToPage(context, Consumer<ChangePasswordModel> (builder: (context, changePasswordModel, child) => ChangePasswordPage(changePasswordModel, currentUser: currentUser)));
+        }
+        else
+        {
+          navigateToPage(context, TabbedMainPage(currentUser: currentUser)); 
+        }
+      }
     }
   }
 

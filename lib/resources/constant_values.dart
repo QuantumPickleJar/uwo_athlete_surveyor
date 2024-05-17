@@ -17,7 +17,7 @@ const String invalidPasswordString = 'Password field left blank, please enter pa
 const String testStudentUsername = 'testStudent@uwosh.edu';
 const String testStudentPassword = '1A5qGrb6p4!%a4Iw';
 const String testAdminUsername = 'admin@uwosh.edu';
-const String testAdminPassword = 'A)msBslYwXnnmb9W';
+const String testAdminPassword = 'newpasswordtest'; //const String testAdminPassword = 'A)msBslYwXnnmb9W';
 const String uwoWatermarkUrl = 'https://uwosh.edu/umc/wp-content/uploads/sites/18/2019/07/UWO_vertical_Oshkosh_4c.png';
 const String pageTitle = 'Be Better Initiative';
 const String loginUsernameFieldHint = 'Enter Username';
@@ -42,7 +42,14 @@ const String ok = 'OK';
 
 /// CreateUserModel.dart - String
 const String randomPasswordChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*()_+';
-const String emailApiKey = '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';
 const String sendingEmail = 'bebetterinitiativeapp@gmail.com';
 const String emailSubjectLine = 'Your UW Oshkosh Be Better Initiative App Temporary Password';
 const String contentType = 'text/plain';
+
+/// ChangePasswordPage.dart - String
+const String changePassword = 'Change Password';
+const String enterNewPasswordFieldHint = 'Enter new password';
+const String enterNewPasswordAgainFieldHint = 'Enter new password again';
+const String invalidPasswordsString = 'The passwords entered did not match - please try again';
+const String passwordChangeSucessful = 'Password was successfully changed!';
+const String passwordChangeUnsuccessful = 'An error occurred attempting to change the password; try again later.';
