@@ -8,7 +8,6 @@
 /// Authors: Josh, Vince, Amanda.
 /// Version:          0.0.1
 
-
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/create_user_model.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';

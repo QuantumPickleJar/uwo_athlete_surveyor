@@ -18,6 +18,10 @@ class Database
   static const String _dbName = "uwo_forms_docs_test";
   static const String _dbUser = "joshhill";
   static const String _dbPass = "0LMiuWwPzCfrlub7YlKxpw";
+  // static const String _dbHost2 = 'cs361-lab3-13043.5xj.gcp-us-central1.cockroachlabs.cloud';
+  // static const String _dbPass2 = 'cn9T0AvFn056o6Dz1ziyRg';
+  // static const String _dbUser2 = 'quantumpicklejar';
+  
   /// SQL fetch query strings.
   static const String _getEmails = "SELECT date_received, from_uuid, subject_line, body, first_name, last_name FROM tbl_inbox ti LEFT JOIN tbl_users tu ON ti.from_uuid = tu.uuid_user;";
   static const String _getStudentList = "SELECT student_name, grade, sport, student_id FROM tbl_studentList"; 
@@ -26,17 +30,21 @@ class Database
   static const String _getQuestionByQuestionId = """SELECT content, order_in_form, form_id, question_id, response_enum FROM public.tbl_questions WHERE question_id = @questionId;""";
   static const String _getAllQuestionsQuery = """SELECT * FROM tbl_questions""";
   static const String _getAllQuestionsByFormId = """SELECT * from tbl_questions WHERE form_id = @formId""";
+  static const String _getAllForms = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
+  static const String _getFormById = """SELECT form_id, form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;""";
   /// SQL insert query strings. ***Note on inserts; add "RETURNING <column_name>" to end of insert queries to get a Result from them, with <column name> usually being the ID that gets assigned to it.
   static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport, student_id) VALUES (@studentName, @grade, @sport, @id)";
   static const String _insertNewUser = "INSERT INTO tbl_users (username,password,first_name,last_name,is_admin) VALUES (@username,@password,@first_name,@last_name,@is_admin) RETURNING uuid_user";
   static const String _insertNewQuestionByFormId = """INSERT INTO public.tbl_questions (content, order_in_form, form_id, response_enum VALUES (@content, @order, @formId, @responseEnum) RETURNING *;""";
   static const String _insertNewQuestions = "INSERT INTO public.tbl_questions (content, order_in_form, form_id, response_enum) VALUES @values";
+  static const String _insertNewForm = """INSERT INTO tbl_forms (user_id, form_title, last_modified, create_date) VALUES (@userId, @formTitle, @lastModified, @createDate) RETURNING form_id, form_title, create_date;""";
   /// SQL delete query strings.
-  //static const String _deleteAthlete = " DElETE FROM tbl_studentlist WHERE student_name =  @name AND grade = @grade AND sport = @sport";
   static const String _deleteQuestion = """DELETE * FROM public.tbl_questions WHERE question_id = @questionId;""";
-  static const String _deleteForm = "DELETE FROM public.tbl_questions WHERE form_id = @formId";
+  static const String _deleteAllQuestionsWithFormId = "DELETE FROM public.tbl_questions WHERE form_id = @formId";
+  static const String _deleteFormById = "DELETE FROM tbl_forms WHERE form_id = @formId";
   /// SQL update query strings.
   static const String _updateQuestion = """UPDATE public.tbl_questions SET content = @content, order_in_form = @order, form_id = @formId, response_enum = @responseEnum WHERE question_id = @questionId;""";
+  static const String _updateFormById = """UPDATE public.tbl_forms SET user_id = @userId, form_title = @formTitle, last_modified = current_date() WHERE form_id = @formId""";
 
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
@@ -95,6 +103,9 @@ class Database
   /// 
   static Future<Result> fetchAllQuestions() async { return _executeSQLCommand(_getAllQuestionsQuery,null); }
 
+  /// 
+  static Future<Result> fetchAllForms() async { return _executeSQLCommand(_getAllForms,null); }
+
   /// Get a user's profile based on their provided username.
   static Future<Result> fetchUser(String username) async
   {
@@ -114,6 +125,13 @@ class Database
   {
     return _executeSQLCommand(_getAllQuestionsByFormId, 
                              {'formId':formId });
+  }
+
+  /// 
+  static Future<Result> fetchFormById(String formId) async
+  {
+    return _executeSQLCommand(_getFormById, 
+                             {'formId':formId});
   }
 
   /// Connects the app to the data base and gets the athletes put in on the app into the database
@@ -144,6 +162,13 @@ class Database
                              {'values':concatenatedValues});   
   }
 
+  /// 
+  static Future<Result> insertNewForm(String userId, String formTitle, String lastModified, String createDate) async
+  {
+    return _executeSQLCommand(_insertNewForm, 
+                             {'userId':userId, 'formTitle':formTitle, 'lastModified':lastModified, 'createDate':createDate});
+  }
+
   /// Removes a question from the database by its id. 
   static Future<Result> deleteQuestion(String questionId) async
   {
@@ -152,9 +177,16 @@ class Database
   }
 
   /// 
+  static Future<Result> deleteAllQuestionsWithFormId(String formId) async
+  {
+    return _executeSQLCommand(_deleteAllQuestionsWithFormId,
+                             {'formId':formId});
+  }
+
+  ///
   static Future<Result> deleteFormById(String formId) async
   {
-    return _executeSQLCommand(_deleteForm,
+    return _executeSQLCommand(_deleteFormById,
                              {'formId':formId});
   }
 
@@ -163,5 +195,12 @@ class Database
   {
     return _executeSQLCommand(_updateQuestion, 
                              {'content':questionContent, 'order':questionOrdinal, 'formId':questionFormId, 'responseEnum':questionResFormat, 'questionId':questionId});
+  }
+
+  /// 
+  static Future<Result> updateFormById(String? formId, String userId, String formTitle, DateTime lastModified, DateTime createDate) async
+  {
+    return _executeSQLCommand(_updateFormById,
+                             {'formId':formId, 'userId':userId, 'formTitle':formTitle, 'lastModified':lastModified, 'createDate':createDate});
   }
 }

@@ -21,9 +21,9 @@ class QuestionRepository implements IQuestionRepository
   Future<Question> createQuestion(Question question, String formId) async 
   {
     var result = await Database.insertNewQuestionByFormId(question.content,
-                                                  question.ordinal,
-                                                  formId,
-                                                  question.resFormat.widgetType); // Assuming you have an enum mapped to int
+                                                          question.ordinal,
+                                                          formId,
+                                                          question.resFormat.widgetType); // Assuming you have an enum mapped to int
 
     if (result.isEmpty) { throw Exception('Failed to create question.'); }
 
@@ -92,7 +92,7 @@ class QuestionRepository implements IQuestionRepository
 Future<void> updateFormQuestions({required List<Question> questions, required String formId}) async 
 {
   // Remove existing questions for the form
-  await Database.deleteFormById(formId);
+  await Database.deleteAllQuestionsWithFormId(formId);
 
   List<String> values = [];
   for (var question in questions) 
