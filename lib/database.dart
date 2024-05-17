@@ -15,7 +15,16 @@ class Database
   static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList"; 
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _getSpecificUser = "SELECT * FROM tbl_users WHERE username = @username";
-  // SQL insert query strings. ***Note on inserts; add "RETURNING <column_name>" to end of insert queries to get a Result from them, with <column name> usually being the ID that gets assigned to it.
+  static const String _getQuestionByQuestionId = """SELECT content, order_in_form, form_id, question_id, response_enum FROM public.tbl_questions WHERE question_id = @questionId;""";
+  static const String _getAllQuestionsQuery = """SELECT * FROM tbl_questions""";
+  static const String _getAllQuestionsByFormId = """SELECT * from tbl_questions WHERE form_id = @formId""";
+  static const String _getAllForms = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
+  static const String _getFormById = """SELECT form_id, form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;""";
+
+  // static const String _getFormsByUserId = """SELECT form_id, form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;""";
+
+  static const String _getEmailServiceApiKey = "SELECT key FROM tbl_api_keys WHERE name='sendgrid'";
+  /// SQL insert query strings. ***Note on inserts; add "RETURNING <column_name>" to end of insert queries to get a Result from them, with <column name> usually being the ID that gets assigned to it.
   static const String _insertAthlete = "INSERT INTO tbl_studentlist (student_name, grade, sport, student_id) VALUES (@studentName, @grade, @sport, @id)";
   //static const String _getUserPassword = "SELECT * FROM tbl_users WHERE username = @username";
   static const String _insertNewUser = "INSERT INTO tbl_users (username,password,is_admin) VALUES (@username,@password,@is_admin)";
@@ -81,6 +90,40 @@ class Database
     //                         {'username':username});
     return executeSQLCommand(_getSpecificUser, 
                             {'username':username});
+  }
+
+  /// Get question with matching Id.
+  static Future<Result> fetchQuestionByQuestionId(String questionId) async
+  {
+    return _executeSQLCommand(_getQuestionByQuestionId, 
+                             {'questionId':questionId});
+  }
+
+  /// Get all of the questions associated with a specific Form ID.
+  static Future<Result> fetchQuestionsByFormId(String formId) async
+  {
+    return _executeSQLCommand(_getAllQuestionsByFormId, 
+                             {'formId':formId });
+  }
+
+  /// Get a Form by specifying its ID
+  static Future<Result> fetchFormById(String formId) async
+  {
+    return _executeSQLCommand(_getFormById, 
+                             {'formId':formId});
+  }
+  // /// Get a Form by specifying its ID
+  // static Future<Result> fetchFormsById(String userId) async
+  // {
+  //   return _executeSQLCommand(_getFormsByUserId, 
+  //                            {'userId': userId});
+  // }
+
+    /// Get all messages for the given user from the database.
+  static Future<Result> fetchMessagesById(String userId) async 
+  { 
+    return _executeSQLCommand(_getMessagesById,
+                             {'userId':userId});
   }
 
   /// Connects the app to the data base and gets the athletes put in on the app into the database

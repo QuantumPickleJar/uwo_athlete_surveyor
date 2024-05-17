@@ -5,14 +5,14 @@
 /// Description: A page to display a list of previously complete forms by the logged-in user, displayed as "form-shaped" rectangles.
 /// Bugs: n/a
 /// Reflection: n/a
-
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
-import 'package:athlete_surveyor/models/forms/individual_form_examination_model.dart';
-import 'package:athlete_surveyor/pages/individual_form_examination_page.dart';
-import 'package:athlete_surveyor/resources/common_functions.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:athlete_surveyor/widgets/form_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
+import 'package:athlete_surveyor/models/forms/base_form.dart';
+import 'package:athlete_surveyor/models/forms/student_form.dart';
+import 'package:athlete_surveyor/pages/form_taker_page.dart';
+import 'package:athlete_surveyor/resources/common_functions.dart';
 
 /// A class representing a page in which all forms previously completed by a user are displayed.
 class PreviousFormsPage extends StatefulWidget 
@@ -26,36 +26,47 @@ class PreviousFormsPage extends StatefulWidget
 }
 
 /// StatefulWidget State.
-class _PreviousFormsPageState extends State<PreviousFormsPage>
-{
-  /// Handles fetching previously completed forms from database and populating ListView when received.
+class _PreviousFormsPageState extends State<PreviousFormsPage> {
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     widget.formModel.getPreviousFormsFromDatabase(userId: widget.currentUser.userUuid);   
   }
 
   @override
-  Widget build(BuildContext context) 
-  {
-    return Column(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('My Forms'),
+      ),
+      body: Column(
         children: [
           Expanded(
             child: GridView.builder(
-              itemCount: widget.formModel.formsList.length, 
+              itemCount: widget.formModel.formsList.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 childAspectRatio: 8.5 / 11.0,
-                crossAxisCount: 2), 
+                crossAxisCount: 2,
+              ),
               itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Card(
-                    clipBehavior: Clip.antiAlias,
-                    child: ListTile(
-                      title: Text("${widget.formModel.formsList[index].formName}\n~ ${widget.formModel.formsList[index].sport} ~\n", textAlign: TextAlign.center), titleAlignment: ListTileTitleAlignment.center,
-                      subtitle: Text("Created:\n${widget.formModel.formsList[index].formDateCreated}", textAlign: TextAlign.center),
-                      onTap:(){ navigateToPage(context, IndividualFormWidget(widget.formModel.formsList[index].formName, widget.formModel.formsList[index].sport, IndividualFormExaminationModel())); }
-                    )));}))]);
+                GenericForm form = widget.formModel.formsList[index];
+                return FormTileWidget(
+                  form: form,
+                  currentUser: widget.currentUser,
+                  // onTap: () {
+                  //   navigateToPage(
+                  //     context,
+                  //     FormTakerPage(
+                  //       questions: form.questions.map((q) => q.header).toList(),
+                  //     ),
+                  //   );
+                  // },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

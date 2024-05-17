@@ -1,5 +1,6 @@
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
+import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:flutter/material.dart';
 
 /// Model to represent a user's forms.
@@ -12,7 +13,6 @@ import 'package:flutter/material.dart';
 class AuthoredFormsModel extends ChangeNotifier {
   final List<GenericForm> formsList = [];
   FormService _formService;
-
   AuthoredFormsModel(this._formService);
 
   /// Get all inbox messages from the database and insert into internal list.
