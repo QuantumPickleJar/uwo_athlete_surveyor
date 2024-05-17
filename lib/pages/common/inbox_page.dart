@@ -6,6 +6,7 @@
 /// Bugs: n/a
 /// Reflection: Was intended to be a full email-type inbox at conception of the project, which is certainly not what it is now.
 
+import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/pages/compose_message_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
@@ -16,7 +17,8 @@ import 'package:flutter/material.dart';
 class InboxPage extends StatefulWidget
 {
   final InboxModel inboxModel;
-  const InboxPage(this.inboxModel, {super.key});
+  final LoggedInUser currentUser;
+  const InboxPage(this.inboxModel, {super.key, required this.currentUser});
 
   @override
   State<StatefulWidget> createState() => _InboxPageState();
@@ -40,7 +42,7 @@ class _InboxPageState extends State<InboxPage>
   {
     super.initState();
 
-    widget.inboxModel.getEmailsFromDatabase();
+    widget.inboxModel.getEmailsFromDatabase(widget.currentUser.userUuid);
   }
 
   @override

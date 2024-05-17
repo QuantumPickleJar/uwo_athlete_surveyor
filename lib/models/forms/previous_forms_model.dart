@@ -15,8 +15,8 @@ class PreviousFormsModel extends ChangeNotifier
 {
   final List<PreviousForm> formsList = [];
 
-  /// Get all inbox messages from the database and insert into internal list.
-  Future<void> getPreviousFormsFromDatabase() async 
+  /// Get all previously completed forms from the database and insert into internal list.
+  Future<void> getPreviousFormsFromDatabase() async
   {
     await Database.fetchPreviousForms().then((results) 
     {  

@@ -26,7 +26,7 @@ class LoginModel extends ChangeNotifier
     bool passwordMatches = BCrypt.checkpw(password, hashedPassword);
 
     print('Password matches: $passwordMatches');
-    return passwordMatches  ? LoggedInUser( result[0][1] as String,
+    return passwordMatches  ? LoggedInUser( result[0][0] as String,
                                             result[0][2] as bool, 
                                             result[0][4] as bool, 
                                             result[0][3] as String, 

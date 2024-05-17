@@ -1,7 +1,7 @@
 // ignore_for_file: dangling_library_doc_comments, avoid_print
 
-/// Name:
-/// Date:
+/// Name: Vincent, Joshua
+/// Date: 5/16/2024
 /// Description:
 /// Bugs:
 /// Reflection:
@@ -18,11 +18,7 @@ class FormRepository implements IFormRepository
 {
   FormRepository();
   
-  /// Private constructor
-  FormRepository._internal();
-
   /// Used temporarily to streamline the demo
-  /// TODO: replace with Adam In's id
   final String developerUuid = "a23e1679-d5e9-4d97-9902-bb338b38e468";
   
   /// 

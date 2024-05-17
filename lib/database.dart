@@ -18,12 +18,12 @@ class Database
   static const String _dbName = "uwo_forms_docs_test";
   static const String _dbUser = "joshhill";
   static const String _dbPass = "0LMiuWwPzCfrlub7YlKxpw";
-  // static const String _dbHost2 = 'cs361-lab3-13043.5xj.gcp-us-central1.cockroachlabs.cloud';
-  // static const String _dbPass2 = 'cn9T0AvFn056o6Dz1ziyRg';
-  // static const String _dbUser2 = 'quantumpicklejar';
+  // static const String _dbHost = 'cs361-lab3-13043.5xj.gcp-us-central1.cockroachlabs.cloud';
+  // static const String _dbPass = 'cn9T0AvFn056o6Dz1ziyRg';
+  // static const String _dbUser = 'quantumpicklejar';
   
   /// SQL fetch query strings.
-  static const String _getEmails = "SELECT date_received, from_uuid, subject_line, body, first_name, last_name FROM tbl_inbox ti LEFT JOIN tbl_users tu ON ti.from_uuid = tu.uuid_user;";
+  static const String _getMessagesById = "SELECT date_received, from_uuid, subject_line, body, first_name, last_name FROM tbl_inbox ti LEFT JOIN tbl_users tu ON ti.from_uuid = tu.uuid_user WHERE ti.to_uuid = @userId;";
   static const String _getStudentList = "SELECT student_name, grade, sport, student_id FROM tbl_studentList"; 
   static const String _getPreviousForms = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _getSpecificUser = "SELECT * FROM tbl_users WHERE username = @username";
@@ -91,9 +91,6 @@ class Database
     } 
   }
 
-  /// Get all Emails from the database.
-  static Future<Result> fetchEmails() async { return _executeSQLCommand(_getEmails,null); }
-
   /// Get all previously completed forms from the database.
   static Future<Result> fetchPreviousForms() async { return _executeSQLCommand(_getPreviousForms,null); }
 
@@ -132,6 +129,13 @@ class Database
   {
     return _executeSQLCommand(_getFormById, 
                              {'formId':formId});
+  }
+
+    /// Get all messages for the given user from the database.
+  static Future<Result> fetchMessagesById(String userId) async 
+  { 
+    return _executeSQLCommand(_getMessagesById,
+                             {'userId':userId});
   }
 
   /// Connects the app to the data base and gets the athletes put in on the app into the database
@@ -203,4 +207,5 @@ class Database
     return _executeSQLCommand(_updateFormById,
                              {'formId':formId, 'userId':userId, 'formTitle':formTitle, 'lastModified':lastModified, 'createDate':createDate});
   }
+
 }

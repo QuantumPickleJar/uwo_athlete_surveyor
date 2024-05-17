@@ -1,7 +1,7 @@
 // ignore_for_file: dangling_library_doc_comments
 
-/// Name:
-/// Date:
+/// Name: Vincent, Joshua
+/// Date: 5/16/2024
 /// Description:
 /// Bugs:
 /// Reflection:
