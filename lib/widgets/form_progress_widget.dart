@@ -1,9 +1,10 @@
+import 'package:athlete_surveyor/models/question.dart';
 import 'package:flutter/material.dart';
 
 /// A stateful widget that represents the form progress widget.
 /// It displays a list of questions and a progress indicator showing the completion percentage.
 class FormProgressWidget extends StatefulWidget {
-  final List<String> questions;
+  final List<Question> questions;
   final Set<int> answeredQuestions;
   final int currentQuestionIndex;
   final ValueChanged<int> onQuestionSelected;
@@ -81,8 +82,7 @@ class _FormProgressWidgetState extends State<FormProgressWidget> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: ListTile(
-                      title: Text(
-                        widget.questions[index],
+                      title: Text(widget.questions[index].header,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: widget.currentQuestionIndex == index
