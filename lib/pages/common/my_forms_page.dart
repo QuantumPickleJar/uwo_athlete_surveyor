@@ -29,7 +29,7 @@ class MyFormsPage extends StatelessWidget {
         itemBuilder: (context, index) {
           return FormTileWidget(
             form: authoredFormsModel.formsList[index],
-            currentUser: currentUser,
+            hasAdminPrivileges: currentUser.hasAdminPrivileges,
           );
         },
       ),

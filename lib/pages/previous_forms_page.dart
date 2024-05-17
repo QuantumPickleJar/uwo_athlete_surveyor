@@ -49,6 +49,7 @@ class _PreviousFormsPageState extends State<PreviousFormsPage> {
                 crossAxisCount: 2,
               ),
               itemBuilder: (BuildContext context, int index) {
+                /// load the current form into a [FormTileWidget]
                 GenericForm form = widget.formModel.formsList[index];
                 return FormTileWidget(
                   form: form,
