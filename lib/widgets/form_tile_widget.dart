@@ -1,5 +1,6 @@
   import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
   import 'package:athlete_surveyor/models/forms/base_form.dart';
+import 'package:athlete_surveyor/pages/form_taker_page.dart';
   import 'package:athlete_surveyor/pages/staff/form_builder_page.dart';
   import 'package:athlete_surveyor/resources/common_functions.dart';
   import 'package:flutter/material.dart';
@@ -26,14 +27,15 @@
               FormBuilderPage(formId: form.formId),
             );
           } else {
-            navigateToPage(
-              context,
-              FormTakerPage(
-                form.formName,
-                form.sport,
-                /// send w/e needed to track responses.  Probably a [StudentForm]?
-              ),
-            );
+            throw UnimplementedError();
+            // navigateToPage(
+            //   context,
+            //   FormTakerPage(
+            //     form.formName,
+            //     form.sport,
+            //     /// send w/e needed to track responses.  Probably a [StudentForm]?
+            //   ),
+            // );
           }
         },
       );

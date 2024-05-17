@@ -1,7 +1,6 @@
 // ignore_for_file: override_on_non_overriding_member
 
 import "dart:io";
-
 import "package:athlete_surveyor/models/interfaces/i_generic_form.dart";
 import "package:athlete_surveyor/models/question.dart";
 import "package:flutter/material.dart";
