@@ -12,11 +12,12 @@ import 'package:provider/provider.dart';
 /// It is important to distinguish between the two when displaying the forms on the screen
 class MyFormsPage extends StatelessWidget {
   final LoggedInUser currentUser;
-  const MyFormsPage({super.key, required this.currentUser});
+  late AuthoredFormsModel authoredFormsModel;
+  MyFormsPage({super.key, required this.currentUser});
 
   @override
   Widget build(BuildContext context) {
-    var authoredFormsModel = Provider.of<AuthoredFormsModel>(context);
+    authoredFormsModel = Provider.of<AuthoredFormsModel>(context);
     return Scaffold(
       appBar: defaultAppBar(
         buildContext: context, 
