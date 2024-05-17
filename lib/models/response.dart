@@ -33,7 +33,6 @@ class Response<T> {
 
   /// Creates a response wrapping [answer] based on the [responseType]
   static Response<dynamic> fromAnswer(Question question, dynamic answer) {
-    // TODO: conditionally format based on question.resFormat
     
     return Response<dynamic>(
       questionId: question.questionId,

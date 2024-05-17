@@ -16,7 +16,7 @@ import 'response.dart';
 class Question { 
   late String formId;
   String questionId;
-  late String header;   /// TODO: this should default to the ordinal
+  late String header;
   late String content;
   late bool resRequired;
   /// Controls what widget will be shown to students when loaded
@@ -45,10 +45,8 @@ class Question {
   /// Creates a [Response] by passing [answer] through the [Question] without 
   /// needing to know what [resFormat]. 
   Response<dynamic> createResponse(dynamic answer) {
-    // TODO: potentially place validation logic here
 
     return Response<dynamic>(
-      // questionId: TODO
       questionId: "TEST_ID",
       answer: answer,
       responseType: resFormat

@@ -25,9 +25,8 @@ class SecureFormProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<GenericForm>(
-      future: _loadFormByUserRole(context, formId), /// TODO: may be a call to userservice
+      future: _loadFormByUserRole(context, formId),
       builder: (context, snapshot) {
-        /// TODO: check if user is logged in here
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: SizedBox(height: 25, width: 25, child: CircularProgressIndicator())
@@ -40,7 +39,6 @@ class SecureFormProvider extends StatelessWidget {
           return ChangeNotifierProvider<GenericForm>.value(
             value: snapshot.data!,
             child: Consumer<GenericForm>(builder: (context, form, child) {
-              /// TODO: implement student survey page   
               if (form is StaffForm) {
                 // Ensure formId is passed correctly
                 return FormBuilderPage(formId: form.formId); 
@@ -48,7 +46,6 @@ class SecureFormProvider extends StatelessWidget {
                 return const Text('Unsupported form type encountered.');
               }
             
-              // TODO: uncomment when resolved null string error
               // return (form is StaffForm) ? 
               // FormBuilderPage(formId: formId) : 
               // throw UnimplementedError("The form type is not supported yet.");
@@ -67,7 +64,6 @@ class SecureFormProvider extends StatelessWidget {
     /// reach up the widget tree to get [FormService]
     FormService formService = Provider.of<FormService>(context, listen: false);
 
-    /// TODO: check loggedInUser 
 
      // This should be determined based on the user's logged-in status
     if (hasAdminPrivileges) {
@@ -88,7 +84,6 @@ class SecureFormProvider extends StatelessWidget {
         rethrow; // This will allow you to see where exactly the null is occurring.
       }
     } else { 
-      /// TODO: implement StudentForm.fromGenericForm
       throw UnimplementedError('StudentForm not yet implemented (SFP)');
     }
     /*

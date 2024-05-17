@@ -26,7 +26,7 @@ class FormRepository implements IFormRepository
   Future<GenericForm> createForm(GenericForm form) async 
   {
     // query 1 of 2: inserting the form into the database
-    var insertResult = await Database.insertNewForm(developerUuid, // TODO: get user's ID dynamically
+    var insertResult = await Database.insertNewForm(developerUuid,
                                                     form.formName, 
                                                     DateTime.now().toIso8601String(), 
                                                     DateTime.now().toIso8601String());
@@ -99,7 +99,7 @@ class FormRepository implements IFormRepository
   @override
   Future<GenericForm> updateForm(GenericForm form) async 
   {
-    var result = await Database.updateFormById(null,      // TODO: adjust query and remove
+    var result = await Database.updateFormById(null,
                                                'user-id', // For now, since you don't have auth
                                                form.formName, 
                                                DateTime.now(), 

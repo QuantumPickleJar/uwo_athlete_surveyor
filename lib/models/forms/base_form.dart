@@ -38,13 +38,11 @@ class GenericForm extends ChangeNotifier implements IGenericForm {
   /// removed to respect SOLID principles.
   @override
   void saveForm() {
-    /// TODO: Implement saveForm
     notifyListeners();
   }
   
   @override
   set attachments(List<File>? attachments) {
-    /// TODO: implement attachments
   }
   
 }

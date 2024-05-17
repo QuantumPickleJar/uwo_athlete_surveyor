@@ -38,7 +38,6 @@ class ConcreteFormFactory extends FormFactory {
       formId: '',
       formName: formName,
       sport: 'test student sport',  // get from service?
-      /// TODO: change below line, this is dirty code
       formDateReceived: DateTime.now(), /// should be read from the spreadsheet
       formDateCompleted: null,
       questions: []

@@ -1,4 +1,4 @@
-// ignore_for_file: dangling_library_doc_comments, avoid_print, library_private_types_in_public_api
+// ignore_for_file: dangling_library_doc_comments, avoid_print, library_private_types_in_public_api, unused_field, unused_local_variable, unused_element
 
 /// Name:
 /// Date:
@@ -75,13 +75,11 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       if (widget.formId != null && widget.formId!.isNotEmpty) {
       try {
        GenericForm? loadedForm = await _formService.fetchOrCreateForm(formId: widget.formId);
-        if (loadedForm != null) {
           // setState(() {
           //   _currentForm = loadedForm; // Update the state with loaded form
           // // Convert GenericForm to StaffForm using the dedicated constructor
           // });
-          return loadedForm;
-          } 
+        return loadedForm;
       } catch (e) { 
         /// an exception will occur if not found
         print('Error loading form: $e');
@@ -90,6 +88,8 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
         return null;
         }
       }
+
+      return null;
     }
   
   
@@ -107,7 +107,6 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
         Question? question = questions?[index]; 
 
       /// this is where we unpack the contents of the question.
-      /// TODO: the button to modify a question should be inside the Card
       return Card(
       child: ListTile(
         title: Text(question?.header ?? 'New Question'),
@@ -119,7 +118,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
 
   Column launchQuestionEditor(Question? question) { 
     _questionTextController.text = question?.content ?? '';
-    ResponseWidgetType selectedResponseType = question?.resFormat as ResponseWidgetType ?? ResponseType.getDefaultWidgetType();
+    ResponseWidgetType selectedResponseType = question?.resFormat as ResponseWidgetType;
 
     return Column(
       children: [
@@ -178,7 +177,6 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
           return AlertDialog(
           title: Text(question == null ? 'Add New Question' : 'Edit Question'),
           content: 
-          /// TODO: make in edit_question (or, would it be `edit_question_widget`, since we just need UI elements for accepting input, preloaded with existing information on edit operations)
           // EditQuestionWidget(question), 
 
             Builder(

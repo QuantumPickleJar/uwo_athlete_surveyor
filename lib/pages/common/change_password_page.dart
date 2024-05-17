@@ -10,14 +10,12 @@
 import 'dart:async';
 
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
-import 'package:athlete_surveyor/database.dart';
 import 'package:athlete_surveyor/models/change_password_model.dart';
 import 'package:athlete_surveyor/pages/common/tabbed_main_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/resources/constant_values.dart' as constants;
-import 'package:flutter/widgets.dart';
 
 /// A Form-based page for entering information to create a new application user.
 class ChangePasswordPage extends StatefulWidget

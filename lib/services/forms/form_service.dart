@@ -20,7 +20,6 @@ class FormService {
   final QuestionRepository _questionRepository;
   final FormFactory _formFactory = ConcreteFormFactory();
   
-  /// TODO: make more specific get-based functions that query smaller 
   /// subsets, such as ones suited for students vs staff for example
   FormService(this._formRepository, this._questionRepository);
     // _init(spreadsheetId);
@@ -32,7 +31,6 @@ class FormService {
         var retrievedForm = await _formRepository.getFormById(formId);
         
         if (retrievedForm != null) {
-          /// TODO: check if there are any questions to be retrieved:
           /// for now this if from tbl_questions, but will eventually be from tbl_form_question
           retrievedForm.questions = await _questionRepository.resolveQuestionsByFormId(formId: formId);
           return retrievedForm;
@@ -46,12 +44,13 @@ class FormService {
         print("Invalid or missing formId: $formId");
         return null;
     }
+
+    return null;
   }
 
   /// Creates a new form in the database, returning an instance containing
   /// the id assigned from the SQL server.
   Future<GenericForm> createNewForm(String formName, String sport) async {
-    /// TODO: ensure another form with this name doesn't exist
     IGenericForm newForm = _formFactory.createStaffForm(formName: formName, sport: sport);
 
     /// [IGenericForm] can't store a formId, so we must inject the newly spawned one:
@@ -87,9 +86,7 @@ class FormService {
     }
   }
 
-  // /// TODO: implement
   // Future<GenericForm?> getFormDetails(String formId) async {
-  //   /// TODO: wrap with safe uuid parse
   //   return _formRepository.getFormById(formId);
   // }
 

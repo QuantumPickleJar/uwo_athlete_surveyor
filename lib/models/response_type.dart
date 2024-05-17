@@ -16,7 +16,6 @@ class ResponseType {
   final ResponseWidgetType widgetType;
 
   /// an optional set of information that can be supplied, to be implemented
-  /// TODO: implement when more concerete is done
   final Map<String, dynamic> config;
 
   ResponseType({required this.widgetType, this.config = const {}});

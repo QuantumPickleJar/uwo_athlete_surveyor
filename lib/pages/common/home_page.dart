@@ -63,7 +63,7 @@ class HomePage extends StatelessWidget
                     style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
                     child: const SizedBox(child: Center(child: Text('View Forms', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center))))
                   : ElevatedButton( //student
-                    onPressed: (){ null; }, //TODO
+                    onPressed: (){ null; },
                     style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
                     child: const SizedBox(child: Center(child: Text('Complete a Self-Inventory Survey', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center)))),
                 toggleVisibleButton(visibilityToggle: hasAdminPrivileges, onPressed: () async { navigateToNewFormPage(context); }, buttonText: 'Create a Form')

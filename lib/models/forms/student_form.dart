@@ -26,21 +26,20 @@ class StudentForm extends GenericForm {
   late final DateTime? formDateReceived;
   final DateTime? formDateCompleted;
   
-  /// TODO: this should be populated by the form_file_service
   // @override
   // List<File>? attachments;
   // List<Question> questions = [];
 
   /// Constructs a new StudentForm
   StudentForm({
-    required formId,
-    required formName,
-    required sport,
+    required super.formId,
+    required super.formName,
+    required super.sport,
     this.formDateReceived,
     this.formDateCompleted,
     super.attachments, 
     required super.questions
-  }) : super(formId: formId, formName: formName, sport: sport);
+  }) : super();
   
     /// Called when updates to the form's responses have been made 
   @override 

@@ -18,7 +18,6 @@ abstract class IGenericForm {
   List<File>? attachments; 
 
   /// Save changes/answers to the current form 
-  /// TODO: Evaluate removal. could be that this is equivalent to FormService.updateForm)
   void saveForm(); 
   
   // void getDraftIfExists(Uuid formUuid);

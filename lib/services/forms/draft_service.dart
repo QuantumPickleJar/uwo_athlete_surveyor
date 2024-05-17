@@ -18,7 +18,6 @@ class DraftService {
   DraftService(this.draftSheet);
 
   Future<void> saveDraft(Uuid formUuid, String questionId, String draftData) async {
-    // TODO: TEST THIS 
     // find the right cell based on formUuid and questionId and save draftData
     final row = await draftSheet.values.rowByKey(formUuid.toString() + questionId, fromColumn: 1);
     
@@ -26,12 +25,10 @@ class DraftService {
       // Append new draft
       await draftSheet.values.appendRow([formUuid, questionId, draftData]);
     } else {
-      // TODO: Update existing draft
       // await draftSheet.values.insertValue(draftData, column: 3, row: row);
     }
   }
 
   // Future<String> loadDraft(Uuid formUuid, String questionId) async {
-  //   // TODO: retrieve draft data from the sheet
   // }
 }
