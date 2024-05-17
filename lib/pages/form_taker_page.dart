@@ -1,9 +1,11 @@
+import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/widgets/form_progress_widget.dart';
 import 'package:flutter/material.dart';
 
 /// Page for students to take the form and submit their responses.
 class FormTakerPage extends StatefulWidget {
-  final List<String> questions;
+  // should this be a StudentForm, or a reference to something like that?
+  final List<Question> questions;
 
   const FormTakerPage({Key? key, required this.questions}) : super(key: key);
 
