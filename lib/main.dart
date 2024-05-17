@@ -10,7 +10,6 @@
 /// Remarks: ProxyProvider was extremely powerful to be working with starting out
 
 import 'dart:convert';
-
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/login_model.dart';
@@ -32,34 +31,41 @@ import 'services/forms/form_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  final sportsRepository = SportsRepository();
-  final sportsService = SportsService(sportsRepository);
+
+late SportsRepository sportsRepository;
+  final sportsService = SportsService(null); // Temporarily set to null
+  final sportSelectionModel = SportSelectionModel(sportsService: sportsService);
+
+  // Create the sports repository with the SportSelectionModel
+  sportsRepository = SportsRepository(sportsSelectionModel: sportSelectionModel);
+
+  // Update the SportService with the correct SportsRepository
+  sportsService.setRepository(sportsRepository);
+
+  // Load initial sports data
   final sports = await sportsService.loadSportsFromFile();
-  
+  sportSelectionModel.sports = sports;
+
 
   /// Driver code.
   runApp(
     /// Dependency injection time!
     MultiProvider(
       providers: [
-        /// Create SportSelectionModel first to load file contents from assets
-        ChangeNotifierProvider(
-          create: (context) => SportSelectionModel(sportsService: sportsService)..sports = sports,
+        /// Create SportSelectionModel next to load sport contents from assets
+        ChangeNotifierProvider<SportSelectionModel>(
+          create: (context) => sportSelectionModel,
         ),
-
-        /// [ Prelaunch - 1 of 3 ] low-level repositories
+        
+        Provider<SportsRepository>(create: (context) => sportsRepository),        
+        Provider<SportsService>(create: (context) => sportsService),
         Provider<QuestionRepository>(create: (_) => QuestionRepository()),
         
-        /// Create SportsRepository first
-        // Provider<SportsRepository>(create: (context) => SportsRepository(),
-        // ),
-        
         /// [ Prelaunch - 2 of 3 ] 1-N service relationships
-        ProxyProvider<SportSelectionModel, FormRepository>(
-          update: (_, sportsModel, __) => FormRepository(SportsRepository()),
+        ProxyProvider<SportsRepository, FormRepository>(
+          update: (_, sportsRepo, __) => FormRepository(sportsRepo, sportSelectionModel),
         ),
-        
+
         /// [ Prelaunch - 3 of 3 ] complex services (those with multiple/timely dependencies)
         /// [FormService] relies on both the [SportsRepository], [QuestionRepository], & [FormRepository],
         ProxyProvider3<SportsRepository, FormRepository, QuestionRepository, FormService>(
