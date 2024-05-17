@@ -28,10 +28,10 @@ class FormTileWidget extends StatelessWidget {
         } else {
           navigateToPage(
             context,
-            IndividualFormWidget(
+            FormTakerPage(
               form.formName,
               form.sport,
-              IndividualFormExaminationModel(),
+              /// send w/e needed to track responses.  Probably a [StudentForm]?
             ),
           );
         }
