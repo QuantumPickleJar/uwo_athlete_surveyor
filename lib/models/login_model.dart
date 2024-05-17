@@ -40,7 +40,7 @@ class LoginModel extends ChangeNotifier
   /// Grab the hashed password on the server and check it against the user-provided password.
   Future<LoggedInUser?> checkExistingPassword(String userName, String password) async 
   { 
-    final result = await Database.fetchUserPassword(userName);
+    final result = await Database.fetchUser(userName);
     if (result.length != 1) 
     { // either the user doesn't exist or some error occurred where more than 1 row returned.
       return null; 
