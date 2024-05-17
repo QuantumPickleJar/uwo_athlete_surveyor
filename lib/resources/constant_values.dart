@@ -15,7 +15,7 @@ const double defaultEdgeInsetsPadding = 8.0;
 const String invalidUsernameString = 'Username field left blank, please enter username';
 const String invalidPasswordString = 'Password field left blank, please enter password';
 const String testStudentUsername = 'testStudent@uwosh.edu';
-const String testStudentPassword = '1A5qGrb6p4!%a4Iw';
+const String testStudentPassword = 'studentpassword'; //const String testStudentPassword = '1A5qGrb6p4!%a4Iw';
 const String testAdminUsername = 'admin@uwosh.edu';
 const String testAdminPassword = 'newpasswordtest'; //const String testAdminPassword = 'A)msBslYwXnnmb9W';
 const String uwoWatermarkUrl = 'https://uwosh.edu/umc/wp-content/uploads/sites/18/2019/07/UWO_vertical_Oshkosh_4c.png';
