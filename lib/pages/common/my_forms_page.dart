@@ -12,24 +12,22 @@ import 'package:provider/provider.dart';
 /// It is important to distinguish between the two when displaying the forms on the screen
 class MyFormsPage extends StatelessWidget {
   final LoggedInUser currentUser;
-  AuthoredFormsModel myFormsModel;
-  MyFormsPage({
-    super.key, required this.currentUser, required this.myFormsModel});
+  const MyFormsPage({super.key, required this.currentUser});
 
   @override
   Widget build(BuildContext context) {
-    myFormsModel = Provider.of<AuthoredFormsModel>(context);
+    var authoredFormsModel = Provider.of<AuthoredFormsModel>(context);
     return Scaffold(
       appBar: defaultAppBar(
         buildContext: context, 
         hasBackButton: false,
-        title: 'My Forms (${myFormsModel.formsList.length})'
+        title: 'My Forms (${authoredFormsModel.formsList.length})'
       ),
       body: ListView.builder(
-        itemCount: myFormsModel.formsList.length,
+        itemCount: authoredFormsModel.formsList.length,
         itemBuilder: (context, index) {
           return FormTileWidget(
-            form: myFormsModel.formsList[index],
+            form: authoredFormsModel.formsList[index],
             currentUser: currentUser,
           );
         },
