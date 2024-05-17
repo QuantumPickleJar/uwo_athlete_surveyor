@@ -185,10 +185,10 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
-                      onPressed: _caution,
-                      child: Text('Caution'),
-                    ),
+                    // ElevatedButton( // Not finished for lack of time.
+                    //   onPressed: _caution,
+                    //   child: Text('Caution'),
+                    // ),
                   ],
                 ),
               ),
@@ -200,6 +200,6 @@ class _IndividualStudentScreenState extends State<IndividualStudentScreen> {
   }
 }
 
-void _caution() {
-  // Define the action to be performed when the button is pressed
-}
+// void _caution() {
+//   // Define the action to be performed when the button is pressed
+// }
