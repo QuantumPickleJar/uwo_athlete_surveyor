@@ -27,15 +27,13 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
               FormBuilderPage(formId: form.formId),
             );
           } else {
-            throw UnimplementedError();
-            // navigateToPage(
-            //   context,
-            //   FormTakerPage(
-            //     form.formName,
-            //     form.sport,
-            //     /// send w/e needed to track responses.  Probably a [StudentForm]?
-            //   ),
-            // );
+            navigateToPage(
+              context,
+              FormTakerPage(
+                questions: form.questions.map((e) => e.toString()).toList(),
+                /// send w/e needed to track responses.  Probably a [StudentForm]?
+              ),
+            );
           }
         },
       );
