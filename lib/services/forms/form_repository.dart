@@ -2,6 +2,7 @@
 /// across Google Sheets.
 import 'package:athlete_surveyor/models/interfaces/i_form_respository.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
+import 'package:athlete_surveyor/models/sport_selection_model.dart';
 import 'package:athlete_surveyor/services/sports/sports_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
@@ -12,10 +13,11 @@ import 'package:uuid/uuid.dart';
 class FormRepository implements IFormRepository {
   // final Connection _connection;
   Future<Connection> get _connection async => await PostgresDB.getConnection();
-  FormRepository(this._sportRepository);
+  FormRepository(this._sportRepository, this._sportSelectionModel);
 
   final SportsRepository _sportRepository;
-  /// used temporarily to streamline the demo
+  final SportSelectionModel _sportSelectionModel;
+    /// used temporarily to streamline the demo
   /// TODO: replace with Adam In's id
   final String DEVELOPER_UUID = "a23e1679-d5e9-4d97-9902-bb338b38e468";
  
@@ -47,11 +49,12 @@ Future<GenericForm> createForm(GenericForm form) async {
         // var formId = formResult.first.toColumnMap()['form_id'] as String;
         var formId = formResult.first[0];
 
-        debugPrint('[FormRepository] Checking for sport...');
-        var sportId = await _sportRepository.getSportIdByName(form.sport);
+        debugPrint('[FormRepository] Checking for sport named ${form.sport}');
+        // var sportId = await _sportRepository.getSportIdByName(form.sport);
+        var sportId = _sportSelectionModel.getSportByName(form.sport)?.sportId;
 
         if (sportId == null) {
-          debugPrint('[FormRepository] Sport not found: ${form.sport}');
+          debugPrint('[FormRepository] Sport not found: $sportId');
           throw Exception('Sport not found: ${form.sport}');
         }
 
@@ -158,9 +161,12 @@ Future<GenericForm> createForm(GenericForm form) async {
       var result = await db.execute(Sql.named(sqlStatement), parameters: {'userId' : userId });
       
       /// extracting the query result
-      return result.map((row) => _mapRowToForm(row.toColumnMap(),
-                                             activity: row.toColumnMap()['sport'])).toList();     
-      } finally {
+      return result.map((row) {
+        final sportId = row.toColumnMap()['sport_id'].toString();
+        final sport = _sportSelectionModel.getSportById(sportId)?.activity;
+        return _mapRowToForm(row.toColumnMap(), activity: sport);
+      }).toList();
+    } finally {
          await PostgresDB.closeConnection();
 
     }
