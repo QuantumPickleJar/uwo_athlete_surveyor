@@ -31,7 +31,7 @@ class SecureFormProvider extends StatelessWidget {
           return Center(child: Text('SFP Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           /// only render to Consumer if data is present
-          return Provider<GenericForm>.value(
+          return ChangeNotifierProvider<GenericForm>.value(
             value: snapshot.data!,
             child: Consumer<GenericForm>(builder: (context, form, child) {
             /// TODO: implement student survey page
