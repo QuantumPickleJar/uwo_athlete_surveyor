@@ -42,6 +42,18 @@ class SportSelectionModel extends ChangeNotifier {
     }
   }
 
+   /// Another workaound function, this one lets us query a sport name 
+   /// by ID from the cached sports data in assets/sports.json
+    Sport? getSportById(String sportId) {
+    try {
+      final sport = _sports.firstWhere((sport) => sport.sportId.toString() == sportId);
+      return sport;
+    } catch (e) {
+      debugPrint('Error finding sport with ID $sportId: $e');
+      return null;
+    }
+  }
+
   /// lets us store the updated list of [Sport]s into the model for selection
   set sports(List<Sport> sports) {
     _sports = sports;

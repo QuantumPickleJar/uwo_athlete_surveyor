@@ -6,11 +6,16 @@ import 'package:athlete_surveyor/services/sports/sports_repository.dart';
 import 'package:flutter/services.dart' as rootBundle;
 
 class SportsService {
-  final SportsRepository _sportRepository;
+  SportsRepository? _sportRepository;
+
   SportsService(this._sportRepository);
 
+  void setRepository(SportsRepository sportRepository) {
+    _sportRepository = sportRepository;
+  }
+
   Future<List<Sport>> getAllSports() async {
-    return await _sportRepository.getAllSports();
+    return await _sportRepository!.getAllSports();
   }
 
   Future<List<Sport>> loadSportsFromFile() async {
@@ -19,7 +24,7 @@ class SportsService {
     return jsonResponse.map((data) => Sport.fromJson(data)).toList();
   }
 
-  Future<String?> getSportById(String sportId) async {
-    return await _sportRepository.getSportById(sportId);
+  Future<Sport?> getSportById(String sportId) async {
+    return await _sportRepository!.getSportById(sportId);
   }
 }
