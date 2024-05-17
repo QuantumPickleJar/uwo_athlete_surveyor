@@ -57,17 +57,16 @@ class _TabbedMainPageState extends State<TabbedMainPage>
       Consumer<AuthoredFormsModel>(
         builder: (context, previousFormsModel, _) {
           /// by wrapping this in a consumer, we let the widget tree deal with role-specifics
-          print("User Role: ${widget.currentUser.hasAdminPrivileges ? 'Admin' : 'Student'}");
+          print("[TabbedMainpage] User Role: ${widget.currentUser.hasAdminPrivileges ? 'Admin' : 'Student'}");
           return MyFormsPage(currentUser: widget.currentUser);
       })
     ];
   }
 
-
   @override
   Widget build(BuildContext context) 
   {
-    AuthoredFormsModel previousFormsModel = Provider.of<AuthoredFormsModel>(context);
+   // AuthoredFormsModel previousFormsModel = Provider.of<AuthoredFormsModel>(context);
 
     return MaterialApp(
       home: DefaultTabController(
