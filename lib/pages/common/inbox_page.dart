@@ -7,8 +7,6 @@
 /// Reflection: Was intended to be a full email-type inbox at conception of the project, which is certainly not what it is now.
 
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
-import 'package:athlete_surveyor/pages/compose_message_page.dart';
-import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:flutter/material.dart';
@@ -53,26 +51,21 @@ class _InboxPageState extends State<InboxPage>
         title: 'Inbox', 
         hasBackButton: false, 
         actionButton: defaultActionButton(
-          actionIcon: Icons.email, 
-          onPressed: () { navigateToPage(context, const ComposeMessagePage()); })),
+          actionIcon: Icons.refresh, 
+          onPressed: () { setState(() {}); })), // Call setState to reload the page and check for new messages.
       body: Column(
         children: [
           DropdownMenu(dropdownMenuEntries: dropdownMenuEntries, hintText: "Inbox", width: MediaQuery.of(context).size.width-8),
-          const Padding(
-            padding: EdgeInsets.all(4.0),
-            child: SearchBar(
-              padding: MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16.0)),
-              leading: Icon(Icons.search))),
           Expanded(
             child: ListView.separated(
               itemCount: widget.inboxModel.emailList.length,
               separatorBuilder: (BuildContext context, int index) => const Divider(color: Colors.transparent, height: 1.0),
               itemBuilder: (BuildContext context, int index) {
                 return Card(
-                  child: RadioListTile(
-                    value: true,          //temp
-                    groupValue: null,     //temp
-                    onChanged: (value){}, //temp
+                  child: RadioListTile(   // Intended for selecting multiple messages to allow mass updates/deletions; never finished
+                    value: true,          // Temp
+                    groupValue: null,     // Temp
+                    onChanged: (value){}, // Temp
                     title: Text("${widget.inboxModel.emailList[index].receivedDate}\nFrom: ${widget.inboxModel.emailList[index].senderFirstName} ${widget.inboxModel.emailList[index].senderLastName}\n${widget.inboxModel.emailList[index].subject}\n"),
                     subtitle: Text(widget.inboxModel.emailList[index].body)));}))]));
   }
