@@ -7,16 +7,22 @@
 /// 
 /// Authors: Josh, Vince, Amanda.
 /// Version:          0.0.1
+/// Remarks: ProxyProvider was extremely powerful to be working with starting out
 
+import 'dart:convert';
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/login_model.dart';
 import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
+import 'package:athlete_surveyor/models/sport.dart';
+import 'package:athlete_surveyor/models/sport_selection_model.dart';
 import 'package:athlete_surveyor/pages/common/tabbed_main_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:athlete_surveyor/services/db.dart';
 import 'package:athlete_surveyor/services/forms/form_repository.dart';
 import 'package:athlete_surveyor/services/questions/question_repository.dart';
+import 'package:athlete_surveyor/services/sports/sports_repository.dart';
+import 'package:athlete_surveyor/services/sports/sports_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/student_model.dart';
@@ -25,37 +31,58 @@ import 'services/forms/form_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-/// Driver code.
-  // var conn = await PostgresDB.getConnString();
+
+late SportsRepository sportsRepository;
+  final sportsService = SportsService(null); // Temporarily set to null
+  final sportSelectionModel = SportSelectionModel(sportsService: sportsService);
+
+  // Create the sports repository with the SportSelectionModel
+  sportsRepository = SportsRepository(sportsSelectionModel: sportSelectionModel);
+
+  // Update the SportService with the correct SportsRepository
+  sportsService.setRepository(sportsRepository);
+
+  // Load initial sports data
+  final sports = await sportsService.loadSportsFromFile();
+  sportSelectionModel.sports = sports;
+
+
+  /// Driver code.
   runApp(
+    /// Dependency injection time!
     MultiProvider(
       providers: [
-        Provider<FormRepository>(
-          create: (_) => FormRepository(),
+        /// Create SportSelectionModel next to load sport contents from assets
+        ChangeNotifierProvider<SportSelectionModel>(
+          create: (context) => sportSelectionModel,
         ),
-        Provider<QuestionRepository>(
-          create: (_) => QuestionRepository(),
+        
+        Provider<SportsRepository>(create: (context) => sportsRepository),        
+        Provider<SportsService>(create: (context) => sportsService),
+        Provider<QuestionRepository>(create: (_) => QuestionRepository()),
+        
+        /// [ Prelaunch - 2 of 3 ] 1-N service relationships
+        ProxyProvider<SportsRepository, FormRepository>(
+          update: (_, sportsRepo, __) => FormRepository(sportsRepo, sportSelectionModel),
         ),
-        /// [FormService] relies on Question + Form repos, so [ProxyProvider2] is suitable
-        ProxyProvider2<FormRepository, QuestionRepository, FormService>(
-          update: (_, formRepo, questionRepo, previous) => FormService(formRepo, questionRepo),
+
+        /// [ Prelaunch - 3 of 3 ] complex services (those with multiple/timely dependencies)
+        /// [FormService] relies on both the [SportsRepository], [QuestionRepository], & [FormRepository],
+        ProxyProvider3<SportsRepository, FormRepository, QuestionRepository, FormService>(
+          update: (_, sportsRepo, formRepo, questionRepo, __) => FormService(formRepo, questionRepo),
         ),
+        
         ChangeNotifierProvider(create: (context) => LoginModel()),
         ChangeNotifierProvider(create: (context) => InboxModel()),
         ChangeNotifierProvider(create: (context) => StudentsModel()),
-
-        /// Combines provision of [FormService] and [AuthoredFormsModel] to provide
-        /// an updated [AuthoredFormsModel] based on changes in the [FormService].
-        ///
-        /// The [ChangeNotifierProxyProvider] is used to create and update the [AuthoredFormsModel]
+        /// [ChangeNotifierProxyProvider] used to create and update the [AuthoredFormsModel]
         /// based on the changes in the [FormService]. It listens to changes in the [FormService]
         /// and updates the [AuthoredFormsModel] accordingly.
         ChangeNotifierProxyProvider<FormService, AuthoredFormsModel>(
           create: (_) => AuthoredFormsModel(Provider.of<FormService>(_, listen: false)),
-          update: (_, formService, previous) => previous!..updateFormService(formService)
-        )
-      ],
+          update: (_, formService, previous) => previous!..updateFormService(formService),
+        ),
+      ], 
       child: MaterialApp(home: MainApp(LoginModel()))
     )
   );

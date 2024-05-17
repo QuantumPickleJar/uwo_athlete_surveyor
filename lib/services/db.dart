@@ -21,6 +21,9 @@ class PostgresDB {
         port: 26257,
         password: 'cn9T0AvFn056o6Dz1ziyRg',
         username: 'quantumpicklejar'
+        ),
+        settings: const ConnectionSettings(
+          connectTimeout: Duration(seconds: 10)
         )
       );
     }
@@ -28,8 +31,10 @@ class PostgresDB {
   }
 
   /// closes the connection so other processes may use it
-  static void closeConnection() {
-    _connection?.close();
-    _connection = null;
+  static Future<void> closeConnection() async {
+    if (_connection != null && _connection!.isOpen) {
+      await _connection!.close();
+      _connection = null;
+    }
   }
 }

@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
     
 /// Widget responsible for containing question-manipulating operations
 /// inside of a Dialog, to keep flow of control linear 
-class EditQuestionWidget extends StatefulWidget {
+class EditQuestionDialog extends StatefulWidget {
   final Question question;
   final Function(Question) onSave;    /// what should happen to the question when done
   final Function onCancel;            /// what (if anything) should happen on cancellation
   
-  const EditQuestionWidget({ 
+  const EditQuestionDialog({ 
     Key? key, 
     required this.question,
     required this.onSave,
@@ -17,10 +17,10 @@ class EditQuestionWidget extends StatefulWidget {
      }) : super(key: key);
 
   @override
-  State<EditQuestionWidget> createState() => _EditQuestionWidgetState();
+  State<EditQuestionDialog> createState() => _EditQuestionDialogState();
 }
 
-class _EditQuestionWidgetState extends State<EditQuestionWidget> {
+class _EditQuestionDialogState extends State<EditQuestionDialog> {
   // _questionTextController.text = question?.content ?? '';
   late TextEditingController _textController;
   late ResponseType _responseFormat;
