@@ -104,7 +104,7 @@ class _MainAppState extends State<MainApp>
   void _buttonPressTestAdminLogin(BuildContext context) async
   {
     usernameController.text = 'admin@uwosh.edu';
-    passwordController.text = 'A)msBslYwXnnmb9W';
+    passwordController.text = 'newpasswordtest';
 
     _validateLogin(context);
   }
