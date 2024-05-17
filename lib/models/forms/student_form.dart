@@ -20,9 +20,9 @@ import 'package:uuid/uuid.dart';
 class StudentForm extends GenericForm {
   
   late final DateTime? formDateReceived;
-  final DateTime? formDateCompleted;
+  // late final DateTime? formDateCompleted;
   
-  /// TODO: this should be populated by the form_file_service
+  /// TODO: this should be populated by the form's Attachments
   // @override
   // List<File>? attachments;
   // List<Question> questions = [];
@@ -33,7 +33,7 @@ class StudentForm extends GenericForm {
     required formName,
     required sport,
     this.formDateReceived,
-    this.formDateCompleted,
+    // this.formDateCompleted,
     super.attachments, 
     required super.questions
   }) : super(formId: formId, formName: formName, sport: sport);
@@ -45,6 +45,19 @@ class StudentForm extends GenericForm {
     notifyListeners();
   }
 
+  /// Constructs a new [StudentForm] from an existing [IGenericForm].
+  /// When used with a concrete [GenericForm], the [questions] field will try to 
+  /// bind if it's not null, as will the [formId] field.
+  StudentForm.fromGenericForm(IGenericForm genericForm, {List<Question>? questions, String? suppliedFormId}) : super(
+    formId: suppliedFormId ?? genericForm.formId,
+    formName: genericForm.formName,
+    sport: genericForm.sport,
+    attachments: genericForm.attachments,
+    formDateCreated: (genericForm is GenericForm) ? genericForm.formDateCreated : DateTime.now(),
+    questions: questions ?? genericForm.questions,
+  ) { 
+    print("[StudentForm] building from GenericForm with formId: $formId"); 
+    }
   // /// Loads the form content and any existing drafts for the questions
   // @override
   // void loadForm(Uuid formUuid) {
@@ -52,5 +65,5 @@ class StudentForm extends GenericForm {
   //   // This would populate the questions list with existing data, including drafts
   //   notifyListeners();
   // }
-  
+
 }
