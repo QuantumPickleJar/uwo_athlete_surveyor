@@ -10,7 +10,7 @@ import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/models/forms/individual_form_examination_model.dart';
 import 'package:flutter/material.dart';
 
-/// 
+/// Class representing a more detailed view of a specific Form.
 class IndividualFormWidget extends StatefulWidget
 {
   final String appBarTitle;
@@ -22,7 +22,7 @@ class IndividualFormWidget extends StatefulWidget
   State<StatefulWidget> createState() => _IndividualFormWidgetState();
 }
 
-///
+/// StatefulWidget State.
 class _IndividualFormWidgetState extends State<IndividualFormWidget>
 {
   @override

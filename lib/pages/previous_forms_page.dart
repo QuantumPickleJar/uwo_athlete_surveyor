@@ -12,7 +12,7 @@ import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
 
-///
+/// A class representing a page in which all forms previously completed by a user are displayed.
 class PreviousFormsPage extends StatefulWidget 
 {
   final PreviousFormsModel formModel;
@@ -22,7 +22,7 @@ class PreviousFormsPage extends StatefulWidget
   _PreviousFormsPageState createState() => _PreviousFormsPageState();
 }
 
-/// 
+/// StatefulWidget State.
 class _PreviousFormsPageState extends State<PreviousFormsPage>
 {
   /// Handles fetching previously completed forms from database and populating ListView when received.

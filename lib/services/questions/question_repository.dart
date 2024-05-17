@@ -16,7 +16,7 @@ class QuestionRepository implements IQuestionRepository
   // Private constructor, facilitates safeguarded connection 
   QuestionRepository();
 
-  /// 
+  /// Creates a question associated with a specified Form.
   @override
   Future<Question> createQuestion(Question question, String formId) async 
   {
@@ -39,7 +39,7 @@ class QuestionRepository implements IQuestionRepository
     return result.isEmpty;
   }
 
-  /// 
+  /// Retrieve a question given its ID.
   @override
   Future<Question?> getQuestionById(String questionId) async 
   {
@@ -49,7 +49,7 @@ class QuestionRepository implements IQuestionRepository
                           : _mapRowToQuestion(result.first.toColumnMap());
   }
 
-  /// 
+  /// Retrieve all questions from all Forms.
   @override
   Future<List<Question>> getQuestions() async 
   {
@@ -68,7 +68,7 @@ class QuestionRepository implements IQuestionRepository
     return result.map((row) => _mapRowToQuestion(row.toColumnMap())).toList();
   }
 
-  /// 
+  /// Update a question on the Database.
   @override
   Future<void> updateQuestion(Question question) async 
   {
@@ -100,7 +100,7 @@ Future<void> updateFormQuestions({required List<Question> questions, required St
 }
 }
 
-/// 
+/// Maps a Result Row to a Question object and returns said object to caller.
 Question _mapRowToQuestion(Map<String, dynamic> row) {
   return Question(
       questionId: row['question_id'],

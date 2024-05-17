@@ -99,13 +99,13 @@ class Database
   /// Fetching the student list
   static Future<Result> fetchStudents() async { return _executeSQLCommand(_getStudentList,null); }
 
-  /// 
+  /// Fetch all questions from the Database.
   static Future<Result> fetchAllQuestions() async { return _executeSQLCommand(_getAllQuestionsQuery,null); }
 
-  /// 
+  /// Fetch every Form that exists on the Database.
   static Future<Result> fetchAllForms() async { return _executeSQLCommand(_getAllForms,null); }
 
-  /// 
+  /// Needed to store the email service's API key on the database, as keeping it in the GitHub repo (publicly) triggers automatic deletion by the service provider when detected.
   static Future<Result> fetchEmailServiceApiKey() async { return _executeSQLCommand(_getEmailServiceApiKey,null); }
 
   /// Get a user's profile based on their provided username.
@@ -122,14 +122,14 @@ class Database
                              {'questionId':questionId});
   }
 
-  ///
+  /// Get all of the questions associated with a specific Form ID.
   static Future<Result> fetchQuestionsByFormId(String formId) async
   {
     return _executeSQLCommand(_getAllQuestionsByFormId, 
                              {'formId':formId });
   }
 
-  /// 
+  /// Get a Form by specifying its ID
   static Future<Result> fetchFormById(String formId) async
   {
     return _executeSQLCommand(_getFormById, 
@@ -164,14 +164,14 @@ class Database
                              {'content':questionContent, 'order':questionOrdinal, 'formId':formId, 'responseEnum':questionResFormat});
   }
 
-  /// 
+  /// Insert a single or multiple questions into the Database associated with a specific Form.
   static Future<Result> insertNewQuestions(String concatenatedValues) async
   {
     return _executeSQLCommand(_insertNewQuestions, 
                              {'values':concatenatedValues});   
   }
 
-  /// 
+  /// Insert a completely new Form into the Database.
   static Future<Result> insertNewForm(String userId, String formTitle, String lastModified, String createDate) async
   {
     return _executeSQLCommand(_insertNewForm, 
@@ -185,35 +185,35 @@ class Database
                              {'questionId':questionId});
   }
 
-  /// 
+  /// Delete all Form questions that have the specified Form ID.
   static Future<Result> deleteAllQuestionsWithFormId(String formId) async
   {
     return _executeSQLCommand(_deleteAllQuestionsWithFormId,
                              {'formId':formId});
   }
 
-  ///
+  /// Delete a Form with the given ID from the Database.
   static Future<Result> deleteFormById(String formId) async
   {
     return _executeSQLCommand(_deleteFormById,
                              {'formId':formId});
   }
 
-  /// 
+  /// Update a single question on the Database given it's ID.
   static Future<Result> updateQuestion(String questionContent, int? questionOrdinal, String questionFormId, ResponseWidgetType questionResFormat, String questionId) async
   {
     return _executeSQLCommand(_updateQuestion, 
                              {'content':questionContent, 'order':questionOrdinal, 'formId':questionFormId, 'responseEnum':questionResFormat, 'questionId':questionId});
   }
 
-  /// 
+  /// Update a Form on the Database given the Form's ID.
   static Future<Result> updateFormById(String? formId, String userId, String formTitle, DateTime lastModified, DateTime createDate) async
   {
     return _executeSQLCommand(_updateFormById,
                              {'formId':formId, 'userId':userId, 'formTitle':formTitle, 'lastModified':lastModified, 'createDate':createDate});
   }
 
-  /// 
+  /// Update a user's password using their ID, which is made available in the data-object LoggedInUser passed from the initial login screen forward to other pages.
   static Future<Result> updateUserPasswordById(String userId, String newPassword, bool isTempPassword)
   {
     return _executeSQLCommand(_updateUserPasswordById,
