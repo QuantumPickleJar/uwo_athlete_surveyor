@@ -110,34 +110,49 @@ class _CreateUserState extends State<CreateUserPage>
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              defaultTextFormField(
-                controller: usernameController, 
-                validator: (text) => _validateUsername(text!), 
-                hintText: constants.newUsernameFieldHint,
-                obscureText: false),
-              defaultTextFormField(
-                controller: firstNameController, 
-                validator: (text) => _validateFirstName(text!), 
-                hintText: constants.firstNameFieldHint,
-                obscureText: false),
-              defaultTextFormField(
-                controller: lastNameController, 
-                validator: (text) => _validateLastName(text!),
-                hintText: constants.lastNameFieldHint,
-                obscureText: false),
-              CheckboxListTile(
-                title: const Text(constants.checkboxListTileTitleText),
-                value: isChecked,
-                onChanged: (bool? value) { 
-                  setState(() {
-                    isChecked = value!;
-                  });}),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(constants.defaultEdgeInsetsPadding),
+                    child: defaultTextFormField(
+                      controller: usernameController, 
+                      validator: (text) => _validateUsername(text!), 
+                      hintText: constants.newUsernameFieldHint,
+                      obscureText: false),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(constants.defaultEdgeInsetsPadding),
+                    child: defaultTextFormField(
+                      controller: firstNameController, 
+                      validator: (text) => _validateFirstName(text!), 
+                      hintText: constants.firstNameFieldHint,
+                      obscureText: false),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(constants.defaultEdgeInsetsPadding),
+                    child: defaultTextFormField(
+                      controller: lastNameController, 
+                      validator: (text) => _validateLastName(text!),
+                      hintText: constants.lastNameFieldHint,
+                      obscureText: false),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(constants.defaultEdgeInsetsPadding),
+                    child: CheckboxListTile(
+                      title: const Text(constants.checkboxListTileTitleText),
+                      value: isChecked,
+                      onChanged: (bool? value) { 
+                        setState(() {
+                          isChecked = value!;
+                        });}),
+                  )]),
               ElevatedButton(
                 onPressed: (){ _validateNewUserCredentials(); },
                 style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.yellow)), 
-                child: const SizedBox(child: Center(child: Text(constants.addNewUserCheckButtonText, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))))),
-    ]))));
+                child: const SizedBox(child: Center(child: Text(constants.addNewUserCheckButtonText, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))))],
+          ))));
   }
 }
