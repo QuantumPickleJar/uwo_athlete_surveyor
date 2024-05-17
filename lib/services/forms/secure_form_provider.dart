@@ -1,6 +1,7 @@
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/forms/student_form.dart';
+import 'package:athlete_surveyor/pages/form_taker_page.dart';
 import 'package:athlete_surveyor/pages/staff/form_builder_page.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +37,7 @@ class SecureFormProvider extends StatelessWidget {
             /// TODO: implement student survey page
                  return form is StaffForm ? 
                  FormBuilderPage(formId: formId) : 
-                 throw UnimplementedError();
-                //  FormTakerPage();
+                 FormTakerPage(questions: form.questions.map((q) => q.header).toList());                //  FormTakerPage();
           })
         );
         /// handle errors in a visuale manner before rendering loading progress
