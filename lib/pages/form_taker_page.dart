@@ -7,11 +7,8 @@ import 'package:flutter/material.dart';
 
 /// Page for students to take the form and submit their responses.
 class FormTakerPage extends StatefulWidget {
-  // should this be a StudentForm, or a reference to something like that?
-  final StudentModel studentModel;
-
+  final StudentModel studentModel;        /// holds the questions that the student will be responding to
   const FormTakerPage({Key? key, required this.studentModel}) : super(key: key);
-
 
   @override
   _FormTakerPageState createState() => _FormTakerPageState();
@@ -68,7 +65,7 @@ class _FormTakerPageState extends State<FormTakerPage> {
           children: [
             FormProgressWidget(
               questions: widget.studentModel.questions,
-              answeredQuestions: widget.studentModel.responses.keys.toSet().,
+              answeredQuestionIds: widget.studentModel.responses.keys.toSet(),
               currentQuestionIndex: currentQuestionIndex,
               onQuestionSelected: onQuestionSelected,
             ),
