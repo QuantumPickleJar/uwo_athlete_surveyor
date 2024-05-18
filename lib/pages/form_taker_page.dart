@@ -1,13 +1,17 @@
+import 'dart:js_interop';
+
 import 'package:athlete_surveyor/models/question.dart';
+import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/widgets/form_progress_widget.dart';
 import 'package:flutter/material.dart';
 
 /// Page for students to take the form and submit their responses.
 class FormTakerPage extends StatefulWidget {
   // should this be a StudentForm, or a reference to something like that?
-  final List<Question> questions;
+  final StudentModel studentModel;
 
-  const FormTakerPage({Key? key, required this.questions}) : super(key: key);
+  const FormTakerPage({Key? key, required this.studentModel}) : super(key: key);
+
 
   @override
   _FormTakerPageState createState() => _FormTakerPageState();
@@ -15,14 +19,20 @@ class FormTakerPage extends StatefulWidget {
 
 class _FormTakerPageState extends State<FormTakerPage> {
   int currentQuestionIndex = 0;
-  Set<int> answeredQuestions = {};
 
-  void answerCurrentQuestion() {
-    setState(() {
-      answeredQuestions.add(currentQuestionIndex);
-    });
+  /// Minifying method for accessing the current question's [questionId]
+  String getCurrentQuestionId() { 
+    return widget.studentModel.questions[currentQuestionIndex].questionId; 
   }
 
+  /// Updates the answer for the current question in the [widget.studentModel.questions] list.
+  /// After updating, triggers a state update to reflect the changes 
+  void answerCurrentQuestion(dynamic answer) {
+    setState(() {
+      widget.studentModel.answerQuestion(getCurrentQuestionId(), answer);
+    });
+  }
+  /// Go back a question (if we're not already at the first question)
   void previousQuestion() {
     setState(() {
       if (currentQuestionIndex > 0) {
@@ -31,9 +41,10 @@ class _FormTakerPageState extends State<FormTakerPage> {
     });
   }
 
+  /// Advance to the next question (if we're not already at the last question)
   void nextQuestion() {
     setState(() {
-      if (currentQuestionIndex < widget.questions.length - 1) {
+      if (currentQuestionIndex < widget.studentModel.questions.length - 1) {
         currentQuestionIndex++;
       }
     });
@@ -56,8 +67,8 @@ class _FormTakerPageState extends State<FormTakerPage> {
         child: Column(
           children: [
             FormProgressWidget(
-              questions: widget.questions,
-              answeredQuestions: answeredQuestions,
+              questions: widget.studentModel.questions,
+              answeredQuestions: widget.studentModel.responses.keys.toSet().,
               currentQuestionIndex: currentQuestionIndex,
               onQuestionSelected: onQuestionSelected,
             ),
@@ -70,7 +81,9 @@ class _FormTakerPageState extends State<FormTakerPage> {
                   label: const Text('<< Prev'),
                 ),
                 ElevatedButton(
-                  onPressed: answerCurrentQuestion,
+                  /// TODO: implement a `ResponseInputWidget` that handles UI + interaction of 
+                  /// the question based on the [ResponseType]
+                    onPressed: () { answerCurrentQuestion('TEST ANSWER'); },
                   child: const Text('Answer Current Question'),
                 ),
                 FloatingActionButton.extended(
