@@ -75,18 +75,14 @@ class SecureFormProvider extends StatelessWidget {
         if (form != null && form.formId.isNotEmpty) { 
           debugPrint("[SFP] Form loaded successfully: ${form.formId}");
           return StaffForm.fromGenericForm(form);
-        } else {
-          debugPrint("[SFP] Failed to load form: form is null or formId is empty.");
         }
       } else {
         /// load the form by its id, and load it into the generic form
         if (form != null && form.formId.isNotEmpty) { 
         return StudentForm.fromGenericForm(form);
-      } else {
-        debugPrint("[SFP] Failed to load form: form is null or formId is empty.");
-        throw Exception('The form failed to load or was not found (Id: $formId)');
-      }
+      } 
+      throw Exception('The form failed to load or was not found (Id: $formId)');
     }
-    return Future<GenericForm>.error('[SFP]The form failed to load (Id: $formId)');    
+    return Future<GenericForm>.error('[SFP]The form failed to load (Id: $formId)');
   }
 }
