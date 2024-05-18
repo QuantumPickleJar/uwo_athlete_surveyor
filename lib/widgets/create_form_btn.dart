@@ -1,3 +1,4 @@
+import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/sport.dart';
 import 'package:athlete_surveyor/models/sport_selection_model.dart';
 import 'package:athlete_surveyor/resources/colors.dart';
@@ -10,8 +11,8 @@ import 'package:provider/provider.dart';
 /// To keep data flow simple, force the user to have a sport chosen for 
 /// the form before we take them to the page to render it for further work.
 class CreateFormButton extends StatelessWidget {
-  final bool hasAdminPrivileges;
-  const CreateFormButton({ Key? key, required this.hasAdminPrivileges }) : super(key: key);
+  final LoggedInUser currentUser;
+  const CreateFormButton({ Key? key, required this.currentUser }) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
@@ -39,15 +40,11 @@ class CreateFormButton extends StatelessWidget {
             
             if (newForm != null && newForm.formId.isNotEmpty) {
               debugPrint('New form created with ID: ${newForm.formId}');
-
               /// push the existing form (if, for example, a previous form's thumnbnail was tapped)
               /// otherwise send them there with a new one to be provided an ID on dbsubmittal
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               debugPrint('[HomePage]: Securely providing ${newForm.formId}');
-              return SecureFormProvider(
-                  formId: newForm.formId,
-                  hasAdminPrivileges: hasAdminPrivileges
-              );
+              return SecureFormProvider(formId: newForm.formId, currentUser: currentUser);
             }));
             } else {
               debugPrint('Failed to create new form or formID was not set!');

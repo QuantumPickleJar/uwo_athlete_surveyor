@@ -61,21 +61,20 @@ class _PreviousFormsPageState extends State<PreviousFormsPage> {
               GenericForm form = formModel.formsList[index];
               return FormTileWidget(
                 form: form,
-                hasAdminPrivileges: widget.currentUser.hasAdminPrivileges, 
+                currentUser: widget.currentUser, 
                 /// dynamically adjust the routing based on [widget.currentUser]
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                         return (widget.currentUser.hasAdminPrivileges) ?
-                          FormBuilderPage(formId: form.formId)  :         /// Staff go here
-                          FormTakerPage(questions: form.questions);       /// Students go here
-                      }
-                    ),
-                  );
-                },
-                
+                // onTap: () {
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) {
+                //          return (widget.currentUser.hasAdminPrivileges) ?
+                //           FormBuilderPage(formId: form.formId)  :         /// Staff go here
+                //           FormTakerPage(questions: form.questions);       /// Students go here
+                  //     }
+                  //   ),
+                  // );
+                // },
               );
             });
           }
