@@ -5,14 +5,18 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
   import 'package:athlete_surveyor/resources/common_functions.dart';
   import 'package:flutter/material.dart';
       
+  /// Widget used to render the forms that have been either CREATED or 
+  /// ASSIGNED to the given user (determined by reading [hasAdminPrivileges]).
+  /// This should be used on the `previous_forms_page`.
   class FormTileWidget extends StatelessWidget {
     final GenericForm form;
-    final LoggedInUser currentUser;
+    // final LoggedInUser currentUser;
+    final bool hasAdminPrivileges;
 
     const FormTileWidget({
       super.key,
       required this.form,
-      required this.currentUser,
+      required this.hasAdminPrivileges
     });
 
     @override
@@ -21,7 +25,7 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
         title: Text(form.formName),
         onTap: () {
           // Staff users should be taken to [FormBuilderPage]
-          if (currentUser.hasAdminPrivileges) {
+          if (hasAdminPrivileges) {
             navigateToPage(
               context,
               FormBuilderPage(formId: form.formId),
@@ -29,11 +33,10 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
           } else {
             navigateToPage(
               context,
-              FormTakerPage(
-                questions: form.questions.map((e) => e.toString()).toList(),
-                /// send w/e needed to track responses.  Probably a [StudentForm]?
+              FormTakerPage( 
+                questions: form.questions,
               ),
-            );
+            );              
           }
         },
       );
