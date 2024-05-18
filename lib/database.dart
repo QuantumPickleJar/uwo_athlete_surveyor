@@ -30,6 +30,8 @@ class Database
   //static const String _getUserPassword = "SELECT * FROM tbl_users WHERE username = @username";
   static const String _insertNewUser = "INSERT INTO tbl_users (username,password,is_admin) VALUES (@username,@password,@is_admin)";
   //static const String _deleteAthlete = " DElETE FROM tbl_studentlist WHERE student_name =  @name AND grade = @grade AND sport = @sport";
+  static const String _updateUserPasswordById = "UPDATE tbl_users SET password = @password, is_temp_password = @is_temp_password WHERE uuid_user = @uuid_user";
+
   /// Open connection to the database.
   static Future<Connection> getOpenConnection() async 
   { 
@@ -139,6 +141,14 @@ class Database
   {
     return _executeSQLCommand(_insertNewUser, 
                             {'username':username, 'password':password, 'first_name':firstName, 'last_name':lastName, 'is_admin':isAdmin});
+  }
+
+
+  /// Update a user's password using their ID, which is made available in the data-object LoggedInUser passed from the initial login screen forward to other pages.
+  static Future<Result> updateUserPasswordById(String userId, String newPassword, bool isTempPassword)
+  {
+    return _executeSQLCommand(_updateUserPasswordById,
+                             {'password':newPassword, 'is_temp_password': isTempPassword, 'uuid_user':userId});     
   }
 
 }
