@@ -32,10 +32,8 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
               FormBuilderPage(formId: form.formId) :
               /// TODO: adjust once subclassed user types are implemented
               FormTakerPage(studentModel: StudentModel(
-                name: 'Student Name', // Replace with actual student name
-                grade: 'Grade', // Replace with actual grade
-                sport: 'Sport', // Replace with actual sport
-                questions: form.questions,
+              student: currentUser,
+              questions: form.questions,
           )));
 
         }
