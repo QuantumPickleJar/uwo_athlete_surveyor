@@ -36,7 +36,7 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
                 grade: 'Grade', // Replace with actual grade
                 sport: 'Sport', // Replace with actual sport
                 questions: form.questions,
-          );));
+          )));
 
         }
       );

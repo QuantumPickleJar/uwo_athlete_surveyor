@@ -34,13 +34,12 @@ class _FormProgressWidgetState extends State<FormProgressWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // _buildQuestionList(),
                 ScrollingQuestionList(
                   questions: widget.questions, 
                   answeredQuestionIds: widget.answeredQuestionIds,
                   currentIndex: widget.currentQuestionIndex, 
                   onQuestionSelected: widget.onQuestionSelected),
-                SizedBox(width: 16.0),
+                const SizedBox(width: 16.0),
                 _buildProgressIndicator(),
               ],
             ),
