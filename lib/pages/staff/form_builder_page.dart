@@ -1,6 +1,7 @@
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
+import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:athlete_surveyor/widgets/dialogs/edit_question_dialog.dart';
 import 'package:athlete_surveyor/widgets/questions/question_item.dart';
@@ -208,6 +209,7 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       canPop: false,  /// allows the page to the user of unsaved data loss on back taps
       onPopInvoked: (bool didPop) async {
         /// TODO: implement a more smooth isDirty attribute of the form, perhaps on the model?
+        showBackDialog(context);
       },
       child: FutureBuilder<GenericForm?>(
         future: _formFuture,

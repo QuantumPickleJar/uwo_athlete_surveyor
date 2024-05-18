@@ -23,6 +23,46 @@ AppBar defaultAppBar({required BuildContext buildContext, required String title,
                   child: actionButton)]);
 }
 
+  /// Shows a dialog and resolves to true when the user has indicated that they
+  /// want to pop.
+  ///
+  /// A return value of null indicates a desire not to pop, such as when the
+  /// user has dismissed the modal without tapping a button.
+  /// < From https://api.flutter.dev/flutter/widgets/PopScope-class.html >
+  Future<bool?> showBackDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure?'),
+          content: const Text(
+            'Are you sure you want to leave this page?',
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Nevermind'),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Leave'),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 /// An ElevatedButton that can have it's visibility toggled based on the provided boolean parameter 'visibilityToggle'.
 /// This can be a one-time check or can be used to dynamically decided if the button is available based on the current
 /// environment.
