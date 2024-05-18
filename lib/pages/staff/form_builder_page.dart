@@ -204,30 +204,46 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
     _sliderValue = 0.5;
     /// update [_currentForm]
 
-    return FutureBuilder<GenericForm?>(
-      future: _formFuture,
-      builder: (context, snapshot) {
-        // _currentForm = _formService.;
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return SizedBox(height: 35, width: 35,child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshot.hasData) {  
-          /// we KNOW it will have a form inside, so we use '!'
-          _currentForm = snapshot.data!;
-          return Scaffold(
-            // appBar: AppBar(title: Text('Form Builder - ${snapshot.data!.formName}')),
-            appBar: AppBar(title: Text('Form Builder - ${_currentForm?.formName}')),
-            body: buildQuestions(_currentForm?.questions),
-            floatingActionButton: FloatingActionButton(
-              onPressed: _addNewQuestion,
-              tooltip: 'Add Question',
-              child: const Icon(Icons.add_circle)),
-          );
-        } else {
-          return Text('Snapshot was empty fetching data for the form.');
-        }
-      } 
+    return PopScope(
+      canPop: false,  /// allows the page to the user of unsaved data loss on back taps
+      onPopInvoked: (bool didPop) async {
+        /// TODO: implement a more smooth isDirty attribute of the form, perhaps on the model?
+      },
+      child: FutureBuilder<GenericForm?>(
+        future: _formFuture,
+        builder: (context, snapshot) {
+          // _currentForm = _formService.;
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SizedBox(height: 35, width: 35,child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {  
+            /// we KNOW it will have a form inside, so we use '!'
+            _currentForm = snapshot.data!;
+            return Scaffold(
+              // appBar: AppBar(title: Text('Form Builder - ${snapshot.data!.formName}')),
+              appBar: AppBar(
+                title: Text('Form Builder - ${_currentForm?.formName}'),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.save),
+                    onPressed: () {
+                      _formService.saveForm(_currentForm!);
+                    },
+                  )
+                ],
+              ),
+              body: buildQuestions(_currentForm?.questions),
+              floatingActionButton: FloatingActionButton(
+                onPressed: _addNewQuestion,
+                tooltip: 'Add Question',
+                child: const Icon(Icons.add_circle)),
+            );
+          } else {
+            return Text('Snapshot was empty fetching data for the form.');
+          }
+        } 
+      ),
     );
   }
   
