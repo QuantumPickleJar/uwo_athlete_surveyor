@@ -12,7 +12,7 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
     final GenericForm form;
     // final LoggedInUser currentUser;
     final bool hasAdminPrivileges;
-  final VoidCallback onTap;
+    final VoidCallback onTap;
 
     const FormTileWidget({
       super.key,
@@ -25,22 +25,7 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
     Widget build(BuildContext context) {
       return ListTile(
         title: Text(form.formName),
-        onTap: () {
-          // Staff users should be taken to [FormBuilderPage]
-          if (hasAdminPrivileges) {
-            navigateToPage(
-              context,
-              FormBuilderPage(formId: form.formId),
-            );
-          } else {
-            navigateToPage(
-              context,
-              FormTakerPage( 
-                questions: form.questions,
-              ),
-            );              
-          }
-        },
+        onTap: onTap
       );
     }
   }
