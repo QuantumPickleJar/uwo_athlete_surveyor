@@ -12,11 +12,13 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
     final GenericForm form;
     // final LoggedInUser currentUser;
     final bool hasAdminPrivileges;
+  final VoidCallback onTap;
 
     const FormTileWidget({
       super.key,
       required this.form,
-      required this.hasAdminPrivileges
+      required this.hasAdminPrivileges,
+      required this.onTap
     });
 
     @override
