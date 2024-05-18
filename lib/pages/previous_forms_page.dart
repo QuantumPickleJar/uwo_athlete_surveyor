@@ -16,9 +16,11 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
 import 'package:provider/provider.dart';
 
-/// A class representing a page in which all forms previously completed by a user are displayed.
-class PreviousFormsPage extends StatefulWidget 
-{
+/// Page used to display to the user any [GenericForm]-type entities that
+/// have been contextually "assigned" to the user.
+/// The user can be either a student or a staff member.
+/// It is important to distinguish between the two when displaying the forms on the screenclass PreviousFormsPage extends StatefulWidget 
+class PreviousFormsPage extends StatefulWidget {
   final LoggedInUser currentUser;
   const PreviousFormsPage({super.key, required this.currentUser});
 
