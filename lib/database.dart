@@ -18,10 +18,11 @@ class Database
   static const String _getQuestionByQuestionId = """SELECT content, order_in_form, form_id, question_id, response_enum FROM public.tbl_questions WHERE question_id = @questionId;""";
   static const String _getAllQuestionsQuery = """SELECT * FROM tbl_questions""";
   static const String _getAllQuestionsByFormId = """SELECT * from tbl_questions WHERE form_id = @formId""";
-  static const String _getAllForms = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
+  // static const String _getAllForms = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
   static const String _getFormById = """SELECT form_id, form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;""";
 
   // static const String _getFormsByUserId = """SELECT form_id, form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;""";
+  static const String _getMessagesById = "SELECT date_received, from_uuid, subject_line, body, first_name, last_name FROM tbl_inbox ti LEFT JOIN tbl_users tu ON ti.from_uuid = tu.uuid_user WHERE ti.to_uuid = @userId;";
 
   static const String _getEmailServiceApiKey = "SELECT key FROM tbl_api_keys WHERE name='sendgrid'";
   /// SQL insert query strings. ***Note on inserts; add "RETURNING <column_name>" to end of insert queries to get a Result from them, with <column name> usually being the ID that gets assigned to it.
@@ -49,7 +50,7 @@ class Database
   }
 
   /// Generic SQL execution method; just need to supply query and any parameters which should exist as constants in this file.
-  static Future<Result> executeSQLCommand(String query, Object? optionalParameters) async
+  static Future<Result> _executeSQLCommand(String query, Object? optionalParameters) async
   {
     Connection? conn;
     try 
@@ -75,20 +76,20 @@ class Database
   }
 
   /// Get all Emails from the database.
-  static Future<Result> fetchEmails() async { return executeSQLCommand(_getEmailsQuery,null); }
+  static Future<Result> fetchEmails() async { return _executeSQLCommand(_getEmailsQuery,null); }
 
   /// Get all previously completed forms from the database.
-  static Future<Result> fetchPreviousForms() async { return executeSQLCommand(_getPreviousFormsQuery,null); }
+  static Future<Result> fetchPreviousForms() async { return _executeSQLCommand(_getPreviousFormsQuery,null); }
 
   /// Fetching the student list
-  static Future<Result> fetchStudents() async { return executeSQLCommand(_getStudentList,null); }
+  static Future<Result> fetchStudents() async { return _executeSQLCommand(_getStudentList,null); }
 
   /// Get a user's profile based on their provided username.
   static Future<Result> fetchUser(String username) async
   {
     // return executeSQLCommand(_getSpecificUser, 
     //                         {'username':username});
-    return executeSQLCommand(_getSpecificUser, 
+    return _executeSQLCommand(_getSpecificUser, 
                             {'username':username});
   }
 
@@ -129,14 +130,14 @@ class Database
   /// Connects the app to the data base and gets the athletes put in on the app into the database
   static Future<Result> insertAthlete(String studentName, String grade, String sport, String id) async 
   {
-    return executeSQLCommand(_insertAthlete, 
+    return _executeSQLCommand(_insertAthlete, 
                             {'student_name':studentName, 'grade':grade, 'sport':sport, 'student_id': id});
   }
 
   /// Insert a new user to the DB; bool response shows whether or not it was successful.
   static Future<Result> insertNewUser(String username, String password, String firstName, String lastName, bool isAdmin) async
   {
-    return executeSQLCommand(_insertNewUser, 
+    return _executeSQLCommand(_insertNewUser, 
                             {'username':username, 'password':password, 'first_name':firstName, 'last_name':lastName, 'is_admin':isAdmin});
   }
 
