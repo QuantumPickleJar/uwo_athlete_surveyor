@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../individual_student_page.dart'; // Import the individual student screen
 import '../add_athlete_page.dart'; // Import the add athlete screen
-import '/models/student_model.dart';
+import '../../models/students_model.dart';
 
 
 class StudentsWidget extends StatefulWidget {

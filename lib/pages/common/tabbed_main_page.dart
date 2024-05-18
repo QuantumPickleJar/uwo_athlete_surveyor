@@ -2,7 +2,7 @@ import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
 import 'package:athlete_surveyor/pages/common/home_page.dart';
-import 'package:athlete_surveyor/pages/common/my_forms_page.dart';
+import 'package:athlete_surveyor/pages/previous_forms_page.dart';
 import 'package:athlete_surveyor/pages/common/inbox_page.dart';
 import 'package:athlete_surveyor/resources/colors.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
@@ -58,7 +58,7 @@ class _TabbedMainPageState extends State<TabbedMainPage>
         builder: (context, previousFormsModel, _) {
           /// by wrapping this in a consumer, we let the widget tree deal with role-specifics
           print("[TabbedMainpage] User Role: ${widget.currentUser.hasAdminPrivileges ? 'Admin' : 'Student'}");
-          return MyFormsPage(currentUser: widget.currentUser);
+          return PreviousFormsPage(currentUser: widget.currentUser);
       })
     ];
   }
