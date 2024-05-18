@@ -1,6 +1,8 @@
+import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/forms/student_form.dart';
+import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/pages/form_taker_page.dart';
 import 'package:athlete_surveyor/pages/staff/form_builder_page.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
@@ -13,8 +15,9 @@ import 'package:provider/provider.dart';
 /// and use that to determine what page we take the user to.
 class SecureFormProvider extends StatelessWidget {
   final String formId;
-  final bool hasAdminPrivileges;
-  const SecureFormProvider({Key? key, required this.formId, required this.hasAdminPrivileges});
+  // final bool hasAdminPrivileges;
+  final LoggedInUser currentUser;
+  const SecureFormProvider({Key? key, required this.formId, required this.currentUser});
   
   @override
   Widget build(BuildContext context) {
@@ -34,9 +37,7 @@ class SecureFormProvider extends StatelessWidget {
           return ChangeNotifierProvider<GenericForm>.value(
             value: snapshot.data!,
             child: Consumer<GenericForm>(builder: (context, form, child) {
-            return form is StaffForm ? 
-                 FormBuilderPage(formId: formId) : 
-                 FormTakerPage(questions: form.questions);                //  FormTakerPage();
+            return resolvePageByUserRole(form);                //  FormTakerPage();
           })
         );
         /// handle errors in a visuale manner before rendering loading progress
@@ -48,25 +49,37 @@ class SecureFormProvider extends StatelessWidget {
       }, 
     );
   }
+
+  /// loads questions into respectie places based on user's role:
+  /// STUDENTS: [StudentModel] (and then to [FormTakerPage]) 
+  /// STAFF: a [StaffForm] is sent to [FormBuilderPage] 
+  StatefulWidget resolvePageByUserRole(GenericForm form) {
+    if (form is StaffForm) {
+      return FormBuilderPage(formId: formId);
+    } else {
+      /// load up the [StudentModel] for the [FormTakerPage]
+      StudentModel studentModel = StudentModel(
+        student: currentUser,
+        questions: form.questions);       /// pass questions from [form] to the model
+      return FormTakerPage(studentModel: studentModel);
+    }
+  }
   
   /// returns the appropriate form based on the 
   Future<GenericForm> _loadFormByUserRole(BuildContext context, String formId) async {
     /// reach up the widget tree to get [FormService]
     FormService formService = Provider.of<FormService>(context, listen: false);
-    if (hasAdminPrivileges) {
-        GenericForm? form = await formService.getFormById(formId);
+    GenericForm? form = await formService.getFormById(formId);
+    if (currentUser.hasAdminPrivileges) {
         /// ensure the form is valid before trying to load it as a [StaffForm]
-        
         if (form != null && form.formId.isNotEmpty) { 
           debugPrint("[SFP] Form loaded successfully: ${form.formId}");
-          /// this seems weird
           return StaffForm.fromGenericForm(form);
         } else {
           debugPrint("[SFP] Failed to load form: form is null or formId is empty.");
         }
       } else {
-      /// load the form by its id, and load it into the generic form
-      GenericForm? form = await formService.getFormById(formId);
+        /// load the form by its id, and load it into the generic form
         if (form != null && form.formId.isNotEmpty) { 
         return StudentForm.fromGenericForm(form);
       } else {

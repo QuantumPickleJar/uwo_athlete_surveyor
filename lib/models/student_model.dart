@@ -1,21 +1,24 @@
+import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:flutter/material.dart';
-import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/models/response.dart';
 
 /// Model representing an individual student, including their details
 /// and the form they are currently taking, along with their responses.
 class StudentModel extends ChangeNotifier {
-  final String name;
-  final String grade;
-  final String sport;
+  final LoggedInUser student;
   final List<Question> questions;
   final Map<String, Response> responses = {};
 
+  /// easy-access getters for [StudentModel] Consumers
+  String get name => '${student.firstName} ${student.lastName}';
+  String get grade => student.hasAdminPrivileges ? 'N/A' : 'Some Grade'; // Replace with actual grade retrieval logic
+  String get sport => 'Some Sport'; // Replace with actual sport retrieval logic
+
+
+
   StudentModel({
-    required this.name,
-    required this.grade,
-    required this.sport,
+    required this.student,
     required this.questions,
   });
 
