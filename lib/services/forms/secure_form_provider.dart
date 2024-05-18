@@ -37,7 +37,7 @@ class SecureFormProvider extends StatelessWidget {
             /// TODO: implement student survey page
                  return form is StaffForm ? 
                  FormBuilderPage(formId: formId) : 
-                 FormTakerPage(questions: form.questions.map((q) => q.header).toList());                //  FormTakerPage();
+                 FormTakerPage(questions: form.questions);                //  FormTakerPage();
           })
         );
         /// handle errors in a visuale manner before rendering loading progress
