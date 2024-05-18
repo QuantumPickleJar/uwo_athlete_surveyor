@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class InboxModel extends ChangeNotifier
 {
   final List<Email> emailList = [];
-
+  /// TODO accept a user id for who these messages belong to
   /// Get all inbox messages from the database and insert into internal list.
   Future<void> getEmailsFromDatabase() async 
   {
@@ -19,8 +19,8 @@ class InboxModel extends ChangeNotifier
                             results[i][1].toString(),   //from
                             results[i][2].toString(),   //subject
                             results[i][3].toString(),   //body
-                            results[i][4].toString(),   //firstName
-                            results[i][5].toString())); //lastName
+                            
+        ));
       }
 
       notifyListeners();
