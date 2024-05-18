@@ -7,6 +7,7 @@ import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/resources/constant_values.dart' as constants;
 import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:athlete_surveyor/services/forms/secure_form_provider.dart';
+import 'package:athlete_surveyor/widgets/create_form_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -85,13 +86,20 @@ class HomePage extends StatelessWidget {
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center)))),
-                toggleVisibleButton(
-                    visibilityToggle: hasAdminPrivileges,
-                    onPressed: () async {
-                      navigateToNewFormPage(context);
-                    },
-                    buttonText: 'Create a Form')
+                                    textAlign: TextAlign.center),
+                              ),
+                            )
+                        ),
+                Visibility(
+                  visible: hasAdminPrivileges,
+                  child: CreateFormButton(hasAdminPrivileges: hasAdminPrivileges))
+                // toggleVisibleButton(
+                //     visibilityToggle: hasAdminPrivileges,
+                //     onPressed: () async {
+                //       navigateToNewFormPage(context);
+                //     },
+                //     buttonText: 'Create a Form'
+                // );
               ])
             ]));
   }
