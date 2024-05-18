@@ -29,8 +29,8 @@ class FormService {
       /// throw an arg-error if it's null
       throw ArgumentError.notNull('userId');
     } on Exception catch (e) {
-      print("Error fetching forms for user with id $userId");
-      throw UnimplementedError();
+      print("Error fetching forms for user with id $userId: $e");
+      rethrow;
     }
   }
   
