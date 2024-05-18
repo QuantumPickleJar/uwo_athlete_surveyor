@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
     if (context.mounted) {
       navigateToPage(
           context,
-          SecureFormProvider(formId: newForm.formId, currentUser: ,));
+          SecureFormProvider(formId: newForm.formId, currentUser: currentUser));
     }
   }
 
@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
                   textAlign: TextAlign.center),
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 toggleVisibleButton(
-                    visibilityToggle: hasAdminPrivileges,
+                    visibilityToggle: currentUser.hasAdminPrivileges,
                     onPressed: () {
                       navigateToPage(
                           context,
@@ -54,8 +54,8 @@ class HomePage extends StatelessWidget {
                                   CreateUserPage(createUserModel)));
                     },
                     buttonText: constants.createNewUserString),
-                hasAdminPrivileges
-                    ? ElevatedButton(
+                    currentUser.hasAdminPrivileges ? 
+                    ElevatedButton(
                         /// : Faculty
                         onPressed: () {
                           navigateToPage(
@@ -93,8 +93,8 @@ class HomePage extends StatelessWidget {
                             )
                         ),
                 Visibility(
-                  visible: hasAdminPrivileges,
-                  child: CreateFormButton(hasAdminPrivileges: hasAdminPrivileges))
+                  visible: currentUser.hasAdminPrivileges,
+                  child: CreateFormButton(currentUser: currentUser))
                 // toggleVisibleButton(
                 //     visibilityToggle: hasAdminPrivileges,
                 //     onPressed: () async {
