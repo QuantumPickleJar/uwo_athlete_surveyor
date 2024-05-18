@@ -11,7 +11,8 @@ class Database
   static const String _dbUser = "joshhill";
   static const String _dbPass = "0LMiuWwPzCfrlub7YlKxpw";
   // SQL fetch query strings.
-  static const String _getEmailsQuery = "SELECT date_received, address_from, subject_line, body FROM tbl_inbox;";
+  static const String _getEmailsByUserId = "SELECT date_received, from_uuid, subject_line, body FROM tbl_inbox WHERE to_uuid = @;";
+  static const String _getEmailsQuery = "SELECT date_received, from_uuid, subject_line, body FROM tbl_inbox;";
   static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList"; 
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _getSpecificUser = "SELECT * FROM tbl_users WHERE username = @username";
@@ -115,6 +116,7 @@ class Database
     return _executeSQLCommand(_getFormById, 
                              {'formId':formId});
   }
+  
   // /// Get a Form by specifying its ID
   // static Future<Result> fetchFormsById(String userId) async
   // {
