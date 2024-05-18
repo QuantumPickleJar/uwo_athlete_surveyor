@@ -48,7 +48,7 @@ class _TabbedMainPageState extends State<TabbedMainPage>
     [
       HomePage(
         displayName: widget.currentUser.firstName, 
-        hasAdminPrivileges: widget.currentUser.hasAdminPrivileges
+        currentUser: widget.currentUser
       ),
       Consumer<InboxModel>(
         builder: (context, inboxModel, _) {

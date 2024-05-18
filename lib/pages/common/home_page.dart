@@ -1,3 +1,4 @@
+import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/create_user_model.dart';
 import 'package:athlete_surveyor/models/students_model.dart';
 import 'package:athlete_surveyor/pages/staff/create_user_page.dart';
@@ -13,9 +14,10 @@ import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage(
-      {super.key, required this.displayName, required this.hasAdminPrivileges});
+      {super.key, required this.displayName, required this.currentUser});
   final String displayName;
-  final bool hasAdminPrivileges;
+  final LoggedInUser currentUser;
+  // final bool hasAdminPrivileges;
 
   /// Prework for navigation to SecureFormProvider page, followed by the navigation itself.
   void navigateToNewFormPage(BuildContext context) async {
@@ -25,7 +27,7 @@ class HomePage extends StatelessWidget {
     if (context.mounted) {
       navigateToPage(
           context,
-          SecureFormProvider(formId: newForm.formId, hasAdminPrivileges: hasAdminPrivileges));
+          SecureFormProvider(formId: newForm.formId, currentUser: ,));
     }
   }
 
