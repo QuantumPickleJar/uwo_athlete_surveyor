@@ -17,9 +17,11 @@ class AuthoredFormsModel extends ChangeNotifier {
 
   /// Get all inbox messages from the database and insert into internal list.
   Future<void> getPreviousFormsFromDatabase({required String userId}) async {
+    /// TODO: Students will rely on FormRequests once implemented
     print("[AuthoredFormsModel] Fetching $userId's forms...");
+    // Staff members will see forms that they themselves have created
     var authoredForms = await _formService.getFormsByUserId(userId: userId);
-
+    
     formsList.clear();
     formsList.addAll(authoredForms);
 
