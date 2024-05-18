@@ -6,7 +6,7 @@ import 'package:postgres/postgres.dart';
 
 class StudentsModel extends ChangeNotifier {
   final List<Student> students = [];
-
+  
 //inserts students into the database 
 Future<void> addStudentToDatabase(String name, String grade, String sport) async {
   try {
