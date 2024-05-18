@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:athlete_surveyor/models/student_model.dart';
+import 'package:athlete_surveyor/models/students_model.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
 

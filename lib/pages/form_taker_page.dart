@@ -1,6 +1,3 @@
-import 'dart:js_interop';
-
-import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/widgets/form_progress_widget.dart';
 import 'package:flutter/material.dart';

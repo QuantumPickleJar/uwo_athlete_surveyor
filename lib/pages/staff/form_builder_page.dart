@@ -3,7 +3,7 @@ import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/services/forms/form_service.dart';
 import 'package:athlete_surveyor/widgets/dialogs/edit_question_dialog.dart';
-import 'package:athlete_surveyor/widgets/question_item.dart';
+import 'package:athlete_surveyor/widgets/questions/question_item.dart';
 import  'package:athlete_surveyor/models/response_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -142,17 +142,15 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
     final Question? modifiedQuestion = await showDialog<Question>(
       context: context, 
       builder: (BuildContext context) {
-          return AlertDialog(
+        return AlertDialog(
           title: const Text('Edit Question'),
-          content: 
-          /// TODO: make in edit_question (or, would it be `edit_question_widget`, since we just need UI elements for accepting input, preloaded with existing information on edit operations)
-          EditQuestionDialog(question: question, 
+          content: EditQuestionDialog(question: question, 
           onCancel:  () { 
             /// on cancel, just pop [EditQuestionWidget] off the stack, being an [AlertDialogue]
             Navigator.of(context).pop();
           },
           onSave: (updatedQuestion) { /// send the question back through the Navigation stack
-            Navigator.of(context).pop(updatedQuestion);
+              Navigator.of(context).pop(updatedQuestion);
             }
           ), 
           actions: <Widget>[

@@ -1,6 +1,6 @@
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:athlete_surveyor/models/student_model.dart';
+import 'package:athlete_surveyor/models/students_model.dart';
 
 class IndividualStudentScreen extends StatelessWidget {
   final Student studentData;
