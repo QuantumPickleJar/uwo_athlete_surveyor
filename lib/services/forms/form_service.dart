@@ -4,6 +4,7 @@ import 'package:athlete_surveyor/models/forms/staff_form.dart';
 import 'package:athlete_surveyor/models/interfaces/i_generic_form.dart';
 import 'package:athlete_surveyor/models/question.dart';
 import 'package:athlete_surveyor/services/questions/question_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'form_repository.dart';
 
@@ -85,7 +86,7 @@ class FormService {
   /// form_id readily available. Thus, we stick to passing a concrete [GenericForm]
   Future<void> saveQuestionOnForm({required Question newQuestion, required GenericForm existingForm}) {
     // make sure the question doesn't already exist on [existingForm]
-    if (existingForm.questions.any((question) => question.content == newQuestion.content)) {
+    if (existingForm.questions.any((question) => question.questionId == newQuestion.questionId)) {
       return Future.error('Question already present when trying to add!');
     }
     
@@ -102,7 +103,7 @@ class FormService {
 
   /// When 
   // Future<GenericForm> createFormWithQuestions(GenericForm form, List<Question> questions) async {
-  Future<void> saveFormQuestions({required GenericForm existingForm, 
+  Future<void> saveFormQuestionsOverwrite({required GenericForm existingForm, 
                                          required List<Question> newQuestions}) async {
     try {
       // GenericForm newForm = await _formRepository.createForm(form);    // form needs the id from DB first
@@ -110,10 +111,12 @@ class FormService {
       /// make sure all of [newQuestions] is present in [existingForm] before making req. to DB
       if (!_areFormQuestionsEqual(existingForm, newQuestions)) { /// add them if not 
         /// note that existing questions should contain formId from Widget Tree (in form_builder_page) 
+        debugPrint('[FormService] Updating questions on form ${existingForm.formName}...');
         await _questionRepository.updateFormQuestions(questions: newQuestions, formId: existingForm.formId);    
       }
     } catch (e) {
-      throw Exception('Form ID was null on the attempted operation.');
+      throw Exception('Error saving form: $e');
+      // ID was null on the attempted operation.');
     }
   }
 

@@ -152,7 +152,7 @@ Future<GenericForm> createForm(GenericForm form) async {
     try {
       // TODO: implement getFormById
       // return _forms.firstWhere((form) => form.formId == formId, orElse: () => null as Form?);
-      String sqlStatement = """SELECT  SELECT f.form_id, f.form_title, f.last_modified, f.create_date, s.activity AS sport
+      String sqlStatement = """SELECT f.form_id, f.form_title, f.last_modified, f.create_date, s.activity AS sport
         FROM tbl_forms f
         LEFT JOIN tbl_form_sports fs ON f.form_id = fs.form_id
         LEFT JOIN tbl_sports s ON fs.sport_id = s.sport_id
@@ -213,7 +213,7 @@ Future<GenericForm> createForm(GenericForm form) async {
       /// don't modify creation date, only the modification date
       String sqlStatement = """UPDATE public.tbl_forms
                       SET user_id = @userId, form_title = @formTitle, 
-                          last_modified = current_date() 
+                          last_modified = @lastModified 
                       WHERE form_id = @formId""";
       var result = await db.execute(Sql.named(sqlStatement), parameters: {
           'formId': form.formId, /// TODO: adjust query and remove
