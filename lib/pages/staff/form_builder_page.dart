@@ -209,7 +209,12 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       canPop: false,  /// allows the page to the user of unsaved data loss on back taps
       onPopInvoked: (bool didPop) async {
         /// TODO: implement a more smooth isDirty attribute of the form, perhaps on the model?
-        showBackDialog(context);
+      if (didPop) {
+        Navigator.of(context).pop();
+      } else {
+        return showBackDialog(context);
+      }
+      //  showBackDialog(context);
       },
       child: FutureBuilder<GenericForm?>(
         future: _formFuture,

@@ -29,7 +29,7 @@ AppBar defaultAppBar({required BuildContext buildContext, required String title,
   /// A return value of null indicates a desire not to pop, such as when the
   /// user has dismissed the modal without tapping a button.
   /// < From https://api.flutter.dev/flutter/widgets/PopScope-class.html >
-  Future<bool?> showBackDialog(BuildContext context) {
+  Future<void> showBackDialog(BuildContext context) {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
