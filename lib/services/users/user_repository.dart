@@ -34,27 +34,10 @@ class UserRepository {
       /// using a Map may take an extra line here, but it's much easier to read and parse from
       Map<String, dynamic> userData = result.first;
       String hashedPassword = userData['password'] as String;
-
       bool passwordMatched = BCrypt.checkpw(password, hashedPassword);
+
       if (passwordMatched) {
         return LoggedInUser.fromMap(userData);
-
-        return LoggedInUser(
-          userId: userData['uuid_user'] as String,
-          username: userData['username'] as String,
-          firstName: userData['first_name'] as String,
-          lastName: userData['last_name'] as String,
-          isAdmin: userData['is_admin'] as bool,
-          isTempPassword: userData['is_temp_password'] as bool,
-        );
-        
-        // return LoggedInUser(
-        //         userId: result[0][0] as String,
-        //         username: result[0][3] as String,
-        //         firstName: result[0][5] as String,
-        //         lastName: result[0][6] as String,
-        //         isAdmin: result[0][2] as bool,
-        //         isTempPassword: result[0][4] as bool);
       } else {
         return null;
       }
@@ -92,14 +75,6 @@ class UserRepository {
       }
       Map<String, dynamic> userData = result.first;
         return LoggedInUser.fromMap(userData);
-      // return LoggedInUser(
-      //   userId: userData['uuid_user'] as String,
-      //   username: userData['username'] as String,
-      //   firstName: userData['first_name'] as String,
-      //   lastName: userData['last_name'] as String,
-      //   isAdmin: userData['is_admin'] as bool,
-      //   isTempPassword: userData['is_temp_password'] as bool,
-      // );
     } catch (e) {
       print('Error fetching user by username: $e');
       rethrow;
