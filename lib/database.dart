@@ -114,13 +114,17 @@ class Database
   /// Fetching the student list
   static Future<Result> fetchStudents() async { return _executeSQLCommand(_getStudentList,null); }
 
-  /// Get a user's profile based on their provided username.
-  static Future<Result> fetchUser(String username) async
-  {
-    // return executeSQLCommand(_getSpecificUser, 
-    //                         {'username':username});
-    return _executeSQLCommand(_getSpecificUser, 
-                            {'username':username});
+  // /// Get a user's profile based on their provided username.
+  // static Future<Result> fetchUser(String username) async
+  // {
+  //   return _executeSQLCommand(_getSpecificUser, 
+  //                           {'username':username});
+  // }
+
+  /// Safe user-fetching method that only needs their [username]
+  static Future<List<Map<String, dynamic>>> fetchUser({required String username}) async {
+    final Result result = await _executeSQLCommand(_getSpecificUser, {'username': username});
+    return result.map((row) => row.toColumnMap()).toList();
   }
 
   /// Get question with matching Id.
@@ -143,13 +147,6 @@ class Database
     return _executeSQLCommand(_getFormById, 
                              {'formId':formId});
   }
-  
-  // /// Get a Form by specifying its ID
-  // static Future<Result> fetchFormsById(String userId) async
-  // {
-  //   return _executeSQLCommand(_getFormsByUserId, 
-  //                            {'userId': userId});
-  // }
 
     /// Get all messages for the given user from the database.
   static Future<Result> fetchMessagesById(String userId) async 
