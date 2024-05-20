@@ -1,6 +1,7 @@
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/interfaces/i_form_request_repository.dart';
 import 'package:athlete_surveyor/models/interfaces/i_form_repository.dart';
+import 'package:athlete_surveyor/models/interfaces/i_user_repository.dart';
 import 'package:athlete_surveyor/models/student_model.dart';
 import 'package:athlete_surveyor/services/db.dart';
 import 'package:postgres/postgres.dart';
@@ -9,7 +10,7 @@ import 'package:uuid/uuid.dart';
 class FormRequestService {
   final IFormRepository _formRepository;
   final IFormRequestRepository _formRequestRepository;
-  // final IUserRepository _userRepository;
+  final IUserRepository _userRepository;
 
 
   /// TODO: implement a UserRepository for cohesive readability
@@ -55,10 +56,12 @@ class FormRequestService {
   }
 
   /// Retrieves all form requests for a specific user
-  Future<List<GenericForm>> getFormRequestsByUserId(String userId) async {
+  Future<List<Future<GenericForm>>> getFormRequestsByUserId(String userId) async {
     try {
-      var formRequests = await _formRequestRepository.getFormRequestsByUserId(userId);
+      var formRequests = await _formRequestRepository.getUserAuthoredFormRequests(userId);
       return formRequests.map((request) async {
+        print('Retreived requests ${formRequests}');
+        
         var form = await _formRepository.getFormById(request.formId);
         return form!;
       }).toList();
