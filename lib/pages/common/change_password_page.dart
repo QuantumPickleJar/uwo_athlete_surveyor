@@ -65,7 +65,7 @@ class _ChangePasswordState extends State<ChangePasswordPage>
 
     if(_formKey.currentState!.validate())
     {
-      if(await widget.changePasswordModel.updateUserPassword(widget.currentUser.userUuid, newPasswordAgainController.text.trim()))
+      if(await widget.changePasswordModel.updateUserPassword(widget.currentUser.userId, newPasswordAgainController.text.trim()))
       {
         _showSnackbarMessage(constants.passwordChangeSucessful);
 
