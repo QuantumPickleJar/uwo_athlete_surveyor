@@ -19,6 +19,22 @@ class Database
   static const String _getQuestionByQuestionId = """SELECT content, order_in_form, form_id, question_id, response_enum FROM public.tbl_questions WHERE question_id = @questionId;""";
   static const String _getAllQuestionsQuery = """SELECT * FROM tbl_questions""";
   static const String _getAllQuestionsByFormId = """SELECT * from tbl_questions WHERE form_id = @formId""";
+
+  /// gets all [FormRequest]s that were AUTHORED by the staff user with [userId].
+  /// Will not work for accessing student-bound [FormRequest]s.
+  static const String _getFormRequestsByUserId = """"
+  SELECT fr.request_id, fr.form_id, fr.create_date 
+  FROM tbl_form_requests fr
+  WHERE fr.requesting_user_id = @userId;""";
+   // SQL fetch query strings.
+
+    /// gets all [FormRequest]s assigned to the student with an id of [studentId].
+  static const String _getStudentFormRequests = """
+      SELECT fr.request_id, fr.form_id, fr.create_date 
+      FROM tbl_form_requests fr
+      JOIN tbl_request_recipients rr ON fr.request_id = rr.request_id
+      WHERE rr.student_id = @studentId;""";
+
   // static const String _getAllForms = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
   static const String _getFormById = """SELECT form_id, form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;""";
 
@@ -77,6 +93,17 @@ class Database
       conn?.close();
     } 
   }
+
+  /// gets all [FormRequest]s assigned to the student with an id of [studentId].
+  static Future<Result> fetchStudentFormRequests({required String studentId}) async {
+     return _executeSQLCommand(_getStudentFormRequests, {'studentId' : studentId});
+     }
+  
+  /// gets all [FormRequest]s that were AUTHORED by the staff user with [userId].
+  /// Will not work for accessing student-bound [FormRequest]s.
+  static Future<Result> fetchAuthoredFormRequests({required String userId}) async {
+     return _executeSQLCommand(_getFormRequestsByUserId, {'userId' : userId});
+     }
 
   /// Get all Emails from the database.
   static Future<Result> fetchEmails() async { return _executeSQLCommand(_getEmailsQuery,null); }
