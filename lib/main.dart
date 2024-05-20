@@ -26,7 +26,7 @@ import 'package:athlete_surveyor/services/sports/sports_repository.dart';
 import 'package:athlete_surveyor/services/sports/sports_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'models/student_model.dart';
+import 'models/students_model.dart';
 import 'package:flutter/foundation.dart' as foundation_dart;
 import 'services/forms/form_service.dart';
 
