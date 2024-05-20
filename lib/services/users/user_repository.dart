@@ -1,18 +1,20 @@
 import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/form_request.dart';
+import 'package:athlete_surveyor/models/interfaces/i_user_repository.dart';
 import 'package:athlete_surveyor/models/users/user_types.dart';
 import 'package:athlete_surveyor/services/form_request_repository.dart';
 import 'package:athlete_surveyor/database.dart';
 import 'package:bcrypt/bcrypt.dart';
 
-class UserRepository {
+class UserRepository implements IUserRepository{
   /// needed to track incoming/outgoing [FormRequest] operations
   final FormRequestRepository _formRequestRepository = FormRequestRepository();
-
+  @override
   Future<List<FormRequest>> getStudentFormRequests(String studentId) async {
     return _formRequestRepository.getFormRequestsForStudent(studentId);
   }
-
+  
+  @override
   Future<List<FormRequest>> getStaffAuthoredFormRequests(String userId) async {
     return _formRequestRepository.getUserAuthoredFormRequests(userId);
   }
