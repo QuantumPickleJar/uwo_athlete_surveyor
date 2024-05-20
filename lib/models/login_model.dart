@@ -41,20 +41,27 @@ class LoginModel extends ChangeNotifier
   Future<LoggedInUser?> checkExistingPassword(String userName, String password) async 
   { 
     final result = await Database.fetchUser(userName);
-    if (result.length != 1) 
-    { // either the user doesn't exist or some error occurred where more than 1 row returned.
+    if (result.length != 1) { 
+      // either the user doesn't exist or some error occurred where more than 1 row returned.
       return null; 
     }
     String hashedPassword = result[0][1] as String; 
     bool passwordMatches = BCrypt.checkpw(password, hashedPassword);
 
     print(passwordMatches);
-    return passwordMatches ? LoggedInUser(result[0][1] as String,
-                                            result[0][2] as bool, 
-                                          result[0][4] as bool, 
-                                          result[0][3] as String, 
-                                          result[0][5] as String, 
-                                          result[0][6] as String) 
-                            : null; //if password matches username, return an instance of LoggedInUser; otherwise null
+    //if password matches username, return an instance of LoggedInUser; otherwise null
+     if (passwordMatches) {
+      /// keep their password out of the model for security purposes
+      return LoggedInUser(
+        userId: result[0][0] as String,
+        username: result[0][3] as String,
+        firstName: result[0][5] as String,
+        lastName: result[0][6] as String,
+        isAdmin: result[0][2] as bool,
+        isTempPassword: result[0][4] as bool,
+      );
+    } else {
+      return null; 
+    }
   }
 }
