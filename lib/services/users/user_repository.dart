@@ -17,26 +17,44 @@ class UserRepository {
     return _formRequestRepository.getUserAuthoredFormRequests(userId);
   }
 
+
+  /// Fetches a user in preparation for logging them in and placing them into the appropriate
+  /// model.  
+  /// Accepts a [password], so this should NOT be used for querying profiles.  
   Future<LoggedInUser?> fetchUser({
     required String username, required String password}) async {
     try {
       /// first we get the user, which comes out of a [Result] object
-      final result = await Database.fetchUser(username);
+      final result = await Database.fetchUser(username: username);
       if (result.length != 1) {
         print('[UserRepository] Failed to find user with name $username!');
         return null; 
       }
-      
-      String hashedPassword = result[0][1] as String;
+
+      /// using a Map may take an extra line here, but it's much easier to read and parse from
+      Map<String, dynamic> userData = result.first;
+      String hashedPassword = userData['password'] as String;
+
       bool passwordMatched = BCrypt.checkpw(password, hashedPassword);
       if (passwordMatched) {
+        return LoggedInUser.fromMap(userData);
+
         return LoggedInUser(
-                userId: result[0][0] as String,
-                username: result[0][3] as String,
-                firstName: result[0][5] as String,
-                lastName: result[0][6] as String,
-                isAdmin: result[0][2] as bool,
-                isTempPassword: result[0][4] as bool);
+          userId: userData['uuid_user'] as String,
+          username: userData['username'] as String,
+          firstName: userData['first_name'] as String,
+          lastName: userData['last_name'] as String,
+          isAdmin: userData['is_admin'] as bool,
+          isTempPassword: userData['is_temp_password'] as bool,
+        );
+        
+        // return LoggedInUser(
+        //         userId: result[0][0] as String,
+        //         username: result[0][3] as String,
+        //         firstName: result[0][5] as String,
+        //         lastName: result[0][6] as String,
+        //         isAdmin: result[0][2] as bool,
+        //         isTempPassword: result[0][4] as bool);
       } else {
         return null;
       }
@@ -46,14 +64,17 @@ class UserRepository {
     }
   }
 
-  
+  /// Verifies a users password by first querying them through the [fetchUser] 
+  /// function (just the one that takes a [username])
   Future<bool> verifyPassword(String username, String password) async {
     try {
-      final result = await Database.fetchUser(username);
+      final result = await Database.fetchUser(username: username);
       if (result.length != 1) {
         return false; // User not found or multiple entries found
       }
-      String hashedPassword = result[0][1] as String;
+      Map<String, dynamic> userData = result.first;
+      String hashedPassword = userData['password'] as String;
+
       bool matched = BCrypt.checkpw(password, hashedPassword);
       print('[UserRepository] Password $password successfully hashed!');
       return matched;
@@ -65,19 +86,20 @@ class UserRepository {
   
    Future<LoggedInUser?> getUserByUsername(String username) async {
     try {
-      final result = await Database.fetchUser(username);
+      final result = await Database.fetchUser(username: username);
       if (result.isEmpty) {
         return null;
       }
-      Map<String, dynamic> userData = result.first as Map<String, dynamic>;
-      return LoggedInUser(
-        userId: userData['uuid_user'] as String,
-        username: userData['username'] as String,
-        firstName: userData['first_name'] as String,
-        lastName: userData['last_name'] as String,
-        isAdmin: userData['is_admin'] as bool,
-        isTempPassword: userData['is_temp_password'] as bool,
-      );
+      Map<String, dynamic> userData = result.first;
+        return LoggedInUser.fromMap(userData);
+      // return LoggedInUser(
+      //   userId: userData['uuid_user'] as String,
+      //   username: userData['username'] as String,
+      //   firstName: userData['first_name'] as String,
+      //   lastName: userData['last_name'] as String,
+      //   isAdmin: userData['is_admin'] as bool,
+      //   isTempPassword: userData['is_temp_password'] as bool,
+      // );
     } catch (e) {
       print('Error fetching user by username: $e');
       rethrow;
