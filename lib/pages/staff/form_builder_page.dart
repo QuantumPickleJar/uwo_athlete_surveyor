@@ -31,7 +31,6 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
   late Future<GenericForm?> _formFuture;        /// the form currently opened
   late double _sliderValue;
   late bool _isCurrentFormNew;  
-  bool _isFormDirty = false;  // Track if the form is modified
   
   /// Allows modifying a *single* [QuestionItem] at a time.  This *should*
   /// allow the transition to an expanded-style question widget as 
@@ -44,11 +43,10 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
 
   /// the form currently being modified
 
- void _markFormAsDirty() {
-    setState(() {
-      _isFormDirty = true;
-    });
-  }
+  // /// Temporary placeholder to allow the slider to be enabled
+  // void _onSliderTap() {
+  //   return;
+  // }
 
   @override
   void initState() {
@@ -145,22 +143,33 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
     final Question? modifiedQuestion = await showDialog<Question>(
       context: context, 
       builder: (BuildContext context) {
-        return EditQuestionDialog(question: question, 
+        return AlertDialog(
+          title: const Text('Edit Question'),
+          content: EditQuestionDialog(question: question, 
           onCancel:  () { 
             /// on cancel, just pop [EditQuestionWidget] off the stack, being an [AlertDialogue]
             Navigator.of(context).pop();
           },
-          onSave: (updatedQuestion) async { 
-              /// send the question back through the Navigation stack
+          onSave: (updatedQuestion) { /// send the question back through the Navigation stack
               Navigator.of(context).pop(updatedQuestion);
-              debugPrint('[FormBuilderPage] Comparing ${question.questionId} to ${updatedQuestion.questionId}...');
-              _currentForm!.questions.where((q) => q.questionId == question.questionId);      /// add to the local one for now
-              /// but for sanity and peace-of-mind, we'll persist it right away just in case
-              await _formService.saveFormQuestionsOverwrite(
-                existingForm: _currentForm!, 
-                newQuestions: _currentForm!.questions);
             }
-        ); 
+          ), 
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Save'),
+              onPressed: () {
+                print('Saving question ${question.questionId}...');
+                /// saving happens inside [EditQuestionWidget]
+                }
+            ),
+          ],
+        );
       }
     );
   
@@ -171,7 +180,6 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       if (index > -1) {
         setState(() {
           _currentForm?.questions[index] = modifiedQuestion;
-          _markFormAsDirty();
         });
         /// Persist our changes to the database last
         _formService.saveQuestionOnForm(newQuestion: modifiedQuestion, existingForm: _currentForm!);
@@ -188,8 +196,6 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
   void _deleteQuestion(Question selectedQuestion) {
     setState(() {
       _currentForm!.questions.remove(selectedQuestion);
-      _markFormAsDirty();
-
     });
   }
   
@@ -204,9 +210,6 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
       onPopInvoked: (bool didPop) async {
         /// TODO: implement a more smooth isDirty attribute of the form, perhaps on the model?
         showBackDialog(context);
-        if (didPop) {
-          Navigator.of(context).pop();
-        }
       },
       child: FutureBuilder<GenericForm?>(
         future: _formFuture,
@@ -227,13 +230,8 @@ class _FormBuilderPageState extends State<FormBuilderPage> {
                   IconButton(
                     icon: const Icon(Icons.save),
                     onPressed: () {
-                    if (_isFormDirty) {
                       _formService.saveForm(_currentForm!);
-                      setState(() {
-                        _isFormDirty = false;
-                      });
-                    }
-                  },
+                    },
                   )
                 ],
               ),
