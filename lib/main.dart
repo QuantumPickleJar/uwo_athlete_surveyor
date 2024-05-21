@@ -15,7 +15,6 @@ import 'package:athlete_surveyor/models/inbox_model.dart';
 import 'package:athlete_surveyor/models/login_model.dart';
 import 'package:athlete_surveyor/models/forms/previous_forms_model.dart';
 import 'package:athlete_surveyor/models/sport_selection_model.dart';
-import 'package:athlete_surveyor/models/students_model.dart';
 import 'package:athlete_surveyor/pages/common/change_password_page.dart';
 import 'package:athlete_surveyor/pages/common/tabbed_main_page.dart';
 import 'package:athlete_surveyor/resources/common_functions.dart';
@@ -27,7 +26,7 @@ import 'package:athlete_surveyor/services/sports/sports_repository.dart';
 import 'package:athlete_surveyor/services/sports/sports_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'models/student_model.dart';
+import 'models/students_model.dart';
 import 'package:flutter/foundation.dart' as foundation_dart;
 import 'services/forms/form_service.dart';
 
