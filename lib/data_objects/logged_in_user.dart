@@ -1,41 +1,41 @@
 // Data Object to represent the currently logged-in user and any information about them that may be needed during use of application.
-import 'package:athlete_surveyor/models/users/user_types.dart';
-
-class LoggedInUser extends User
+class LoggedInUser
 {
-  // final String _uuid;
-  final bool isAdmin;
-  final bool isTempPassword;
+  final String _uuid;
+  final bool _isAdmin;
+  final bool _isTempPassword;
+  final String _username;
+  final String _firstName;
+  final String _lastName;
 
-  /// wraps the user in a model-friendly class that extends [User]
-  LoggedInUser({
-    required super.userId, 
-    required super.username, 
-    required super.firstName, 
-    required super.lastName, 
-    required this.isAdmin,
-    required this.isTempPassword
-  });
+  String get userUuid => _uuid;
+  bool get hasAdminPrivileges => _isAdmin;
+  bool get hasTempPassword => _isTempPassword;
+  String get firstName => _firstName;
+  String get lastName => _lastName;
+  String get email => _username;
 
-  bool get hasAdminPrivileges => isAdmin;
-  bool get hasTempPassword => isTempPassword;
+  LoggedInUser(this._uuid, this._isAdmin, this._isTempPassword, this._username, this._firstName, this._lastName);
+}
 
-  /// Minifying function, reduces line count in UserRepository and Database
-  factory LoggedInUser.fromMap(Map<String, dynamic> userData) {
-    assert(userData.containsKey('userId'), 'userId field is missing');
-    assert(userData.containsKey('username'), 'username field is missing');
-    assert(userData.containsKey('firstName'), 'firstName field is missing');
-    assert(userData.containsKey('lastName'), 'lastName field is missing');
-    assert(userData.containsKey('isAdmin'), 'isAdmin field is missing');
-    assert(userData.containsKey('isTempPassword'), 'isTempPassword field is missing');
+/// Most basic user class, to represent a registered user
+abstract class User {
+  final String userId;
+  final String username;
+  final String firstName; 
+  final String lastName;
 
-    return LoggedInUser(
-      userId: userData['userId'] as String,
-      username: userData['username'] as String,
-      firstName: userData['firstName'] as String,
-      lastName: userData['lastName'] as String,
-      isAdmin: userData['isAdmin'] as bool,
-      isTempPassword: userData['isTempPassword'] as bool,
-    );
-  }
+  User({required this.userId, required this.username, required this.firstName, required this.lastName});
+}
+
+class Staff extends User {
+  Staff({required super.userId, required super.username, required super.firstName, required super.lastName});
+  
+  // Additional staff-specific methods here
+}
+
+class Student extends User {
+  Student({required super.userId, required super.username, required super.firstName, required super.lastName});
+  
+  // Additional staff-specific methods here
 }

@@ -38,7 +38,7 @@ class _PreviousFormsPageState extends State<PreviousFormsPage> {
     super.initState();
     // widget.formModel.getPreviousFormsFromDatabase(userId: widget.currentUser.userUuid);   
     formModel = Provider.of<AuthoredFormsModel>(context, listen: false);
-    formModel.getPreviousFormsFromDatabase(userId: widget.currentUser.userId);
+    formModel.getPreviousFormsFromDatabase(userId: widget.currentUser.userUuid);
 
   }
 
