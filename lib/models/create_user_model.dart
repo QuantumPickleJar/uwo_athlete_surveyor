@@ -10,7 +10,7 @@ class CreateUserModel extends ChangeNotifier
   /// Run up to DB and see if username already registered before trying to created a new user.
   Future<bool> checkIfUserAlreadyExists(String username) async
   {
-    final result = await Database.fetchUser(username);
+    final result = await Database.fetchUser(username: username);
     
     if(result.isNotEmpty){ return true; } //user found in DB
 
