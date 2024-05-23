@@ -16,7 +16,7 @@ class Database
   static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList"; 
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _getSpecificUser = "SELECT * FROM tbl_users WHERE username = @username";
-  static const String _getQuestionByQuestionId = """SELECT content, order_in_form, form_id, question_id, response_enum FROM public.tbl_questions WHERE question_id = @questionId;""";
+  static const String _getQuestionById = """SELECT content, order_in_form, form_id, question_id, response_enum FROM public.tbl_questions WHERE question_id = @questionId;""";
   static const String _getAllQuestionsQuery = """SELECT * FROM tbl_questions""";
   static const String _getAllQuestionsByFormId = """SELECT * from tbl_questions WHERE form_id = @formId""";
 
@@ -130,7 +130,7 @@ class Database
   /// Get question with matching Id.
   static Future<Result> fetchQuestionByQuestionId(String questionId) async
   {
-    return _executeSQLCommand(_getQuestionByQuestionId, 
+    return _executeSQLCommand(_getQuestionById, 
                              {'questionId':questionId});
   }
 

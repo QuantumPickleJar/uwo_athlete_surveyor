@@ -9,6 +9,7 @@ import 'package:bcrypt/bcrypt.dart';
 class UserRepository implements IUserRepository{
   /// needed to track incoming/outgoing [FormRequest] operations
   final FormRequestRepository _formRequestRepository = FormRequestRepository();
+
   @override
   Future<List<FormRequest>> getStudentFormRequests(String studentId) async {
     return _formRequestRepository.getFormRequestsForStudent(studentId);
@@ -19,7 +20,7 @@ class UserRepository implements IUserRepository{
     return _formRequestRepository.getUserAuthoredFormRequests(userId);
   }
 
-
+  @override
   /// Fetches a user in preparation for logging them in and placing them into the appropriate
   /// model.  
   /// Accepts a [password], so this should NOT be used for querying profiles.  
@@ -44,8 +45,8 @@ class UserRepository implements IUserRepository{
         return null;
       }
     } catch (e) {
-      print('[UserRepository] Error fetching user $username');
-      rethrow;
+      print('[UserRepository] Error fetching user $username: $e');
+      // rethrow;
     }
   }
 
