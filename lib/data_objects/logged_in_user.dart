@@ -3,9 +3,8 @@ import 'package:athlete_surveyor/models/users/user_types.dart';
 
 class LoggedInUser extends User
 {
-  // final String _uuid;
-  final bool isAdmin;
-  final bool isTempPassword;
+  final bool isAdmin;                         /// Referenced as `is_admin` in the table
+  final bool isTempPassword;                  /// Referenced as `is_temp_password` in the table
 
   /// wraps the user in a model-friendly class that extends [User]
   LoggedInUser({
@@ -21,21 +20,22 @@ class LoggedInUser extends User
   bool get hasTempPassword => isTempPassword;
 
   /// Minifying function, reduces line count in UserRepository and Database
+  /// NOTE: inconsisntent syntax standard
   factory LoggedInUser.fromMap(Map<String, dynamic> userData) {
-    assert(userData.containsKey('userId'), 'userId field is missing');
+    assert(userData.containsKey('uuid_user'), 'userId (uuid_user) field is missing');
     assert(userData.containsKey('username'), 'username field is missing');
-    assert(userData.containsKey('firstName'), 'firstName field is missing');
-    assert(userData.containsKey('lastName'), 'lastName field is missing');
-    assert(userData.containsKey('isAdmin'), 'isAdmin field is missing');
-    assert(userData.containsKey('isTempPassword'), 'isTempPassword field is missing');
+    assert(userData.containsKey('first_name'), 'firstName (first_name) field is missing');
+    assert(userData.containsKey('last_name'), 'lastName (last_name) field is missing');
+    assert(userData.containsKey('is_admin'), 'isAdmin (is_admin) field is missing');
+    assert(userData.containsKey('isTempPassword'), 'isTempPassword (is_temp_password) field is missing');
 
     return LoggedInUser(
-      userId: userData['userId'] as String,
+      userId: userData['uuid_user'] as String,
       username: userData['username'] as String,
-      firstName: userData['firstName'] as String,
-      lastName: userData['lastName'] as String,
-      isAdmin: userData['isAdmin'] as bool,
-      isTempPassword: userData['isTempPassword'] as bool,
+      firstName: userData['first_name'] as String,
+      lastName: userData['last_name'] as String,
+      isAdmin: userData['is_admin'] as bool,
+      isTempPassword: userData['is_temp_password'] as bool,
     );
   }
 }

@@ -1,8 +1,9 @@
 abstract class User {
-  final String userId;
-  final String username;
-  final String firstName; 
-  final String lastName;
+  
+  final String userId;              /// Referenced as `uuid_user` in the table
+  final String username;  
+  final String firstName;           /// Referenced as `first_name` in the table
+  final String lastName;            /// Referenced as `last_name` in the table
 
   User({required this.userId, required this.username, required this.firstName, required this.lastName});
 }
