@@ -1,6 +1,6 @@
 /// This file is a cobbled together SQL migrated form of the original plan to have Forms stored 
 /// across Google Sheets.
-import 'package:athlete_surveyor/models/interfaces/i_form_respository.dart';
+import 'package:athlete_surveyor/models/interfaces/i_form_repository.dart';
 import 'package:athlete_surveyor/models/forms/base_form.dart';
 import 'package:athlete_surveyor/models/sport_selection_model.dart';
 import 'package:athlete_surveyor/services/sports/sports_repository.dart';
@@ -18,7 +18,7 @@ class FormRepository implements IFormRepository {
   final SportsRepository _sportRepository;
   final SportSelectionModel _sportSelectionModel;
     /// used temporarily to streamline the demo
-  /// TODO: replace with Adam In's id
+
   final String DEVELOPER_UUID = "a23e1679-d5e9-4d97-9902-bb338b38e468";
  
  @override

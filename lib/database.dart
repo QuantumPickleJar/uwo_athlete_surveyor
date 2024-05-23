@@ -16,9 +16,25 @@ class Database
   static const String _getStudentList = "SELECT student_name, grade, sport FROM tbl_studentList"; 
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _getSpecificUser = "SELECT * FROM tbl_users WHERE username = @username";
-  static const String _getQuestionByQuestionId = """SELECT content, order_in_form, form_id, question_id, response_enum FROM public.tbl_questions WHERE question_id = @questionId;""";
+  static const String _getQuestionById = """SELECT content, order_in_form, form_id, question_id, response_enum FROM public.tbl_questions WHERE question_id = @questionId;""";
   static const String _getAllQuestionsQuery = """SELECT * FROM tbl_questions""";
   static const String _getAllQuestionsByFormId = """SELECT * from tbl_questions WHERE form_id = @formId""";
+
+  /// gets all [FormRequest]s that were AUTHORED by the staff user with [userId].
+  /// Will not work for accessing student-bound [FormRequest]s.
+  static const String _getFormRequestsByUserId = """"
+  SELECT fr.request_id, fr.form_id, fr.create_date 
+  FROM tbl_form_requests fr
+  WHERE fr.requesting_user_id = @userId;""";
+   // SQL fetch query strings.
+
+    /// gets all [FormRequest]s assigned to the student with an id of [studentId].
+  static const String _getStudentFormRequests = """
+      SELECT fr.request_id, fr.form_id, fr.create_date 
+      FROM tbl_form_requests fr
+      JOIN tbl_request_recipients rr ON fr.request_id = rr.request_id
+      WHERE rr.student_id = @studentId;""";
+
   // static const String _getAllForms = "SELECT form_id, user_id, form_title, last_modified, create_date FROM public.tbl_forms;";
   static const String _getFormById = """SELECT form_id, form_title, last_modified, create_date FROM public.tbl_forms WHERE form_id = @formId;""";
 
@@ -78,6 +94,17 @@ class Database
     } 
   }
 
+  /// gets all [FormRequest]s assigned to the student with an id of [studentId].
+  static Future<Result> fetchStudentFormRequests({required String studentId}) async {
+     return _executeSQLCommand(_getStudentFormRequests, {'studentId' : studentId});
+     }
+  
+  /// gets all [FormRequest]s that were AUTHORED by the staff user with [userId].
+  /// Will not work for accessing student-bound [FormRequest]s.
+  static Future<Result> fetchAuthoredFormRequests({required String userId}) async {
+     return _executeSQLCommand(_getFormRequestsByUserId, {'userId' : userId});
+     }
+
   /// Get all Emails from the database.
   static Future<Result> fetchEmails() async { return _executeSQLCommand(_getEmailsQuery,null); }
 
@@ -87,19 +114,23 @@ class Database
   /// Fetching the student list
   static Future<Result> fetchStudents() async { return _executeSQLCommand(_getStudentList,null); }
 
-  /// Get a user's profile based on their provided username.
-  static Future<Result> fetchUser(String username) async
-  {
-    // return executeSQLCommand(_getSpecificUser, 
-    //                         {'username':username});
-    return _executeSQLCommand(_getSpecificUser, 
-                            {'username':username});
+  // /// Get a user's profile based on their provided username.
+  // static Future<Result> fetchUser(String username) async
+  // {
+  //   return _executeSQLCommand(_getSpecificUser, 
+  //                           {'username':username});
+  // }
+
+  /// Safe user-fetching method that only needs their [username]
+  static Future<List<Map<String, dynamic>>> fetchUser({required String username}) async {
+    final Result result = await _executeSQLCommand(_getSpecificUser, {'username': username});
+    return result.map((row) => row.toColumnMap()).toList();
   }
 
   /// Get question with matching Id.
   static Future<Result> fetchQuestionByQuestionId(String questionId) async
   {
-    return _executeSQLCommand(_getQuestionByQuestionId, 
+    return _executeSQLCommand(_getQuestionById, 
                              {'questionId':questionId});
   }
 
@@ -116,13 +147,6 @@ class Database
     return _executeSQLCommand(_getFormById, 
                              {'formId':formId});
   }
-  
-  // /// Get a Form by specifying its ID
-  // static Future<Result> fetchFormsById(String userId) async
-  // {
-  //   return _executeSQLCommand(_getFormsByUserId, 
-  //                            {'userId': userId});
-  // }
 
     /// Get all messages for the given user from the database.
   static Future<Result> fetchMessagesById(String userId) async 
