@@ -3,7 +3,9 @@ import "package:athlete_surveyor/widgets/expanded_text_file.dart";
 import "package:flutter/material.dart";
 
 class ComposeMessagePage extends StatelessWidget {
-  const ComposeMessagePage({super.key});
+  final String currentUserId;
+  const ComposeMessagePage({required this.currentUserId, super.key});
+  
   // ignore: constant_identifier_names
   static const double SCREEN_WIDTH = 375.0;
 
