@@ -1,8 +1,10 @@
 // Data Object to represent the currently logged-in user and any information about them that may be needed during use of application.
 import 'package:athlete_surveyor/models/users/user_types.dart';
 
+
 class LoggedInUser extends User
 {
+  /// TODO: set based on child type of [User] ([Staff] or [Student])
   final bool isAdmin;                         /// Referenced as `is_admin` in the table
   final bool isTempPassword;                  /// Referenced as `is_temp_password` in the table
 

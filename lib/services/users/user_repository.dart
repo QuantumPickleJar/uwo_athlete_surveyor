@@ -2,7 +2,7 @@ import 'package:athlete_surveyor/data_objects/logged_in_user.dart';
 import 'package:athlete_surveyor/models/form_request.dart';
 import 'package:athlete_surveyor/models/interfaces/i_user_repository.dart';
 import 'package:athlete_surveyor/models/users/user_types.dart';
-import 'package:athlete_surveyor/services/form_request_repository.dart';
+import 'package:athlete_surveyor/services/form_requests/form_request_repository.dart';
 import 'package:athlete_surveyor/database.dart';
 import 'package:bcrypt/bcrypt.dart';
 
