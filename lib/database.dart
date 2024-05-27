@@ -109,7 +109,7 @@ class Database
   static Future<Result> fetchEmails() async { return _executeSQLCommand(_getEmailsQuery,null); }
 
   /// Get all of a single user's emails from the database
-  static Future<Result> fetchEmailsByUserId(userId) async { return _executeSQLCommand(_getEmailsByUserId, userId); }
+  static Future<Result> fetchEmailsByUserId(userId) async { return _executeSQLCommand(_getEmailsByUserId, { 'userId': userId}); }
 
   /// Get all previously completed forms from the database.
   static Future<Result> fetchPreviousForms() async { return _executeSQLCommand(_getPreviousFormsQuery,null); }
