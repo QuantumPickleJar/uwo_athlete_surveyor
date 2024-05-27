@@ -1,14 +1,40 @@
 import "package:athlete_surveyor/resources/common_widgets.dart";
-import "package:athlete_surveyor/widgets/expanded_text_file.dart";
+import "package:athlete_surveyor/widgets/async_student_autocomplete.dart";
+import "package:athlete_surveyor/widgets/expanded_text_field.dart";
 import "package:flutter/material.dart";
 
 class ComposeMessagePage extends StatelessWidget {
   final String currentUserId;
   const ComposeMessagePage({required this.currentUserId, super.key});
-  
+
   // ignore: constant_identifier_names
   static const double SCREEN_WIDTH = 375.0;
+  
 
+  /// Populate the recipients search bar with students
+  /// TODO: once student groups are implemented, narrow the selection by 
+  /// [currentUserId]
+  Future<void> fillRecipientsContents() async {
+    try {
+          
+      
+    } catch (e) {
+      print('Error populating recipients: $e');
+    }
+  }
+
+  /// Called after [fillRecipientsContents]; loads the selectable options into 
+  /// an [AsyncStudentAutocomplete] widget
+  Future<AsyncStudentAutocomplete> buildRecipientsDropdown() async {
+    try {
+      
+
+      return AsyncStudentAutocomplete();
+    } catch (e) {
+      print('Error building dropdown: $e');
+      
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,3 +102,4 @@ class ComposeMessagePage extends StatelessWidget {
       );
   }
 }
+
