@@ -84,7 +84,7 @@ class _AsyncAutocompleteState extends State<_AsyncAutocomplete> {
     }
     _currentQuery = null;
 
-    return optikh nvmons;
+    return options;
   }
 
   @override
