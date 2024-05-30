@@ -49,6 +49,31 @@ class UserRepository implements IUserRepository{
       // rethrow;
     }
   }
+    
+   Future<LoggedInUser?> getUserByUsername(String username) async {
+    try {
+      final result = await Database.fetchUser(username: username);
+      if (result.isEmpty) {
+        return null;
+      }
+      Map<String, dynamic> userData = result.first;
+      return LoggedInUser.fromMap(userData);
+    } catch (e) {
+      print('Error fetching user by username: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> updateUserPassword(String userId, String newPassword, bool isTempPassword) async {
+    try {
+      String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+      await Database.updateUserPasswordById(userId, hashedPassword, isTempPassword);
+    } catch (e) {
+      print('Error updating user password: $e');
+      rethrow;
+    }
+  }
+
 
   /// Verifies a users password by first querying them through the [fetchUser] 
   /// function (just the one that takes a [username])
@@ -69,29 +94,14 @@ class UserRepository implements IUserRepository{
       rethrow;
     }
   }
-  
-   Future<LoggedInUser?> getUserByUsername(String username) async {
-    try {
-      final result = await Database.fetchUser(username: username);
-      if (result.isEmpty) {
-        return null;
-      }
-      Map<String, dynamic> userData = result.first;
-        return LoggedInUser.fromMap(userData);
-    } catch (e) {
-      print('Error fetching user by username: $e');
-      rethrow;
-    }
-  }
 
 
-  Future<void> updateUserPassword(String userId, String newPassword, bool isTempPassword) async {
+  Future<void> addStudentToDatabase(Student student) async {
     try {
-      String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-      await Database.updateUserPasswordById(userId, hashedPassword, isTempPassword);
+      /// minimize our line count by leveraging the `toMap` for [Student]
+      await Database.insertAthleteFromData(student.toMap());
     } catch (e) {
-      print('Error updating user password: $e');
-      rethrow;
+      print('Error adding student: $e');
     }
   }
 }
