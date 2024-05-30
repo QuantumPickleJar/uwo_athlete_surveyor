@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:athlete_surveyor/database.dart';
+import 'package:athlete_surveyor/models/users/user_types.dart';
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 
@@ -14,7 +15,7 @@ Future<void> addStudentToDatabase(String name, String grade, String sport) async
     await conn.execute("INSERT INTO tbl_studentlist (student_name, grade, sport) VALUES (\$1, \$2, \$3)",
         parameters: [name, grade, sport]);
         students.clear();
-        fetchStudentsFromDatabase();//will repopulate the List with the new added student
+        fetchStudentsFromDatabase();      //will repopulate the List with the new added student
         notifyListeners();
   } catch (e) {
     print('Error adding student to database: $e');
@@ -23,6 +24,7 @@ Future<void> addStudentToDatabase(String name, String grade, String sport) async
 }
 
 
+  @deprecated 
   // Method to fetch students from the database
   Future<void> fetchStudentsFromDatabase() async {
     try {
@@ -50,14 +52,3 @@ Future<void> addStudentToDatabase(String name, String grade, String sport) async
   }
 }
 
-class Student {
-  final String name;
-  final String grade;
-  final String sport;
-
-  Student({
-    required this.name,
-    required this.grade,
-    required this.sport,
-  });
-}
