@@ -13,7 +13,7 @@ class Database
   // SQL fetch query strings.
   static const String _getEmailsByUserId = "SELECT date_received, from_uuid, subject_line, body FROM tbl_inbox WHERE to_uuid = @userId;";
   static const String _getEmailsQuery = "SELECT date_received, from_uuid, subject_line, body FROM tbl_inbox;";
-  static const String _getStudentList = "SELECT first_name, last_name, grade, sport FROM tbl_studentList"; 
+  static const String _getStudentList = "SELECT student_id, email, first_name, last_name, grade, sport FROM tbl_studentList"; 
   static const String _getPreviousFormsQuery = "SELECT form_name, associated_sport, date_received, date_completed FROM tbl_previous_forms_temp;";
   static const String _getSpecificUser = "SELECT * FROM tbl_users WHERE username = @username";
   static const String _getQuestionById = """SELECT content, order_in_form, form_id, question_id, response_enum FROM public.tbl_questions WHERE question_id = @questionId;""";
@@ -43,7 +43,7 @@ class Database
 
   static const String _getEmailServiceApiKey = "SELECT key FROM tbl_api_keys WHERE name='sendgrid'";
   /// SQL insert query strings. ***Note on inserts; add "RETURNING <column_name>" to end of insert queries to get a Result from them, with <column name> usually being the ID that gets assigned to it.
-  static const String _insertAthlete = "INSERT INTO tbl_studentlist (first_name, last_name, grade, sport, student_id) VALUES (@firstName, @lastName, @grade, @sport, @id)";
+  static const String _insertAthlete = "INSERT INTO tbl_studentlist (email, first_name, last_name, grade, sport, student_id) VALUES (@email, @firstName, @lastName, @grade, @sport, @id)";
   //static const String _getUserPassword = "SELECT * FROM tbl_users WHERE username = @username";
   static const String _insertNewUser = "INSERT INTO tbl_users (username,password,is_admin) VALUES (@username,@password,@is_admin)";
   //static const String _deleteAthlete = " DElETE FROM tbl_studentlist WHERE student_name =  @name AND grade = @grade AND sport = @sport";
