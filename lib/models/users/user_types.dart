@@ -53,10 +53,10 @@ class Student extends User {
   }
 
 
-  /// Used to show the email and the name of the User, ideal for
-  /// dropdown filling
+  /// Used to show the first and last name of the User
   String get fullName { return '$firstName $lastName'; }
 
+  /// Prints the email [username], and concatenated first-last name of User
   @override
   String toString() {
     return '$username, ${firstName + ' ' + lastName}';
