@@ -5,6 +5,7 @@ import 'package:athlete_surveyor/models/users/user_types.dart';
 import 'package:athlete_surveyor/services/form_requests/form_request_repository.dart';
 import 'package:athlete_surveyor/database.dart';
 import 'package:bcrypt/bcrypt.dart';
+import 'package:postgres/postgres.dart';
 
 class UserRepository implements IUserRepository{
   /// needed to track incoming/outgoing [FormRequest] operations
@@ -49,7 +50,25 @@ class UserRepository implements IUserRepository{
       // rethrow;
     }
   }
-    
+
+  // Fetches students from the database
+  Future<List<Student>> fetchStudentsFromDatabase() async {
+    try {
+      
+      final fetchedStudents = await Database.fetchStudents();
+      if (fetchedStudents.isEmpty) {
+        return [];
+      }
+      List<Student> students = fetchedStudents.map((row) => 
+      /// map out the rows from the query result
+        Student.fromMap(row.toColumnMap())).toList();
+        return students;
+    } catch (e) {
+      print('Error fetching students: $e');
+      rethrow;
+    }
+  }
+
    Future<LoggedInUser?> getUserByUsername(String username) async {
     try {
       final result = await Database.fetchUser(username: username);
@@ -94,7 +113,6 @@ class UserRepository implements IUserRepository{
       rethrow;
     }
   }
-
 
   Future<void> addStudentToDatabase(Student student) async {
     try {
