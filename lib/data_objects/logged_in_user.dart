@@ -24,7 +24,7 @@ class LoggedInUser extends User
   /// Minifying function, reduces line count in UserRepository and Database
   /// NOTE: inconsisntent syntax standard
   factory LoggedInUser.fromMap(Map<String, dynamic> userData) {
-    print('[LoggedInUser] Unpacling data $userData');
+    print('[LoggedInUser] Unpacking data $userData');
 
     assert(userData.containsKey('uuid_user'), 'userId (uuid_user) field is missing');
     assert(userData.containsKey('username'), 'username field is missing');
