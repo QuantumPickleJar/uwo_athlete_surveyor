@@ -6,17 +6,17 @@ import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/services/users/user_repository.dart';
 import 'package:flutter/material.dart';
 
-class AddStudent extends StatefulWidget 
+class AddStudentPage extends StatefulWidget 
 {
   // final StudentsModel studentsModel;
   final UserRepository userRepository;
-  const AddStudent(this.userRepository, {super.key});
+  const AddStudentPage(this.userRepository, {super.key});
 
   @override
-  State<AddStudent> createState() => _AddStudentState();
+  State<AddStudentPage> createState() => _AddStudentPageState();
 }
 
-class _AddStudentState extends State<AddStudent> 
+class _AddStudentPageState extends State<AddStudentPage> 
 {
   // late String firstName, lastName;
   final TextEditingController _nameController = TextEditingController();
