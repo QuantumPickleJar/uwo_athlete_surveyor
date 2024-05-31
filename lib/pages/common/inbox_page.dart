@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 class InboxPage extends StatefulWidget
 {
   final InboxModel inboxModel;
-  const InboxPage(this.inboxModel, {super.key});
+  /// TODO: could this come from [LoggedInUser]?
+  final String userId;      /// needed to know which user to fech 
+  const InboxPage(this.inboxModel, {required this.userId, super.key});
 
   @override
   State<StatefulWidget> createState() => _InboxPageState();
@@ -28,11 +30,9 @@ class _InboxPageState extends State<InboxPage>
 
   /// Handles fetching inbox messages and populating ListView when received.
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
-
-    widget.inboxModel.getEmailsFromDatabase();
+    widget.inboxModel.getEmailsFromDatabase(widget.userId);
   }
 
   @override
@@ -44,7 +44,7 @@ class _InboxPageState extends State<InboxPage>
         hasBackButton: false, 
         actionButton: defaultActionButton(
           actionIcon: Icons.email, 
-          onPressed: () { navigateToPage(context, const ComposeMessagePage()); })),
+          onPressed: () { navigateToPage(context, ComposeMessagePage(currentUserId: widget.userId)); })),
       body: Column(
         children: [
           DropdownMenu(dropdownMenuEntries: dropdownMenuEntries, hintText: "Inbox", width: MediaQuery.of(context).size.width-8),
@@ -63,7 +63,14 @@ class _InboxPageState extends State<InboxPage>
                     value: true,          //temp
                     groupValue: null,     //temp
                     onChanged: (value){}, //temp
-                    title: Text("${widget.inboxModel.emailList[index].receivedDate}\nFrom: ${widget.inboxModel.emailList[index].from}\n${widget.inboxModel.emailList[index].subject}\n"),
-                    subtitle: Text(widget.inboxModel.emailList[index].body)));}))]));
+                     title: Text(
+                        "${widget.inboxModel.emailList[index].receivedDate}\nFrom: ${widget.inboxModel.emailList[index].from}\n${widget.inboxModel.emailList[index].subject}\n"),
+                    subtitle: Text(widget.inboxModel.emailList[index].body),
+                  ),
+                );
+              })
+              )]
+        )
+      );
   }
 }

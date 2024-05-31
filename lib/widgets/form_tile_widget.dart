@@ -20,23 +20,31 @@ import 'package:athlete_surveyor/pages/form_taker_page.dart';
       super.key,
       required this.form,
       required this.currentUser,
-      // required this.onTap
     });
 
     @override
     Widget build(BuildContext context) {
-      return ListTile(
-        title: Text(form.formName),
+      return Card(
+      child: Material(
+        child: InkWell(
         onTap: () {
-            navigateToPage(context, (currentUser.hasAdminPrivileges) ?
-              FormBuilderPage(formId: form.formId) :
-              /// TODO: adjust once subclassed user types are implemented
-              FormTakerPage(studentModel: StudentModel(
-              student: currentUser,
-              questions: form.questions,
-          )));
-
-        }
+          navigateToPage(
+          context,
+          (currentUser.hasAdminPrivileges)
+            ? FormBuilderPage(formId: form.formId)
+            : FormTakerPage(
+              studentModel: StudentModel(
+                student: currentUser,
+                questions: form.questions,
+              ),
+              ),
+          );
+        },
+        child: ListTile(
+          title: Text(form.formName),
+        ),
+        ),
+      ),
       );
     }
   }

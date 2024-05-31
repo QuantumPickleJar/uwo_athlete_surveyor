@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 class InboxModel extends ChangeNotifier
 {
   final List<Email> emailList = [];
-  /// TODO accept a user id for who these messages belong to
+
+  /// TODO (later): differentiate between [User] types (if scope dictates)
   /// Get all inbox messages from the database and insert into internal list.
-  Future<void> getEmailsFromDatabase() async 
-  {
-    await Database.fetchEmails().then((results) 
-    {  
+  Future<void> getEmailsFromDatabase(String userId) async {
+    await Database.fetchEmailsByUserId(userId).then((results) {
       emailList.clear();
 
       for(int i = 0; i < results.length; i++)
@@ -22,6 +21,17 @@ class InboxModel extends ChangeNotifier
                             
         ));
       }
+
+      /// In order to use this, [database.dart] needs to be refactored to return more 
+      /// specific Futures than [Result]. e.g Future<List<Map<String, dynamic>>> 
+      // for (var row in results) {
+      //   emailList.add(Email(
+      //     DateTime.parse(row['date_received'].toString()),
+      //     row['from_uuid'].toString(),
+      //     row['subject_line'].toString(),
+      //     row['body'].toString(),
+      //   ));
+      // }
 
       notifyListeners();
     });

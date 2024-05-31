@@ -52,7 +52,7 @@ class _TabbedMainPageState extends State<TabbedMainPage>
       ),
       Consumer<InboxModel>(
         builder: (context, inboxModel, _) {
-          return InboxPage(inboxModel);
+          return InboxPage(inboxModel, userId: widget.currentUser.userId);
       }),
       Consumer<AuthoredFormsModel>(
         builder: (context, previousFormsModel, _) {

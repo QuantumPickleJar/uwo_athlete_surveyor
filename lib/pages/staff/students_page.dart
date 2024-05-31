@@ -1,3 +1,4 @@
+import 'package:athlete_surveyor/models/users/user_types.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,8 @@ class _StudentsWidgetState extends State<StudentsWidget> {
   void initState() {
     super.initState();
     // Fetch students from the database when the widget is initialized
-    widget.studentModel.fetchStudentsFromDatabase();
+    // widget.studentModel.fetchStudentsFromDatabase();
+    widget.studentModel.userRepository.fetchStudentsFromDatabase();
   }
 
   @override
@@ -114,7 +116,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
               itemCount: widget.studentModel.students.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  title: Text(widget.studentModel.students[index].name),
+                  title: Text(widget.studentModel.students[index].fullName),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -150,7 +152,8 @@ class _StudentsWidgetState extends State<StudentsWidget> {
   void _addAthlete(BuildContext context) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => AddStudent(widget.studentModel)),
+    MaterialPageRoute(builder: (context) =>
+     AddStudentPage(widget.studentModel.userRepository)),
   );
 }
 
