@@ -7,15 +7,15 @@ import '../add_athlete_page.dart'; // Import the add athlete screen
 import '../../models/students_model.dart';
 
 
-class StudentsWidget extends StatefulWidget {
+class StudentsPage extends StatefulWidget {
   final StudentsModel studentModel;
-const StudentsWidget(this.studentModel, {super.key});
+const StudentsPage(this.studentModel, {super.key});
 
   @override
-  State<StudentsWidget> createState() => _StudentsWidgetState();
+  State<StudentsPage> createState() => _StudentsPageState();
 }
 
-class _StudentsWidgetState extends State<StudentsWidget> {
+class _StudentsPageState extends State<StudentsPage> {
   // Define sorting criteria
   bool _sortBySport = false;
   bool _sortByGrade = false;
@@ -154,7 +154,7 @@ class _StudentsWidgetState extends State<StudentsWidget> {
     context,
     MaterialPageRoute(builder: (context) =>
      AddStudentPage(widget.studentModel.userRepository)),
-  );
-}
+    );
+  }
 
 }

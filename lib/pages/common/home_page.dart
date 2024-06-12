@@ -62,7 +62,7 @@ class HomePage extends StatelessWidget {
                               context,
                               Consumer<StudentsModel>(
                                   builder: (context, studentsModel, child) =>
-                                      StudentsWidget(studentsModel)));
+                                      StudentsPage(studentsModel)));
                         },
                         style: ButtonStyle(
                             backgroundColor:
