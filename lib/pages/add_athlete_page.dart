@@ -1,19 +1,23 @@
 // ignore_for_file: avoid_print
-
 import 'package:athlete_surveyor/models/students_model.dart';
 import 'package:athlete_surveyor/models/users/user_types.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:athlete_surveyor/services/users/user_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddStudentPage extends StatefulWidget 
 {
+  // leftover from pre-provider shift:
   // final StudentsModel studentsModel;
-  final UserRepository userRepository;
-  const AddStudentPage(this.userRepository, {super.key});
+  //const AddStudentPage(this.userRepository, {super.key});
+  
+  const AddStudentPage({super.key});
 
   @override
   State<AddStudentPage> createState() => _AddStudentPageState();
+
+
 }
 
 class _AddStudentPageState extends State<AddStudentPage> 
@@ -53,8 +57,13 @@ class _AddStudentPageState extends State<AddStudentPage>
         grade: grade,
         sport: sport,
       );
-    // widget.studentsModel.addStudentToDatabase(name, grade, sport).then((_) {
-      widget.userRepository.addStudentToDatabase(newStudent).then((_) {
+
+      /// instead of passing through the widget...
+      //widget.userRepository.addStudentToDatabase(newStudent).then((_) {
+      
+      /// ...we get it from the tree
+      final userRepository = Provider.of<UserRepository>(listen: false, context);
+      userRepository.addStudentToDatabase(newStudent).then((_) {
         // Clear form fields
         _nameController.clear();
         _gradeController.clear();
@@ -209,5 +218,4 @@ class _AddStudentPageState extends State<AddStudentPage>
       ),
     );
   }
-
 }
