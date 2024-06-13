@@ -2,14 +2,15 @@ import 'dart:async';
 import 'package:athlete_surveyor/models/students_model.dart';
 import 'package:athlete_surveyor/models/users/user_types.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
     
 /// Handles the fetching of the recipients that a staff can send an email to.
 /// Features debouncing to limit network requests as well as error handling
 /// (see https://api.flutter.dev/flutter/material/Autocomplete-class.html)
 class AsyncStudentAutocomplete extends StatefulWidget {
-  final StudentsModel studentsModel;
+  // final StudentsModel studentsModel;
   static const Duration debounceDuration = Duration(milliseconds: 500);
-  const AsyncStudentAutocomplete({super.key, required this.studentsModel});
+  const AsyncStudentAutocomplete({super.key});
   
   @override
   State<AsyncStudentAutocomplete> createState() => AsyncStudentAutocompleteState();
@@ -24,7 +25,7 @@ class AsyncStudentAutocompleteState extends State<AsyncStudentAutocomplete> {
   String? _currentQuery;
 
   // The most recent options received from the service connected to the DB
-  late Iterable<Student> _lastOptions = widget.studentsModel.students;
+  late Iterable<Student> _lastOptions; // = widget.studentsModel.students;
 
   // Whether to consider the fake network to be offline.
   bool _networkEnabled = true;
@@ -36,27 +37,33 @@ class AsyncStudentAutocompleteState extends State<AsyncStudentAutocomplete> {
   // the call has been made obsolete.
   Future<Iterable<Student>?> _search(String query) async {
     _currentQuery = query;
+    /// get [StudentsModel] from the tree
+    final studentsModel = Provider.of<StudentsModel>(context, listen: false);
     late final Iterable<Student> options; 
     try {
       /// get the students that will fill the dropdown (from [StudentsModel])
       
-      /// if [query] contains an '@', look by email, otherwise assume name
-      if(query.contains('@')) {
-
-      } else {
+      
+      if(query.contains('@')) {        /// if [query] contains an '@', look by email
+        options = studentsModel.students.where((student) => 
+          student.username.toLowerCase().contains(query.toLowerCase()));
+      } else {                          /// otherwise assume name
         // options = await _FakeAPI.search(_currentQuery!, _networkEnabled);
-        options = await widget.studentsModel.userRepository.fetchStudentsFromDatabase();
+        //options = await widget.studentsModel.userRepository.fetchStudentsFromDatabase();
+        options = studentsModel.students.where(
+          (student) => student.fullName.toLowerCase().contains(query.toLowerCase())
+          );
       }
     } catch (error) {
       if (error is _NetworkException) {
       setState(() {
         _networkError = true;
       });
-      if (widget.studentsModel.students == null) {
+      if (studentsModel.students.isEmpty) {
         rethrow;
       } else {
         /// fallback to the local cache, if available
-        return widget.studentsModel.students;
+        return studentsModel.students;
         }
       }
     }
@@ -66,7 +73,6 @@ class AsyncStudentAutocompleteState extends State<AsyncStudentAutocomplete> {
       return null;
     }
     _currentQuery = null;
-
     return options;
   }
 
@@ -74,6 +80,9 @@ class AsyncStudentAutocompleteState extends State<AsyncStudentAutocomplete> {
   void initState() {
     super.initState();
     _debouncedSearch = _debounce<Iterable<Student>?, String>(_search);
+    /// load from the model into the widget's dropdown
+    _lastOptions = Provider.of<StudentsModel>(context, listen: false)
+                                            .students;
   }
 
   @override

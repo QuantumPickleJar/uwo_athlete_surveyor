@@ -1,7 +1,9 @@
+import "package:athlete_surveyor/models/students_model.dart";
 import "package:athlete_surveyor/resources/common_widgets.dart";
 import "package:athlete_surveyor/widgets/async_student_autocomplete.dart";
 import "package:athlete_surveyor/widgets/expanded_text_field.dart";
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
 class ComposeMessagePage extends StatelessWidget {
   final String currentUserId;
@@ -23,16 +25,17 @@ class ComposeMessagePage extends StatelessWidget {
     }
   }
 
-  /// Called after [fillRecipientsContents]; loads the selectable options into 
-  /// an [AsyncStudentAutocomplete] widget
-  Future<AsyncStudentAutocomplete> buildRecipientsDropdown() async {
-    try {
-      
+    /// Called after [fillRecipientsContents]; loads the selectable options into 
+    /// an [AsyncStudentAutocomplete] widget
+    Future<AsyncStudentAutocomplete?> buildRecipientsDropdown() async {
+      try {
+      // fillRecipientsContents(); // maybe this goes here...?
 
-      return AsyncStudentAutocomplete();
+      /// TODO: how will we get studentsModel here?
+      return const AsyncStudentAutocomplete();
     } catch (e) {
       print('Error building dropdown: $e');
-      
+      return null;
     }
   }
 
@@ -94,12 +97,25 @@ class ComposeMessagePage extends StatelessWidget {
                     ],
                 ),
               ],
-              
             ),
-            
           ),
         ]),
       );
   }
 }
 
+/// TODO: potentially wrap the compose_message_page with a StatelessWidget-based wrapper that
+/// supplies a Consumer,StudentsModel
+class ComposeMessagePageWrapper extends StatelessWidget {
+  final String currentUserId;
+  const ComposeMessagePageWrapper({required this.currentUserId, super.key});
+
+    @override
+    Widget build(BuildContext context) {
+      return Consumer<StudentsModel>(
+        builder: (context, studentsModel, child) {
+          return ComposeMessagePage(currentUserId: currentUserId);
+      },
+    );
+  }
+}

@@ -1,3 +1,4 @@
+import 'package:athlete_surveyor/models/users/user_types.dart';
 import 'package:athlete_surveyor/resources/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:athlete_surveyor/models/students_model.dart';
@@ -13,7 +14,7 @@ class IndividualStudentScreen extends StatelessWidget {
     return Scaffold(
       appBar: defaultAppBar(
         buildContext: context, 
-        title: studentData.name, 
+        title: studentData.fullName, 
         hasBackButton: true),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -35,7 +36,7 @@ class IndividualStudentScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Name: ${studentData.name}',
+                          'Name: ${studentData.fullName}',
                         ),
                         const SizedBox(height: 20), // Spacer between lines
                         Text(
